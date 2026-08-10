@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230f1013'/%3E%3Ctext x='50' y='70' font-size='54' text-anchor='middle' fill='%23d9a441' font-family='serif' font-weight='700'%3E淵%3C/text%3E%3C/svg%3E">
+<style>
+/* ============ Design Tokens ============ */
+:root{
+  --bg:#0f1013;
+  --bg-2:#15161b;
+  --surface:#1a1c22;
+  --surface-2:#20232b;
+  --ink:#ece7db;
+  --ink-strong:#faf6ec;
+  --muted:#9b968a;
+  --line:rgba(236,231,219,.14);
+  --line-soft:rgba(236,231,219,.08);
+  --gold:#d9a441;
+  --gold-soft:rgba(217,164,65,.14);
+  --gold-line:rgba(217,164,65,.4);
+  --shadow:0 20px 50px -12px rgba(0,0,0,.55);
+  --hero-ink:#faf6ec;
+  --hero-muted:#a8a294;
+  color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f6f1e7;
+  --bg-2:#efe9dc;
+  --surface:#fdfaf3;
+  --surface-2:#f2ecdf;
+  --ink:#26231d;
+  --ink-strong:#17150f;
+  --muted:#6f6a5e;
+  --line:rgba(38,35,29,.16);
+  --line-soft:rgba(38,35,29,.08);
+  --gold:#a06e1c;
+  --gold-soft:rgba(160,110,28,.1);
+  --gold-line:rgba(160,110,28,.38);
+  --shadow:0 20px 45px -18px rgba(60,45,15,.28);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f1e7;
+    --bg-2:#efe9dc;
+    --surface:#fdfaf3;
+    --surface-2:#f2ecdf;
+    --ink:#26231d;
+    --ink-strong:#17150f;
+    --muted:#6f6a5e;
+    --line:rgba(38,35,29,.16);
+    --line-soft:rgba(38,35,29,.08);
+    --gold:#a06e1c;
+    --gold-soft:rgba(160,110,28,.1);
+    --gold-line:rgba(160,110,28,.38);
+    --shadow:0 20px 45px -18px rgba(60,45,15,.28);
+    color-scheme:light;
+  }
+}
+
+/* ============ Base ============ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-weight:400;
+  line-height:1.75;
+  letter-spacing:.02em;
+  transition:background .45s ease,color .45s ease;
+  overflow-x:hidden;
+}
+.serif{font-family:"Noto Serif TC","Songti TC","STSong",serif}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#141310}
+
+/* grain texture */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+
+/* ============ Nav（固定深色墨帶，兩種主題皆然） ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(13,14,17,.72);
+  border-bottom:1px solid rgba(236,231,219,.09);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.nav-logo{font-family:"Noto Serif TC",serif;font-weight:900;font-size:1.05rem;letter-spacing:.14em;color:#faf6ec}
+.nav-logo em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:#d9a441;margin-left:.5em;letter-spacing:.04em}
+.nav-links{display:flex;gap:clamp(14px,2.4vw,30px);align-items:center;font-size:.86rem;letter-spacing:.12em}
+.nav-links a{color:#a8a294;transition:color .25s}
+.nav-links a:hover{color:#d9a441}
+@media (max-width:760px){.nav-links a{display:none}}
+
+/* theme toggle */
+.theme-btn{
+  width:40px;height:40px;border-radius:50%;border:1px solid rgba(236,231,219,.28);
+  background:transparent;color:#ece7db;cursor:pointer;
+  display:grid;place-items:center;transition:border-color .25s,transform .25s;
+}
+.theme-btn:hover{border-color:var(--gold);transform:rotate(18deg)}
+.theme-btn svg{width:17px;height:17px}
+[data-theme="light"] .icon-moon{display:none}
+[data-theme="dark"] .icon-sun{display:none}
+:root:not([data-theme]) .icon-sun{display:none}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]) .icon-sun{display:block}
+  :root:not([data-theme]) .icon-moon{display:none}
+}
+
+/* ============ Hero (永遠深色，與棚拍背景融合) ============ */
+.hero{
+  position:relative;min-height:100svh;
+  background:radial-gradient(125% 100% at 74% 30%,#25272e 0%,#16171c 50%,#0c0d10 100%);
+  color:var(--hero-ink);
+  display:flex;align-items:stretch;overflow:hidden;
+}
+/* 右緣直排裝飾字 */
+.hero::after{
+  content:"GENERATIVE AI × EDUCATION";
+  position:absolute;top:50%;right:clamp(8px,1.6vw,22px);transform:translateY(-50%);
+  writing-mode:vertical-rl;
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:.78rem;
+  letter-spacing:.5em;color:rgba(217,164,65,.5);
+  border-left:1px solid rgba(217,164,65,.25);padding-left:10px;
+}
+@media (max-width:860px){.hero::after{display:none}}
+.hero-grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:0;
+  width:100%;max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px);
+}
+.hero-copy{display:flex;flex-direction:column;justify-content:center;padding:110px 0 170px}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:14px;color:var(--gold);
+  font-size:.82rem;letter-spacing:.34em;margin-bottom:26px;
+}
+.hero-eyebrow::before{content:"";width:44px;height:1px;background:var(--gold-line)}
+.hero-name{
+  font-family:"Noto Serif TC",serif;font-weight:900;
+  font-size:clamp(3.4rem,9vw,6.4rem);line-height:1.08;letter-spacing:.06em;
+  color:var(--hero-ink);
+}
+.hero-name .en{
+  display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+  font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:.28em;color:var(--gold);margin-top:14px;
+}
+.hero-titles{
+  margin-top:30px;display:grid;grid-template-columns:repeat(2,auto);
+  justify-content:start;gap:12px 40px;
+  font-size:clamp(.86rem,1.4vw,.98rem);color:var(--hero-muted);letter-spacing:.06em;
+}
+.hero-titles span{position:relative;padding-left:20px}
+.hero-titles span::before{
+  content:"";position:absolute;left:0;top:.7em;width:10px;height:1px;background:var(--gold);
+}
+@media (max-width:560px){.hero-titles{grid-template-columns:1fr;gap:10px}}
+.hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
+.hero-social{display:flex;gap:14px;margin-top:36px}
+.hero-social a{
+  width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
+  display:grid;place-items:center;color:var(--hero-muted);
+  transition:all .3s ease;
+}
+.hero-social a:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+.hero-social svg{width:17px;height:17px;fill:currentColor}
+
+.hero-photo{position:relative;display:flex;align-items:flex-end;justify-content:center}
+.hero-photo img{
+  width:min(46vw,470px);max-height:88svh;object-fit:contain;object-position:bottom;
+  -webkit-mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
+  mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
+}
+/* 底部統計帶 */
+.hero-stats{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  border-top:1px solid rgba(236,231,219,.12);
+  background:linear-gradient(to top,rgba(10,10,13,.85),rgba(10,10,13,.35));
+  backdrop-filter:blur(6px);
+}
+.hero-stats-inner{
+  max-width:1180px;margin:0 auto;padding:18px clamp(20px,4vw,48px);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.stat .num{
+  font-family:"Cormorant Garamond",serif;font-weight:700;
+  font-size:clamp(1.7rem,3.4vw,2.5rem);color:var(--gold);line-height:1.1;
+}
+.stat .num small{font-size:.55em;margin-left:2px}
+.stat .lbl{font-size:clamp(.68rem,1.1vw,.8rem);letter-spacing:.16em;color:var(--hero-muted)}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-copy{padding:110px 0 0;text-align:left}
+  .hero-photo{margin:22px 0 48px;align-items:center}
+  .hero-photo img{
+    width:min(82vw,360px);aspect-ratio:1/1;max-height:none;
+    object-fit:cover;object-position:top;border-radius:16px;
+    -webkit-mask-image:radial-gradient(140% 140% at 50% 42%,#000 60%,transparent 100%);
+    mask-image:radial-gradient(140% 140% at 50% 42%,#000 60%,transparent 100%);
+  }
+  .hero{min-height:auto;padding-bottom:150px}
+  .hero-stats-inner{grid-template-columns:repeat(2,1fr);gap:10px 20px;padding-bottom:14px}
+  .hero-stats{position:absolute}
+}
+/* 平板區間：置中的封面式構圖，避免單欄靠左造成右側大片留白 */
+@media (min-width:561px) and (max-width:860px){
+  .hero-copy{align-items:center;text-align:center;padding-top:96px}
+  .hero-eyebrow{justify-content:center;margin-bottom:20px}
+  .hero-eyebrow::after{content:"";width:44px;height:1px;background:var(--gold-line)}
+  .hero-titles{justify-content:center;gap:12px 48px;margin-top:24px}
+  .hero-titles span{text-align:left;justify-self:start}
+  .hero-lead{margin:16px auto 0}
+  .hero-social{justify-content:center;margin-top:28px}
+  .hero-photo{margin:30px 0 12px}
+  .hero{padding-bottom:104px}
+  .hero-stats-inner{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ============ Sections ============ */
+section{padding:clamp(70px,10vw,130px) 0}
+.sec-head{display:flex;align-items:baseline;gap:22px;margin-bottom:clamp(34px,5vw,60px)}
+.sec-no{
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+  font-size:clamp(1.1rem,2vw,1.4rem);color:var(--gold);letter-spacing:.1em;
+}
+.sec-title{
+  font-family:"Noto Serif TC",serif;font-weight:900;
+  font-size:clamp(1.7rem,4vw,2.6rem);letter-spacing:.1em;color:var(--ink-strong);
+}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+.sec-sub{margin:-24px 0 40px;color:var(--muted);font-size:.92rem;letter-spacing:.04em}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.65,.25,1),transform .8s cubic-bezier(.2,.65,.25,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 01 關於 ============ */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.role{
+  background:var(--surface);padding:clamp(24px,3vw,36px);
+  position:relative;transition:background .35s ease;
+}
+.role:hover{background:var(--surface-2)}
+.role .idx{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:1rem}
+.role h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:1.08rem;letter-spacing:.08em;margin:10px 0 12px;color:var(--ink-strong)}
+.role p{font-size:.86rem;color:var(--muted);font-weight:300}
+
+/* ============ 02 著作 ============ */
+/* 書架 */
+.shelf{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));
+  gap:clamp(16px,2.2vw,26px);align-items:start;
+}
+.book{position:relative;transition:transform .4s cubic-bezier(.2,.65,.25,1)}
+.book:hover{transform:translateY(-8px)}
+.book .cover{
+  border-radius:3px 6px 6px 3px;overflow:hidden;box-shadow:var(--shadow);
+  border:1px solid var(--line-soft);
+  aspect-ratio:3/4.1;background:var(--surface-2);position:relative;
+  transform-origin:left center;transition:transform .5s cubic-bezier(.2,.65,.25,1);
+}
+/* 書脊高光與書口陰影，做出實體書質感 */
+.book .cover::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 9%,transparent 86%,rgba(0,0,0,.22) 100%);
+}
+.book:hover .cover{transform:perspective(900px) rotateY(-10deg)}
+.book .cover img{width:100%;height:100%;object-fit:cover}
+.book figcaption{margin-top:12px;font-size:.78rem;color:var(--muted);line-height:1.5;letter-spacing:.02em}
+.tag{
+  display:inline-block;font-size:.66rem;letter-spacing:.14em;color:var(--gold);
+  border:1px solid var(--gold-line);border-radius:99px;padding:1px 9px;margin-bottom:7px;
+}
+@media (max-width:560px){
+  .shelf{grid-template-columns:repeat(2,1fr);gap:26px 18px}
+}
+
+/* 排行榜 proof */
+.proof{margin-top:clamp(46px,6vw,70px)}
+.proof-label{
+  display:flex;align-items:center;gap:14px;margin-bottom:24px;
+  font-size:.82rem;letter-spacing:.28em;color:var(--gold);
+}
+.proof-label::after{content:"";flex:1;height:1px;background:var(--gold-line);opacity:.5}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(16px,2.4vw,26px)}
+.shot{
+  border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.shot .bar{
+  display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line-soft);
+  background:var(--surface-2);
+}
+.shot .bar i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.shot .bar i:first-child{background:var(--gold);opacity:.8}
+.shot img{width:100%}
+.shot figcaption{padding:12px 16px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line-soft)}
+
+/* ============ 03 授課 ============ */
+.teach-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-bottom:clamp(40px,5vw,60px)}
+.tstat{background:var(--surface);padding:clamp(22px,3vw,36px);text-align:center}
+.tstat .num{font-family:"Cormorant Garamond",serif;font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);color:var(--gold);line-height:1}
+.tstat .num .plus{font-size:.44em;vertical-align:.85em;margin-left:3px;opacity:.85}
+.tstat .lbl{margin-top:8px;font-size:clamp(.74rem,1.4vw,.88rem);letter-spacing:.2em;color:var(--muted)}
+.tstat .sub{margin-top:5px;font-size:clamp(.62rem,1.1vw,.72rem);letter-spacing:.14em;color:var(--muted);opacity:.75}
+/* 手機版：統計改橫向一列（數字＋說明），避免三欄擠壓文字 */
+@media (max-width:560px){
+  .teach-stats{grid-template-columns:1fr}
+  .tstat{
+    display:grid;grid-template-columns:auto 1fr;align-items:center;
+    text-align:left;padding:16px 24px 16px 40px;
+  }
+  .tstat .num{grid-row:1/3;font-size:2.2rem;min-width:2.4em;text-align:left}
+  .tstat .lbl{margin-top:0}
+  .tstat .sub{margin-top:3px}
+}
+
+.chips-block{margin-bottom:34px}
+.chips-block h4{
+  font-family:"Noto Serif TC",serif;font-weight:700;font-size:1rem;letter-spacing:.16em;
+  color:var(--ink-strong);margin-bottom:16px;display:flex;align-items:center;gap:12px;
+}
+.chips-block h4 em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:var(--gold);font-size:.9rem;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{
+  font-size:.8rem;letter-spacing:.05em;color:var(--ink);
+  border:1px solid var(--line);border-radius:99px;padding:5px 15px;font-weight:300;
+  transition:border-color .25s,background .25s,color .25s;
+  font-family:inherit;background:transparent;cursor:pointer;line-height:1.75;
+}
+.chip:hover{border-color:var(--gold-line);background:var(--gold-soft)}
+.chip.active{border-color:var(--gold);background:var(--gold-soft);color:var(--ink-strong)}
+.chip b{font-weight:500;color:var(--gold);margin-left:6px;font-size:.74rem}
+
+/* 點擊單位展開的課程面板 */
+.chip-panel{
+  display:none;margin-top:18px;position:relative;
+  border:1px solid var(--gold-line);border-left:3px solid var(--gold);border-radius:10px;
+  background:var(--surface);padding:20px 26px;box-shadow:var(--shadow);
+}
+.chip-panel.open{display:block;animation:panelIn .4s cubic-bezier(.2,.65,.25,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cp-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px;padding-right:34px;flex-wrap:wrap}
+.cp-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:1.05rem;letter-spacing:.08em;color:var(--gold)}
+.cp-count{font-size:.74rem;letter-spacing:.16em;color:var(--muted)}
+.cp-list{list-style:none;display:grid;gap:10px;grid-template-columns:1fr}
+.cp-list li{position:relative;padding-left:20px;font-size:.88rem;font-weight:300;color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.cp-list li::before{content:"";position:absolute;left:0;top:.8em;width:10px;height:1px;background:var(--gold)}
+.cp-list a{border-bottom:1px solid var(--gold-line);transition:color .25s}
+.cp-list a:hover{color:var(--gold)}
+.cp-close{
+  position:absolute;top:10px;right:12px;background:none;border:none;cursor:pointer;
+  color:var(--muted);font-size:1.25rem;line-height:1;padding:4px;font-family:inherit;
+}
+.cp-close:hover{color:var(--gold)}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{transition:none}
+  .chip-panel.open{animation:none}
+  html{scroll-behavior:auto}
+}
+
+/* gallery */
+.gallery{
+  margin-top:clamp(46px,6vw,70px);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,1.8vw,20px);
+}
+.gitem{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line-soft);box-shadow:var(--shadow)}
+.gitem img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.gitem:hover img{transform:scale(1.05)}
+.gitem figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
+  font-size:.78rem;letter-spacing:.12em;color:#f5f1e6;
+  background:linear-gradient(to top,rgba(8,8,10,.82),transparent);
+}
+.g-a{grid-column:span 7;aspect-ratio:16/10}
+.g-b{grid-column:span 5;aspect-ratio:auto}
+.g-c{grid-column:span 6;aspect-ratio:16/9}
+.g-d{grid-column:span 6;aspect-ratio:16/9}
+@media (max-width:700px){
+  .g-a,.g-b,.g-c,.g-d{grid-column:span 12;aspect-ratio:16/10}
+}
+
+/* ============ 04 媒體 ============ */
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,26px)}
+@media (max-width:700px){.media-grid{grid-template-columns:1fr}}
+/* 統一裁切比例；一律從最上方取景，避免切到人物頭部 */
+.media-grid .shot img{aspect-ratio:2/1;width:100%;object-fit:cover;object-position:top}
+.media-grid .gitem{aspect-ratio:2/1}
+.media-grid .gitem img{object-position:top}
+.media-grid+.media-grid{margin-top:clamp(16px,2.4vw,26px)}
+/* 收尾金句：置中壓軸 */
+.quote-final{
+  margin:clamp(60px,9vw,100px) auto 0;max-width:30em;text-align:center;position:relative;
+  font-family:"Noto Serif TC",serif;font-weight:600;
+  font-size:clamp(1.15rem,2.6vw,1.55rem);line-height:2;color:var(--ink-strong);
+  padding-top:36px;
+}
+.quote-final::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:46px;height:2px;background:var(--gold);
+}
+.quote-final .src{
+  display:block;margin-top:18px;font-family:"Noto Sans TC",sans-serif;font-weight:400;
+  font-size:.76rem;letter-spacing:.26em;color:var(--muted);
+}
+
+/* ============ Footer ============ */
+footer{
+  border-top:1px solid var(--line-soft);padding:clamp(50px,7vw,80px) 0 40px;
+  background:var(--bg-2);transition:background .45s ease;
+}
+.foot-top{
+  display:grid;grid-template-columns:1.1fr 1.6fr;gap:clamp(36px,6vw,80px);
+  align-items:start;
+}
+.foot-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:.12em;color:var(--ink-strong)}
+.foot-name em{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.5em;color:var(--gold);letter-spacing:.26em;margin-top:8px}
+.foot-tag{margin-top:18px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:22em}
+.foot-cols{display:grid;grid-template-columns:repeat(3,auto);gap:clamp(24px,4vw,60px);justify-content:end}
+.foot-col h6{
+  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;
+  margin-bottom:16px;text-transform:uppercase;
+}
+.foot-col a,.foot-col p{
+  display:flex;align-items:center;gap:9px;
+  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;
+  margin-bottom:10px;transition:color .25s;
+}
+.foot-col a:hover{color:var(--gold)}
+.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+.foot-col .gold-link{color:var(--gold);border-bottom:1px solid var(--gold-line);padding-bottom:2px;display:inline-block}
+@media (max-width:860px){
+  .foot-top{grid-template-columns:1fr}
+  .foot-cols{justify-content:start;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));width:100%}
+}
+.copy{margin-top:clamp(40px,6vw,60px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
+.to-top{color:var(--muted);transition:color .25s;letter-spacing:.16em}
+.to-top:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ======= Nav ======= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#top">林鼎淵<em>Dean Lin</em></a>
+    <div class="nav-links">
+      <a href="#about">關於</a>
+      <a href="#books">著作</a>
+      <a href="#teaching">授課</a>
+      <a href="#media">媒體</a>
+      <button class="theme-btn" id="themeBtn" aria-label="切換亮暗模式" title="切換亮暗模式">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ======= Hero ======= -->
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">{{EYEBROW}}</div>
+      <h1 class="hero-name">{{NAME}}<span class="en">{{NAME_EN}}</span></h1>
+      <div class="hero-titles">
+{{TITLES}}
+      </div>
+      <p class="hero-lead">{{LEAD}}</p>
+      <div class="hero-social">
+{{SOCIAL_HERO}}
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="{{PHOTO}}" alt="{{NAME}}形象照" fetchpriority="high">
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stats-inner">
+{{HERO_STATS}}
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======= 01 關於 ======= -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">01</span><h2 class="sec-title">{{ABOUT_TITLE}}</h2></div>
+    <p class="sec-sub reveal">{{ABOUT_SUB}}</p>
+    <div class="about-grid reveal">
+{{ROLES}}
+    </div>
+  </div>
+</section>
+
+<!-- ======= 02 著作 ======= -->
+<section id="books" style="background:var(--bg-2);transition:background .45s ease">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">02</span><h2 class="sec-title">{{BOOKS_TITLE}}</h2></div>
+    <p class="sec-sub reveal">{{BOOKS_SUB}}</p>
+    <div class="shelf reveal">
+{{BOOKS}}
+    </div>
+
+    <div class="proof reveal">
+      <div class="proof-label">{{PROOF_LABEL}}</div>
+      <div class="proof-grid">
+{{PROOF}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= 03 授課 ======= -->
+<section id="teaching">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">03</span><h2 class="sec-title">{{TEACHING_TITLE}}</h2></div>
+    <p class="sec-sub reveal">{{TEACHING_SUB}}</p>
+
+    <div class="teach-stats reveal">
+{{TEACH_STATS}}
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>企業內訓 <em>Corporate Training</em></h4>
+      <div class="chips">
+{{CHIPS_CORPORATE}}
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>校園講座 <em>Campus Talks</em></h4>
+      <div class="chips">
+{{CHIPS_CAMPUS}}
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>線上／平台課程 <em>Online Courses</em></h4>
+      <div class="chips">
+{{CHIPS_ONLINE}}
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="gallery reveal">
+{{GALLERY}}
+    </div>
+  </div>
+</section>
+
+<!-- ======= 04 媒體 ======= -->
+<section id="media" style="background:var(--bg-2);transition:background .45s ease">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">04</span><h2 class="sec-title">{{MEDIA_TITLE}}</h2></div>
+    <p class="sec-sub reveal">{{MEDIA_SUB}}</p>
+    <div class="media-grid reveal">
+{{MEDIA_SHOTS}}
+    </div>
+    <div class="media-grid reveal">
+{{MEDIA_PHOTOS}}
+    </div>
+    <blockquote class="quote-final reveal">
+      {{QUOTE}}
+      <span class="src">{{QUOTE_SRC}}</span>
+    </blockquote>
+  </div>
+</section>
+
+</main>
+
+<!-- ======= Footer ======= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="foot-name">{{NAME}}<em>{{NAME_EN}}</em></div>
+        <p class="foot-tag">{{FOOT_TAGLINE}}</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h6>導覽</h6>
+          <a href="#about">關於</a>
+          <a href="#books">出版著作</a>
+          <a href="#teaching">授課足跡</a>
+          <a href="#media">媒體與專欄</a>
+        </div>
+        <div class="foot-col">
+          <h6>社群</h6>
+{{SOCIAL_FOOT}}
+        </div>
+        <div class="foot-col">
+          <h6>合作邀約</h6>
+{{FOOT_SERVICES}}
+          <a class="gold-link" href="{{FACEBOOK}}" target="_blank" rel="noopener">{{FOOT_CTA}}</a>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <span>{{COPYRIGHT}}</span>
+      <a class="to-top" href="#top">回到頂部 ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== 主題切換：預設跟隨系統，手動切換後記憶 =====
+const btn = document.getElementById('themeBtn');
+const root = document.documentElement;
+const saved = localStorage.getItem('theme');
+if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+btn.addEventListener('click', () => {
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const current = root.dataset.theme || (sysDark ? 'dark' : 'light');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next;
+  localStorage.setItem('theme', next);
+});
+
+// ===== 進場顯示動畫 =====
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ===== 點擊單位展開課程清單 =====
+const COURSES = {{COURSES_JSON}};
+
+document.querySelectorAll('.chips-block').forEach(block => {
+  const panel = block.querySelector('.chip-panel');
+  if (!panel) return;
+  const closeAll = () => {
+    panel.classList.remove('open');
+    block.querySelectorAll('.chip.active').forEach(b => {
+      b.classList.remove('active'); b.setAttribute('aria-expanded', 'false');
+    });
+  };
+  block.querySelectorAll('button.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      closeAll();
+      if (wasActive) return;
+      btn.classList.add('active');
+      btn.setAttribute('aria-expanded', 'true');
+      const items = COURSES[btn.dataset.unit] || [];
+      panel.querySelector('.cp-title').textContent = btn.dataset.unit;
+      panel.querySelector('.cp-count').textContent = items.length + ' 項課程';
+      const ul = panel.querySelector('.cp-list');
+      ul.innerHTML = '';
+      items.forEach(c => {
+        const li = document.createElement('li');
+        if (typeof c === 'string') {
+          li.textContent = c;
+        } else {
+          const a = document.createElement('a');
+          a.href = c.u; a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = c.t;
+          li.appendChild(a);
+        }
+        ul.appendChild(li);
+      });
+      panel.classList.add('open');
+    });
+  });
+  panel.querySelector('.cp-close').addEventListener('click', closeAll);
+});
+</script>
+</body>
+</html>

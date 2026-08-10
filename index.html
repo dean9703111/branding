@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>林鼎淵 Dean Lin｜生成式 AI 講師・暢銷書作家・軟體專家</title>
+<meta name="description" content="外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場企業內訓與校園講座經驗。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230f1013'/%3E%3Ctext x='50' y='70' font-size='54' text-anchor='middle' fill='%23d9a441' font-family='serif' font-weight='700'%3E淵%3C/text%3E%3C/svg%3E">
+<style>
+/* ============ Design Tokens ============ */
+:root{
+  --bg:#0f1013;
+  --bg-2:#15161b;
+  --surface:#1a1c22;
+  --surface-2:#20232b;
+  --ink:#ece7db;
+  --ink-strong:#faf6ec;
+  --muted:#9b968a;
+  --line:rgba(236,231,219,.14);
+  --line-soft:rgba(236,231,219,.08);
+  --gold:#d9a441;
+  --gold-soft:rgba(217,164,65,.14);
+  --gold-line:rgba(217,164,65,.4);
+  --shadow:0 20px 50px -12px rgba(0,0,0,.55);
+  --hero-ink:#faf6ec;
+  --hero-muted:#a8a294;
+  color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f6f1e7;
+  --bg-2:#efe9dc;
+  --surface:#fdfaf3;
+  --surface-2:#f2ecdf;
+  --ink:#26231d;
+  --ink-strong:#17150f;
+  --muted:#6f6a5e;
+  --line:rgba(38,35,29,.16);
+  --line-soft:rgba(38,35,29,.08);
+  --gold:#a06e1c;
+  --gold-soft:rgba(160,110,28,.1);
+  --gold-line:rgba(160,110,28,.38);
+  --shadow:0 20px 45px -18px rgba(60,45,15,.28);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f1e7;
+    --bg-2:#efe9dc;
+    --surface:#fdfaf3;
+    --surface-2:#f2ecdf;
+    --ink:#26231d;
+    --ink-strong:#17150f;
+    --muted:#6f6a5e;
+    --line:rgba(38,35,29,.16);
+    --line-soft:rgba(38,35,29,.08);
+    --gold:#a06e1c;
+    --gold-soft:rgba(160,110,28,.1);
+    --gold-line:rgba(160,110,28,.38);
+    --shadow:0 20px 45px -18px rgba(60,45,15,.28);
+    color-scheme:light;
+  }
+}
+
+/* ============ Base ============ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-weight:400;
+  line-height:1.75;
+  letter-spacing:.02em;
+  transition:background .45s ease,color .45s ease;
+  overflow-x:hidden;
+}
+.serif{font-family:"Noto Serif TC","Songti TC","STSong",serif}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#141310}
+
+/* grain texture */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+
+/* ============ Nav（固定深色墨帶，兩種主題皆然） ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(13,14,17,.72);
+  border-bottom:1px solid rgba(236,231,219,.09);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.nav-logo{font-family:"Noto Serif TC",serif;font-weight:900;font-size:1.05rem;letter-spacing:.14em;color:#faf6ec}
+.nav-logo em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:#d9a441;margin-left:.5em;letter-spacing:.04em}
+.nav-links{display:flex;gap:clamp(14px,2.4vw,30px);align-items:center;font-size:.86rem;letter-spacing:.12em}
+.nav-links a{color:#a8a294;transition:color .25s}
+.nav-links a:hover{color:#d9a441}
+@media (max-width:760px){.nav-links a{display:none}}
+
+/* theme toggle */
+.theme-btn{
+  width:40px;height:40px;border-radius:50%;border:1px solid rgba(236,231,219,.28);
+  background:transparent;color:#ece7db;cursor:pointer;
+  display:grid;place-items:center;transition:border-color .25s,transform .25s;
+}
+.theme-btn:hover{border-color:var(--gold);transform:rotate(18deg)}
+.theme-btn svg{width:17px;height:17px}
+[data-theme="light"] .icon-moon{display:none}
+[data-theme="dark"] .icon-sun{display:none}
+:root:not([data-theme]) .icon-sun{display:none}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]) .icon-sun{display:block}
+  :root:not([data-theme]) .icon-moon{display:none}
+}
+
+/* ============ Hero (永遠深色，與棚拍背景融合) ============ */
+.hero{
+  position:relative;min-height:100svh;
+  background:radial-gradient(125% 100% at 74% 30%,#25272e 0%,#16171c 50%,#0c0d10 100%);
+  color:var(--hero-ink);
+  display:flex;align-items:stretch;overflow:hidden;
+}
+/* 右緣直排裝飾字 */
+.hero::after{
+  content:"GENERATIVE AI × EDUCATION";
+  position:absolute;top:50%;right:clamp(8px,1.6vw,22px);transform:translateY(-50%);
+  writing-mode:vertical-rl;
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:.78rem;
+  letter-spacing:.5em;color:rgba(217,164,65,.5);
+  border-left:1px solid rgba(217,164,65,.25);padding-left:10px;
+}
+@media (max-width:860px){.hero::after{display:none}}
+.hero-grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:0;
+  width:100%;max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px);
+}
+.hero-copy{display:flex;flex-direction:column;justify-content:center;padding:110px 0 170px}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:14px;color:var(--gold);
+  font-size:.82rem;letter-spacing:.34em;margin-bottom:26px;
+}
+.hero-eyebrow::before{content:"";width:44px;height:1px;background:var(--gold-line)}
+.hero-name{
+  font-family:"Noto Serif TC",serif;font-weight:900;
+  font-size:clamp(3.4rem,9vw,6.4rem);line-height:1.08;letter-spacing:.06em;
+  color:var(--hero-ink);
+}
+.hero-name .en{
+  display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+  font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:.28em;color:var(--gold);margin-top:14px;
+}
+.hero-titles{
+  margin-top:30px;display:grid;grid-template-columns:repeat(2,auto);
+  justify-content:start;gap:12px 40px;
+  font-size:clamp(.86rem,1.4vw,.98rem);color:var(--hero-muted);letter-spacing:.06em;
+}
+.hero-titles span{position:relative;padding-left:20px}
+.hero-titles span::before{
+  content:"";position:absolute;left:0;top:.7em;width:10px;height:1px;background:var(--gold);
+}
+@media (max-width:560px){.hero-titles{grid-template-columns:1fr;gap:10px}}
+.hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
+.hero-social{display:flex;gap:14px;margin-top:36px}
+.hero-social a{
+  width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
+  display:grid;place-items:center;color:var(--hero-muted);
+  transition:all .3s ease;
+}
+.hero-social a:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
+.hero-social svg{width:17px;height:17px;fill:currentColor}
+
+.hero-photo{position:relative;display:flex;align-items:flex-end;justify-content:center}
+.hero-photo img{
+  width:min(46vw,470px);max-height:88svh;object-fit:contain;object-position:bottom;
+  -webkit-mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
+  mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
+}
+/* 底部統計帶 */
+.hero-stats{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  border-top:1px solid rgba(236,231,219,.12);
+  background:linear-gradient(to top,rgba(10,10,13,.85),rgba(10,10,13,.35));
+  backdrop-filter:blur(6px);
+}
+.hero-stats-inner{
+  max-width:1180px;margin:0 auto;padding:18px clamp(20px,4vw,48px);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.stat .num{
+  font-family:"Cormorant Garamond",serif;font-weight:700;
+  font-size:clamp(1.7rem,3.4vw,2.5rem);color:var(--gold);line-height:1.1;
+}
+.stat .num small{font-size:.55em;margin-left:2px}
+.stat .lbl{font-size:clamp(.68rem,1.1vw,.8rem);letter-spacing:.16em;color:var(--hero-muted)}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-copy{padding:110px 0 0;text-align:left}
+  .hero-photo{margin:22px 0 48px;align-items:center}
+  .hero-photo img{
+    width:min(82vw,360px);aspect-ratio:1/1;max-height:none;
+    object-fit:cover;object-position:top;border-radius:16px;
+    -webkit-mask-image:radial-gradient(140% 140% at 50% 42%,#000 60%,transparent 100%);
+    mask-image:radial-gradient(140% 140% at 50% 42%,#000 60%,transparent 100%);
+  }
+  .hero{min-height:auto;padding-bottom:150px}
+  .hero-stats-inner{grid-template-columns:repeat(2,1fr);gap:10px 20px;padding-bottom:14px}
+  .hero-stats{position:absolute}
+}
+/* 平板區間：置中的封面式構圖，避免單欄靠左造成右側大片留白 */
+@media (min-width:561px) and (max-width:860px){
+  .hero-copy{align-items:center;text-align:center;padding-top:96px}
+  .hero-eyebrow{justify-content:center;margin-bottom:20px}
+  .hero-eyebrow::after{content:"";width:44px;height:1px;background:var(--gold-line)}
+  .hero-titles{justify-content:center;gap:12px 48px;margin-top:24px}
+  .hero-titles span{text-align:left;justify-self:start}
+  .hero-lead{margin:16px auto 0}
+  .hero-social{justify-content:center;margin-top:28px}
+  .hero-photo{margin:30px 0 12px}
+  .hero{padding-bottom:104px}
+  .hero-stats-inner{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ============ Sections ============ */
+section{padding:clamp(70px,10vw,130px) 0}
+.sec-head{display:flex;align-items:baseline;gap:22px;margin-bottom:clamp(34px,5vw,60px)}
+.sec-no{
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+  font-size:clamp(1.1rem,2vw,1.4rem);color:var(--gold);letter-spacing:.1em;
+}
+.sec-title{
+  font-family:"Noto Serif TC",serif;font-weight:900;
+  font-size:clamp(1.7rem,4vw,2.6rem);letter-spacing:.1em;color:var(--ink-strong);
+}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+.sec-sub{margin:-24px 0 40px;color:var(--muted);font-size:.92rem;letter-spacing:.04em}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.65,.25,1),transform .8s cubic-bezier(.2,.65,.25,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 01 關於 ============ */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.role{
+  background:var(--surface);padding:clamp(24px,3vw,36px);
+  position:relative;transition:background .35s ease;
+}
+.role:hover{background:var(--surface-2)}
+.role .idx{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:1rem}
+.role h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:1.08rem;letter-spacing:.08em;margin:10px 0 12px;color:var(--ink-strong)}
+.role p{font-size:.86rem;color:var(--muted);font-weight:300}
+
+/* ============ 02 著作 ============ */
+/* 書架 */
+.shelf{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));
+  gap:clamp(16px,2.2vw,26px);align-items:start;
+}
+.book{position:relative;transition:transform .4s cubic-bezier(.2,.65,.25,1)}
+.book:hover{transform:translateY(-8px)}
+.book .cover{
+  border-radius:3px 6px 6px 3px;overflow:hidden;box-shadow:var(--shadow);
+  border:1px solid var(--line-soft);
+  aspect-ratio:3/4.1;background:var(--surface-2);position:relative;
+  transform-origin:left center;transition:transform .5s cubic-bezier(.2,.65,.25,1);
+}
+/* 書脊高光與書口陰影，做出實體書質感 */
+.book .cover::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 9%,transparent 86%,rgba(0,0,0,.22) 100%);
+}
+.book:hover .cover{transform:perspective(900px) rotateY(-10deg)}
+.book .cover img{width:100%;height:100%;object-fit:cover}
+.book figcaption{margin-top:12px;font-size:.78rem;color:var(--muted);line-height:1.5;letter-spacing:.02em}
+.tag{
+  display:inline-block;font-size:.66rem;letter-spacing:.14em;color:var(--gold);
+  border:1px solid var(--gold-line);border-radius:99px;padding:1px 9px;margin-bottom:7px;
+}
+@media (max-width:560px){
+  .shelf{grid-template-columns:repeat(2,1fr);gap:26px 18px}
+}
+
+/* 排行榜 proof */
+.proof{margin-top:clamp(46px,6vw,70px)}
+.proof-label{
+  display:flex;align-items:center;gap:14px;margin-bottom:24px;
+  font-size:.82rem;letter-spacing:.28em;color:var(--gold);
+}
+.proof-label::after{content:"";flex:1;height:1px;background:var(--gold-line);opacity:.5}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(16px,2.4vw,26px)}
+.shot{
+  border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.shot .bar{
+  display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line-soft);
+  background:var(--surface-2);
+}
+.shot .bar i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.shot .bar i:first-child{background:var(--gold);opacity:.8}
+.shot img{width:100%}
+.shot figcaption{padding:12px 16px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line-soft)}
+
+/* ============ 03 授課 ============ */
+.teach-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-bottom:clamp(40px,5vw,60px)}
+.tstat{background:var(--surface);padding:clamp(22px,3vw,36px);text-align:center}
+.tstat .num{font-family:"Cormorant Garamond",serif;font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);color:var(--gold);line-height:1}
+.tstat .num .plus{font-size:.44em;vertical-align:.85em;margin-left:3px;opacity:.85}
+.tstat .lbl{margin-top:8px;font-size:clamp(.74rem,1.4vw,.88rem);letter-spacing:.2em;color:var(--muted)}
+.tstat .sub{margin-top:5px;font-size:clamp(.62rem,1.1vw,.72rem);letter-spacing:.14em;color:var(--muted);opacity:.75}
+/* 手機版：統計改橫向一列（數字＋說明），避免三欄擠壓文字 */
+@media (max-width:560px){
+  .teach-stats{grid-template-columns:1fr}
+  .tstat{
+    display:grid;grid-template-columns:auto 1fr;align-items:center;
+    text-align:left;padding:16px 24px 16px 40px;
+  }
+  .tstat .num{grid-row:1/3;font-size:2.2rem;min-width:2.4em;text-align:left}
+  .tstat .lbl{margin-top:0}
+  .tstat .sub{margin-top:3px}
+}
+
+.chips-block{margin-bottom:34px}
+.chips-block h4{
+  font-family:"Noto Serif TC",serif;font-weight:700;font-size:1rem;letter-spacing:.16em;
+  color:var(--ink-strong);margin-bottom:16px;display:flex;align-items:center;gap:12px;
+}
+.chips-block h4 em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:var(--gold);font-size:.9rem;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{
+  font-size:.8rem;letter-spacing:.05em;color:var(--ink);
+  border:1px solid var(--line);border-radius:99px;padding:5px 15px;font-weight:300;
+  transition:border-color .25s,background .25s,color .25s;
+  font-family:inherit;background:transparent;cursor:pointer;line-height:1.75;
+}
+.chip:hover{border-color:var(--gold-line);background:var(--gold-soft)}
+.chip.active{border-color:var(--gold);background:var(--gold-soft);color:var(--ink-strong)}
+.chip b{font-weight:500;color:var(--gold);margin-left:6px;font-size:.74rem}
+
+/* 點擊單位展開的課程面板 */
+.chip-panel{
+  display:none;margin-top:18px;position:relative;
+  border:1px solid var(--gold-line);border-left:3px solid var(--gold);border-radius:10px;
+  background:var(--surface);padding:20px 26px;box-shadow:var(--shadow);
+}
+.chip-panel.open{display:block;animation:panelIn .4s cubic-bezier(.2,.65,.25,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cp-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px;padding-right:34px;flex-wrap:wrap}
+.cp-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:1.05rem;letter-spacing:.08em;color:var(--gold)}
+.cp-count{font-size:.74rem;letter-spacing:.16em;color:var(--muted)}
+.cp-list{list-style:none;display:grid;gap:10px;grid-template-columns:1fr}
+.cp-list li{position:relative;padding-left:20px;font-size:.88rem;font-weight:300;color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.cp-list li::before{content:"";position:absolute;left:0;top:.8em;width:10px;height:1px;background:var(--gold)}
+.cp-list a{border-bottom:1px solid var(--gold-line);transition:color .25s}
+.cp-list a:hover{color:var(--gold)}
+.cp-close{
+  position:absolute;top:10px;right:12px;background:none;border:none;cursor:pointer;
+  color:var(--muted);font-size:1.25rem;line-height:1;padding:4px;font-family:inherit;
+}
+.cp-close:hover{color:var(--gold)}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{transition:none}
+  .chip-panel.open{animation:none}
+  html{scroll-behavior:auto}
+}
+
+/* gallery */
+.gallery{
+  margin-top:clamp(46px,6vw,70px);
+  display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,1.8vw,20px);
+}
+.gitem{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line-soft);box-shadow:var(--shadow)}
+.gitem img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.gitem:hover img{transform:scale(1.05)}
+.gitem figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:34px 16px 12px;
+  font-size:.78rem;letter-spacing:.12em;color:#f5f1e6;
+  background:linear-gradient(to top,rgba(8,8,10,.82),transparent);
+}
+.g-a{grid-column:span 7;aspect-ratio:16/10}
+.g-b{grid-column:span 5;aspect-ratio:auto}
+.g-c{grid-column:span 6;aspect-ratio:16/9}
+.g-d{grid-column:span 6;aspect-ratio:16/9}
+@media (max-width:700px){
+  .g-a,.g-b,.g-c,.g-d{grid-column:span 12;aspect-ratio:16/10}
+}
+
+/* ============ 04 媒體 ============ */
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,26px)}
+@media (max-width:700px){.media-grid{grid-template-columns:1fr}}
+/* 統一裁切比例；一律從最上方取景，避免切到人物頭部 */
+.media-grid .shot img{aspect-ratio:2/1;width:100%;object-fit:cover;object-position:top}
+.media-grid .gitem{aspect-ratio:2/1}
+.media-grid .gitem img{object-position:top}
+.media-grid+.media-grid{margin-top:clamp(16px,2.4vw,26px)}
+/* 收尾金句：置中壓軸 */
+.quote-final{
+  margin:clamp(60px,9vw,100px) auto 0;max-width:30em;text-align:center;position:relative;
+  font-family:"Noto Serif TC",serif;font-weight:600;
+  font-size:clamp(1.15rem,2.6vw,1.55rem);line-height:2;color:var(--ink-strong);
+  padding-top:36px;
+}
+.quote-final::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:46px;height:2px;background:var(--gold);
+}
+.quote-final .src{
+  display:block;margin-top:18px;font-family:"Noto Sans TC",sans-serif;font-weight:400;
+  font-size:.76rem;letter-spacing:.26em;color:var(--muted);
+}
+
+/* ============ Footer ============ */
+footer{
+  border-top:1px solid var(--line-soft);padding:clamp(50px,7vw,80px) 0 40px;
+  background:var(--bg-2);transition:background .45s ease;
+}
+.foot-top{
+  display:grid;grid-template-columns:1.1fr 1.6fr;gap:clamp(36px,6vw,80px);
+  align-items:start;
+}
+.foot-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:.12em;color:var(--ink-strong)}
+.foot-name em{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.5em;color:var(--gold);letter-spacing:.26em;margin-top:8px}
+.foot-tag{margin-top:18px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:22em}
+.foot-cols{display:grid;grid-template-columns:repeat(3,auto);gap:clamp(24px,4vw,60px);justify-content:end}
+.foot-col h6{
+  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;
+  margin-bottom:16px;text-transform:uppercase;
+}
+.foot-col a,.foot-col p{
+  display:flex;align-items:center;gap:9px;
+  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;
+  margin-bottom:10px;transition:color .25s;
+}
+.foot-col a:hover{color:var(--gold)}
+.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+.foot-col .gold-link{color:var(--gold);border-bottom:1px solid var(--gold-line);padding-bottom:2px;display:inline-block}
+@media (max-width:860px){
+  .foot-top{grid-template-columns:1fr}
+  .foot-cols{justify-content:start;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));width:100%}
+}
+.copy{margin-top:clamp(40px,6vw,60px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
+.to-top{color:var(--muted);transition:color .25s;letter-spacing:.16em}
+.to-top:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ======= Nav ======= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#top">林鼎淵<em>Dean Lin</em></a>
+    <div class="nav-links">
+      <a href="#about">關於</a>
+      <a href="#books">著作</a>
+      <a href="#teaching">授課</a>
+      <a href="#media">媒體</a>
+      <button class="theme-btn" id="themeBtn" aria-label="切換亮暗模式" title="切換亮暗模式">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ======= Hero ======= -->
+<header class="hero" id="top">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">生成式 AI 講師・作家・軟體專家</div>
+      <h1 class="hero-name">林鼎淵<span class="en">DEAN LIN</span></h1>
+      <div class="hero-titles">
+        <span>外商資安公司軟體專家</span>
+        <span>生成式 AI 創新學院發起人</span>
+        <span>全台第一本 ChatGPT 應用專書作者</span>
+        <span>科技島、商業周刊專欄作家</span>
+      </div>
+      <p class="hero-lead">十五年軟體開發資歷，從工程師、專案經理到技術主管；如今把技術寫成書、講成課，陪伴企業與校園把 AI 真正用起來。</p>
+      <div class="hero-social">
+        <a href="https://www.youtube.com/@dlcorner" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg></a>
+        <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg></a>
+        <a href="https://github.com/dean9703111" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></a>
+        <a href="https://medium.com/@dean-lin" target="_blank" rel="noopener" aria-label="Medium"><svg viewBox="0 0 24 24"><path d="M13.5 12A6.8 6.8 0 1 1 0 12a6.8 6.8 0 0 1 13.5 0zm7.4 0c0 3.5-1.5 6.4-3.4 6.4s-3.4-2.9-3.4-6.4 1.5-6.4 3.4-6.4 3.4 2.9 3.4 6.4zm3.1 0c0 3.2-.5 5.7-1.2 5.7S21.6 15.2 21.6 12s.5-5.7 1.2-5.7S24 8.8 24 12z"/></svg></a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="assets/形象照/個人照.jpg" alt="林鼎淵形象照" fetchpriority="high">
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stats-inner">
+      <div class="stat"><div class="num">15<small>+</small></div><div class="lbl">年開發經驗</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">本出版著作</div></div>
+      <div class="stat"><div class="num">450<small>萬+</small></div><div class="lbl">文章瀏覽量</div></div>
+      <div class="stat"><div class="num">100<small>+</small></div><div class="lbl">場授課與顧問</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ======= 01 關於 ======= -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">01</span><h2 class="sec-title">五種身分，一件事</h2></div>
+    <p class="sec-sub reveal">把複雜的技術，變成人人都能上手的生產力。</p>
+    <div class="about-grid reveal">
+      <div class="role">
+        <div class="idx">i.</div>
+        <h3>外商軟體工程師</h3>
+        <p>超過 15 年開發經驗，歷任工程師、專案經理、技術主管，具備跨部門、跨團隊的溝通與資訊整合能力。</p>
+      </div>
+      <div class="role">
+        <div class="idx">ii.</div>
+        <h3>暢銷書作家</h3>
+        <p>出版 7 本技術與職涯類專書，包括《ChatGPT 與 AI 繪圖效率大師》、《工程師下班有約》、《給全端工程師的職涯筆記》等。</p>
+      </div>
+      <div class="role">
+        <div class="idx">iii.</div>
+        <h3>企業內訓講師</h3>
+        <p>授課涵蓋生成式 AI 應用、程式開發、數位轉型，協助不同產業快速導入 AI 工具提升生產力。</p>
+      </div>
+      <div class="role">
+        <div class="idx">iv.</div>
+        <h3>部落客／專欄作家</h3>
+        <p>撰寫 400+ 篇文章、累積超過 450 萬瀏覽，長期分享最新技術、團隊合作與工程師職涯。</p>
+      </div>
+      <div class="role">
+        <div class="idx">v.</div>
+        <h3>YouTube 創作者</h3>
+        <p>經營頻道《工程師下班有約》，內容結合程式開發、AI 教學與生涯規劃。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= 02 著作 ======= -->
+<section id="books" style="background:var(--bg-2);transition:background .45s ease">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">02</span><h2 class="sec-title">出版著作</h2></div>
+    <p class="sec-sub reveal">七本專書，從爬蟲、職涯寫到生成式 AI——包含全台第一本 ChatGPT 應用專書。</p>
+    <div class="shelf reveal">
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050284460" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/下班有約.jpg" alt="工程師下班有約：企業內訓講師帶你認清職涯真相！" loading="lazy"></div>
+          <figcaption><span class="tag">2025 新作</span><br>工程師下班有約：企業內訓講師帶你認清職涯真相！</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050249393" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/ChatGPT3.png" alt="ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）" loading="lazy"></div>
+          <figcaption><span class="tag">第三版</span><br>ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050170586" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/ChatGPT2.png" alt="ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）" loading="lazy"></div>
+          <figcaption><span class="tag">第二版</span><br>ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050161203" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/ChatGPT1.png" alt="ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用" loading="lazy"></div>
+          <figcaption><span class="tag">全台第一本</span><br>ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050170581" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/工程師職涯v2.png" alt="給全端工程師的職涯生存筆記（ChatGPT 加強版）" loading="lazy"></div>
+          <figcaption><span class="tag">加強版</span><br>給全端工程師的職涯生存筆記（ChatGPT 加強版）</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050140367" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/工程師職涯v1.png" alt="給全端工程師的職涯生存筆記：履歷×面試×職場" loading="lazy"></div>
+          <figcaption><span class="tag">職涯</span><br>給全端工程師的職涯生存筆記：履歷×面試×職場</figcaption>
+        </a>
+      </figure>
+      <figure class="book">
+        <a href="https://www.books.com.tw/products/E050106521" target="_blank" rel="noopener">
+          <div class="cover"><img src="assets/書籍/網路爬蟲.png" alt="JavaScript 爬蟲新思路！用 Node.js 打造 FB &amp; IG 爬蟲專案" loading="lazy"></div>
+          <figcaption><span class="tag">實戰</span><br>JavaScript 爬蟲新思路！用 Node.js 打造 FB &amp; IG 爬蟲專案</figcaption>
+        </a>
+      </figure>
+    </div>
+
+    <div class="proof reveal">
+      <div class="proof-label">暢銷實績・百大排行榜</div>
+      <div class="proof-grid">
+        <figure class="shot">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="assets/成就/ChatGPT排行榜.jpeg" alt="《ChatGPT 與 AI 繪圖效率大師》登上暢銷排行榜" loading="lazy">
+          <figcaption>《ChatGPT 與 AI 繪圖效率大師》登上暢銷排行榜</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="assets/成就/工程師職涯排行榜.png" alt="《給全端工程師的職涯生存筆記》入選百大暢銷榜" loading="lazy">
+          <figcaption>《給全端工程師的職涯生存筆記》入選百大暢銷榜</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="assets/成就/爬蟲排行榜.jpeg" alt="《JavaScript 爬蟲新思路》登上暢銷排行榜" loading="lazy">
+          <figcaption>《JavaScript 爬蟲新思路》登上暢銷排行榜</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= 03 授課 ======= -->
+<section id="teaching">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">03</span><h2 class="sec-title">授課足跡</h2></div>
+    <p class="sec-sub reveal">從上市企業到國小教室，累積 93 場授課與 9 次顧問諮詢——<span style="color:var(--gold)">點擊單位名稱</span>即可展開課程清單。</p>
+
+    <div class="teach-stats reveal">
+      <div class="tstat"><div class="num">21</div><div class="lbl">線上／平台課程</div><div class="sub">跨 15 個合作平台</div></div>
+      <div class="tstat"><div class="num">47<span class="plus">+7</span></div><div class="lbl">企業內訓</div><div class="sub">含 7 次顧問陪跑</div></div>
+      <div class="tstat"><div class="num">25<span class="plus">+2</span></div><div class="lbl">校園講座</div><div class="sub">含 2 次課後諮詢</div></div>
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>企業內訓 <em>Corporate Training</em></h4>
+      <div class="chips">
+        <button class="chip" data-unit="中華電信" aria-expanded="false">中華電信<b>×11</b></button>
+        <button class="chip" data-unit="社團法人中華人力資源管理協會" aria-expanded="false">社團法人中華人力資源管理協會<b>×4</b></button>
+        <button class="chip" data-unit="中衛中心" aria-expanded="false">中衛中心<b>×4＋顧問</b></button>
+        <button class="chip" data-unit="滾動力" aria-expanded="false">滾動力<b>×3</b></button>
+        <button class="chip" data-unit="吉田建築" aria-expanded="false">吉田建築<b>×2</b></button>
+        <button class="chip" data-unit="富強鑫精密工業" aria-expanded="false">富強鑫精密工業<b>×2</b></button>
+        <button class="chip" data-unit="銘真科技" aria-expanded="false">銘真科技<b>×2</b></button>
+        <button class="chip" data-unit="中華郵政" aria-expanded="false">中華郵政</button>
+        <button class="chip" data-unit="中華黃頁" aria-expanded="false">中華黃頁</button>
+        <button class="chip" data-unit="精誠資訊" aria-expanded="false">精誠資訊</button>
+        <button class="chip" data-unit="群益證券" aria-expanded="false">群益證券</button>
+        <button class="chip" data-unit="緯穎科技" aria-expanded="false">緯穎科技</button>
+        <button class="chip" data-unit="三軍總醫院" aria-expanded="false">三軍總醫院</button>
+        <button class="chip" data-unit="智慧財產局" aria-expanded="false">智慧財產局</button>
+        <button class="chip" data-unit="勞保局" aria-expanded="false">勞保局</button>
+        <button class="chip" data-unit="環境署" aria-expanded="false">環境署</button>
+        <button class="chip" data-unit="僑務委員會" aria-expanded="false">僑務委員會</button>
+        <button class="chip" data-unit="嘉義縣政府" aria-expanded="false">嘉義縣政府</button>
+        <button class="chip" data-unit="中華民國資訊軟體協會" aria-expanded="false">中華民國資訊軟體協會</button>
+        <button class="chip" data-unit="台灣鍛造協會" aria-expanded="false">台灣鍛造協會</button>
+        <button class="chip" data-unit="金屬中心圖書館" aria-expanded="false">金屬中心圖書館</button>
+        <button class="chip" data-unit="甲山林" aria-expanded="false">甲山林</button>
+        <button class="chip" data-unit="全興國際" aria-expanded="false">全興國際</button>
+        <button class="chip" data-unit="青農會" aria-expanded="false">青農會</button>
+        <button class="chip" data-unit="Rmagic Club" aria-expanded="false">Rmagic Club</button>
+        <button class="chip" data-unit="EDA" aria-expanded="false">EDA</button>
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>校園講座 <em>Campus Talks</em></h4>
+      <div class="chips">
+        <button class="chip" data-unit="數位實驗中學" aria-expanded="false">數位實驗中學<b>×10</b></button>
+        <button class="chip" data-unit="臺灣藝術大學" aria-expanded="false">臺灣藝術大學<b>×2</b></button>
+        <button class="chip" data-unit="致理科技大學" aria-expanded="false">致理科技大學<b>×2＋諮詢</b></button>
+        <button class="chip" data-unit="大安高工" aria-expanded="false">大安高工<b>×2</b></button>
+        <button class="chip" data-unit="國防大學" aria-expanded="false">國防大學</button>
+        <button class="chip" data-unit="臺北科技大學" aria-expanded="false">臺北科技大學</button>
+        <button class="chip" data-unit="臺中科技大學" aria-expanded="false">臺中科技大學</button>
+        <button class="chip" data-unit="淡江大學" aria-expanded="false">淡江大學</button>
+        <button class="chip" data-unit="大葉大學" aria-expanded="false">大葉大學</button>
+        <button class="chip" data-unit="敦化國中" aria-expanded="false">敦化國中</button>
+        <button class="chip" data-unit="信義國中" aria-expanded="false">信義國中</button>
+        <button class="chip" data-unit="南門國中" aria-expanded="false">南門國中</button>
+        <button class="chip" data-unit="老松國小" aria-expanded="false">老松國小</button>
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="chips-block reveal">
+      <h4>線上／平台課程 <em>Online Courses</em></h4>
+      <div class="chips">
+        <button class="chip" data-unit="Tibame" aria-expanded="false">Tibame<b>×3</b></button>
+        <button class="chip" data-unit="T 客邦" aria-expanded="false">T 客邦<b>×2</b></button>
+        <button class="chip" data-unit="商業週刊" aria-expanded="false">商業週刊<b>×2</b></button>
+        <button class="chip" data-unit="Mastertalk" aria-expanded="false">Mastertalk<b>×2</b></button>
+        <button class="chip" data-unit="資料科學家的工作日常" aria-expanded="false">資料科學家的工作日常<b>×2</b></button>
+        <button class="chip" data-unit="遠見雜誌" aria-expanded="false">遠見雜誌</button>
+        <button class="chip" data-unit="iThome" aria-expanded="false">iThome</button>
+        <button class="chip" data-unit="Cake" aria-expanded="false">Cake</button>
+        <button class="chip" data-unit="生成式 AI 創新學院" aria-expanded="false">生成式 AI 創新學院</button>
+        <button class="chip" data-unit="天瓏書局" aria-expanded="false">天瓏書局</button>
+        <button class="chip" data-unit="好實力" aria-expanded="false">好實力</button>
+        <button class="chip" data-unit="馨天鑫地" aria-expanded="false">馨天鑫地</button>
+        <button class="chip" data-unit="生涯設計師" aria-expanded="false">生涯設計師</button>
+        <button class="chip" data-unit="軟體開發之路" aria-expanded="false">軟體開發之路</button>
+        <button class="chip" data-unit="睿華國際" aria-expanded="false">睿華國際</button>
+      </div>
+      <div class="chip-panel" role="region" aria-label="課程清單">
+        <button class="cp-close" aria-label="關閉課程清單">×</button>
+        <div class="cp-head"><span class="cp-title"></span><span class="cp-count"></span></div>
+        <ul class="cp-list"></ul>
+      </div>
+    </div>
+
+    <div class="gallery reveal">
+      <figure class="gitem g-a"><img src="assets/企業內訓/企業.jpeg" alt="企業內訓・授課現場" loading="lazy"><figcaption>企業內訓・授課現場</figcaption></figure>
+      <figure class="gitem g-b"><img src="assets/企業內訓/企業2.jpeg" alt="企業內訓・實戰工作坊" loading="lazy"><figcaption>企業內訓・實戰工作坊</figcaption></figure>
+      <figure class="gitem g-c"><img src="assets/校園講座/台藝大.jpeg" alt="校園講座・臺灣藝術大學" loading="lazy"><figcaption>校園講座・臺灣藝術大學</figcaption></figure>
+      <figure class="gitem g-d"><img src="assets/校園講座/大安高工.jpg" alt="校園講座・大安高工" loading="lazy"><figcaption>校園講座・大安高工</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ======= 04 媒體 ======= -->
+<section id="media" style="background:var(--bg-2);transition:background .45s ease">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-no">04</span><h2 class="sec-title">媒體與專欄</h2></div>
+    <p class="sec-sub reveal">商周名人堂、科技島駐站專家，並受經理人雜誌、人間衛視、1111 人力銀行等單位專訪。</p>
+    <div class="media-grid reveal">
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/專欄作家/講師履歷_image3.png" alt="商周財富網・名人堂專欄《林鼎淵 AI 工作術》" loading="lazy">
+        <figcaption>商周財富網・名人堂專欄《林鼎淵 AI 工作術》</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/專欄作家/講師履歷_image2.png" alt="科技島・駐站專家" loading="lazy">
+        <figcaption>科技島・駐站專家</figcaption>
+      </figure>
+    </div>
+    <div class="media-grid reveal">
+      <figure class="gitem">
+        <img src="assets/節目錄影/人間衛視.jpg" alt="節目錄影・人間衛視" loading="lazy">
+        <figcaption>節目錄影・人間衛視</figcaption>
+      </figure>
+      <figure class="gitem">
+        <img src="assets/節目錄影/1111.jpg" alt="專訪・1111 人力銀行" loading="lazy">
+        <figcaption>專訪・1111 人力銀行</figcaption>
+      </figure>
+    </div>
+    <blockquote class="quote-final reveal">
+      「工作」不等於「職涯」——<br>把自己當成一間公司來經營。
+      <span class="src">DEAN LIN・工程師下班有約</span>
+    </blockquote>
+  </div>
+</section>
+
+</main>
+
+<!-- ======= Footer ======= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="foot-name">林鼎淵<em>DEAN LIN</em></div>
+        <p class="foot-tag">把複雜的技術，變成人人都能上手的生產力。</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h6>導覽</h6>
+          <a href="#about">關於</a>
+          <a href="#books">出版著作</a>
+          <a href="#teaching">授課足跡</a>
+          <a href="#media">媒體與專欄</a>
+        </div>
+        <div class="foot-col">
+          <h6>社群</h6>
+          <a href="https://www.youtube.com/@dlcorner" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>YouTube</a>
+          <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Facebook</a>
+          <a href="https://github.com/dean9703111" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>GitHub</a>
+          <a href="https://medium.com/@dean-lin" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M13.5 12A6.8 6.8 0 1 1 0 12a6.8 6.8 0 0 1 13.5 0zm7.4 0c0 3.5-1.5 6.4-3.4 6.4s-3.4-2.9-3.4-6.4 1.5-6.4 3.4-6.4 3.4 2.9 3.4 6.4zm3.1 0c0 3.2-.5 5.7-1.2 5.7S21.6 15.2 21.6 12s.5-5.7 1.2-5.7S24 8.8 24 12z"/></svg>Medium</a>
+        </div>
+        <div class="foot-col">
+          <h6>合作邀約</h6>
+          <p>企業內訓・校園講座</p>
+          <p>線上課程・媒體邀訪</p>
+          <a class="gold-link" href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener">透過 Facebook 洽詢 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 Dean Lin 林鼎淵・生成式 AI 講師・暢銷書作家・軟體專家</span>
+      <a class="to-top" href="#top">回到頂部 ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== 主題切換：預設跟隨系統，手動切換後記憶 =====
+const btn = document.getElementById('themeBtn');
+const root = document.documentElement;
+const saved = localStorage.getItem('theme');
+if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+btn.addEventListener('click', () => {
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const current = root.dataset.theme || (sysDark ? 'dark' : 'light');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next;
+  localStorage.setItem('theme', next);
+});
+
+// ===== 進場顯示動畫 =====
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ===== 點擊單位展開課程清單 =====
+const COURSES = {
+  "中華電信": [
+    "人機合一終極指南——手把手教你 ChatGPT 和 Midjourney",
+    "與 ChatGPT 對話，不會寫程式也能寫程式",
+    "早上點下班系列——用 AI 做簡報",
+    "如何利用 AI 製作短影音",
+    "使用 AI 生成圖片的技巧",
+    "使用文字、圖片生成 AI 影片",
+    "使用腳本生成 AI 短影音",
+    "Vibe Coding 學習地圖，了解 Gemini、Google AI Studio、Antigravity 的使用情境",
+    "把想法化為現實！用 Vibe Coding 完成輕量級全端專案",
+    "建立自動化測試，解決 Vibe Coding 痛點",
+    "掌握 Agent Skills，讓 AI 從庸才變專家"
+  ],
+  "社團法人中華人力資源管理協會": [
+    "AI 簡報神助攻！",
+    "用腳本生成 AI 短影音",
+    "掌握 Gemini 可以直接應用在職場的最新功能！",
+    "零程式基礎，也能透過 AI 完成「網站」的實作體驗！"
+  ],
+  "中衛中心": [
+    "生成式 AI 工作應用進階班",
+    "AI 工具應用於專題簡報生成",
+    "從文件分析到 Vibe Coding：Cursor 全方位實戰應用",
+    "自動化流程設計：n8n 實戰應用",
+    "AI 導入陪跑（7 次顧問）"
+  ],
+  "滾動力": [
+    "生成式 AI 在職場的全方位應用 Part 1（ChatGPT、Copilot）",
+    "生成式 AI 在職場的全方位應用 Part 2（Midjourney、ideogram）",
+    "生成式 AI 在職場的全方位應用 Part 3（GAMMA、AIVA、Runway）"
+  ],
+  "吉田建築": [
+    "生成式 AI 在職場的全方位應用 Part 1（ChatGPT）",
+    "生成式 AI 在職場的全方位應用 Part 2（GAMMA、Midjourney、Copilot）"
+  ],
+  "富強鑫精密工業": [
+    "利用生成式 AI，改變工作型態 Part 1（ChatGPT）",
+    "利用生成式 AI，改變工作型態 Part 2（Gamma、Copilot、NotebookLM、UPDF、Runway、Suno）"
+  ],
+  "銘真科技": [
+    "生成式 AI 的全方位工作應用 Part 1",
+    "生成式 AI 的全方位工作應用 Part 2"
+  ],
+  "中華郵政": [
+    "ChatGPT 與 AI 繪圖效率大師，解放你的生產力！"
+  ],
+  "中華黃頁": [
+    "自動化您的工作流，使用 ChatGPT & AI 工具解決工作問題"
+  ],
+  "精誠資訊": [
+    "ChatGPT 職場生產力 AI 工具實戰班"
+  ],
+  "群益證券": [
+    "生成式 AI 在職場的全方位應用"
+  ],
+  "緯穎科技": [
+    "Claude Code 實戰工作坊：從 AI 寫程式到驅動開發流程"
+  ],
+  "三軍總醫院": [
+    "醫療人的 AI 優雅轉身術：用 Claude Cowork 把排班、月報表設計成自動化工具"
+  ],
+  "智慧財產局": [
+    "生成式 AI 在職場的全方位應用"
+  ],
+  "勞保局": [
+    "AI 應用案例與資安風險"
+  ],
+  "環境署": [
+    "借助 AI 提升文書處理效率——手把手帶你掌握從入門到進階的 AI 技術！"
+  ],
+  "僑務委員會": [
+    "AI 智慧辦公全攻略，Gemini 辦公應用教育訓練"
+  ],
+  "嘉義縣政府": [
+    "AI 助你打造超吸睛簡報——用 ChatGPT + Gamma 生成高質感簡報（嘉我好漾・AI 加速器啟動！嘉義青年創業專案）"
+  ],
+  "中華民國資訊軟體協會": [
+    "AI 魔法打造吸睛文案"
+  ],
+  "台灣鍛造協會": [
+    "企業如何面對生成式 AI 時代的變革與資安威脅"
+  ],
+  "金屬中心圖書館": [
+    "生成式 AI：改變我們的日常，啟發未來新生活"
+  ],
+  "甲山林": [
+    "生成式 AI 在職場的全方位應用"
+  ],
+  "全興國際": [
+    "生成式 AI 的全方位工作應用（ChatGPT/NotebookLM/Gamma/Gemini/Claude）"
+  ],
+  "青農會": [
+    "AI 輔助簡報生成術"
+  ],
+  "Rmagic Club": [
+    "ChatGPT 與 AI 繪圖效率大師，實戰分享會"
+  ],
+  "EDA": [
+    "Claude 企業級自動化實戰，掌握 Connector / Project / Skill / Cowork 的使用技巧"
+  ],
+  "數位實驗中學": [
+    "ChatGPT 實戰應用——掌握提問技巧、自訂 ChatGPT、撰寫文案、生成提案企劃",
+    "ChatGPT 實戰應用——從零開始完成 Side Project（以 LINE Bot 串接 OpenAI 為例）",
+    "AI 輔助程式開發——用 ChatGPT、Cursor、qodo 輔助開發的實用技巧",
+    "AI 高效簡報術——用 ChatGPT + Gamma + Napkin 生成高質感簡報",
+    "掌握 AI 生成圖片的關鍵技巧——DALL·E、Ideogram、Midjourney",
+    "不露臉、不錄音！用 AI 生成短影音——Runway、Haiper、Pika、Suno、Hedra、ChatGPT",
+    "用一堂課認識目前各領域最夯的生成式 AI 工具",
+    "生成式 AI 應用於教學領域——ChatGPT/Perplexity/NotebookLM/Gamma/Napkin/Gemini",
+    "從零開始 Vibe Coding——Gemini / Google AI Studio / Antigravity",
+    "自動化流程設計：n8n 實戰應用"
+  ],
+  "臺灣藝術大學": [
+    "AI 實戰速成班——手把手帶你掌握從入門到進階的 AI 技術！（113 學年度）",
+    "AI 實戰速成班——手把手帶你掌握從入門到進階的 AI 技術！（114 學年度）"
+  ],
+  "致理科技大學": [
+    "生成式 AI 的全方位應用：以專題簡報為例",
+    "生成式 AI 的全方位應用：將 AI 導入教學",
+    "課後 AI 技術諮詢（2 次）"
+  ],
+  "大安高工": [
+    "靠 AI！我在 1 年內達成 10 年份的里程碑",
+    "不走常人路！你想不到的工程師職涯"
+  ],
+  "國防大學": [
+    "掌握與 AI 溝通的技巧"
+  ],
+  "臺北科技大學": [
+    "把時間留給創造——用 AI 輕鬆搞定繁瑣的需求規格、技術文件"
+  ],
+  "臺中科技大學": [
+    "AI 職涯術：自動生成簡報 Gamma 入門介紹"
+  ],
+  "淡江大學": [
+    "工程師的下一步升級路線：從 AI 寫程式到驅動開發流程"
+  ],
+  "大葉大學": [
+    "AI 高效簡報術"
+  ],
+  "敦化國中": [
+    "ChatGPT 實戰應用——掌握提問技巧、自訂 ChatGPT、撰寫文案、生成提案企劃"
+  ],
+  "信義國中": [
+    "AI 高效簡報術——從 ChatGPT 到 Gamma"
+  ],
+  "南門國中": [
+    "ChatGPT 實戰應用——善用 AI 提升工作效率與教學品質"
+  ],
+  "老松國小": [
+    "ChatGPT 實戰應用——善用 AI 提升工作效率與教學品質"
+  ],
+  "Tibame": [
+    {
+      "t": "從 AI 寫程式到驅動開發流程，工程師的下一步升級路線",
+      "u": "https://www.youtube.com/watch?v=2OzGqCutF2w"
+    },
+    "AI 開發分水嶺｜從寫 Code 轉向流程設計的關鍵路徑",
+    {
+      "t": "Claude AI 驅動全端開發工作流｜導入 Agent Skills 提升開發品質與效率",
+      "u": "https://www.tibame.com/course/6424"
+    }
+  ],
+  "T 客邦": [
+    {
+      "t": "用 ChatGPT 實作自然語言處理專案：串接 OpenAI API，把影音變文字",
+      "u": "https://www.techbang.com/posts/105873-chatgpt-coding-nlp-project"
+    },
+    {
+      "t": "導入 ChatGPT 加速程式開發攻略：進階提問技巧、程式優化與需求規格書實戰演練",
+      "u": "https://www.techbang.com/posts/104856-chatgpt-skills"
+    }
+  ],
+  "商業週刊": [
+    {
+      "t": "AI 高效工作術：ChatGPT 職場全方位應用",
+      "u": "https://smart.businessweekly.com.tw/Event/2023/chatgptaiclass/"
+    },
+    {
+      "t": "AI 高效簡報術",
+      "u": "https://smart.businessweekly.com.tw/Event/2023/aiwork/"
+    }
+  ],
+  "Mastertalk": [
+    "ChatGPT 從日常到職場的全方位應用：文案與 Midjourney 實作",
+    "ChatGPT 從日常到職場的全方位應用：撰寫程式實作"
+  ],
+  "資料科學家的工作日常": [
+    {
+      "t": "AI 真的這麼厲害嗎？靠 ChatGPT 寫完一本書！",
+      "u": "https://www.accupass.com/event/2303121622578724733490"
+    },
+    {
+      "t": "「工作」≠「職涯」把自己當一間公司在經營",
+      "u": "https://www.accupass.com/event/2506151342541968218420"
+    }
+  ],
+  "遠見雜誌": [
+    {
+      "t": "從 ChatGPT 到 Midjourney：打造 AI 腦，高效致勝工作法",
+      "u": "https://www.gvm.com.tw/article/102511"
+    }
+  ],
+  "iThome": [
+    {
+      "t": "「你成功引起我的注意了！」——給我 30 分鐘，帶你打造吸引面試官的亮眼履歷",
+      "u": "https://itplus.ithome.com.tw/webinar-page/201"
+    }
+  ],
+  "Cake": [
+    {
+      "t": "市場不會為爛產品買單！Vibe Coding 讓你快速啟動，但「品質、維護、擴充」才決定產品能走多遠",
+      "u": "https://global.cake.me/C1BODy"
+    }
+  ],
+  "生成式 AI 創新學院": [
+    {
+      "t": "聊天就能聊出需求規畫書——用 ChatGPT 生成 PRD 的技巧",
+      "u": "https://www.technice.com.tw/review/3517/"
+    }
+  ],
+  "天瓏書局": [
+    {
+      "t": "《工程師下班有約》新書發表會",
+      "u": "https://www.accupass.com/event/2506200152141094957788"
+    }
+  ],
+  "好實力": [
+    {
+      "t": "中小企業 AI 實戰：12 大關鍵應用，從營運優化到市場拓展，一次搞定",
+      "u": "https://uhau.csd.org.tw/courses/aiwork-2025"
+    }
+  ],
+  "馨天鑫地": [
+    {
+      "t": "ChatGPT + Gamma AI 實戰速成班！",
+      "u": "https://www.accupass.com/event/2407310935061918653103"
+    }
+  ],
+  "生涯設計師": [
+    {
+      "t": "聽完這堂課，你也能用 AI 開啟斜槓人生",
+      "u": "https://lifecareerdesigner.com/2025careerannualparty/"
+    }
+  ],
+  "軟體開發之路": [
+    {
+      "t": "軟體開發之路——與大師對談",
+      "u": "https://mystudyway.kktix.cc/events/software-developer-master"
+    }
+  ],
+  "睿華國際": [
+    {
+      "t": "生成式 AI 應用與實務工作導入｜2026 企業人才培訓公開班",
+      "u": "https://www.bic-service.com/tw/modules/news/article.php?storyid=425"
+    }
+  ]
+};
+
+document.querySelectorAll('.chips-block').forEach(block => {
+  const panel = block.querySelector('.chip-panel');
+  if (!panel) return;
+  const closeAll = () => {
+    panel.classList.remove('open');
+    block.querySelectorAll('.chip.active').forEach(b => {
+      b.classList.remove('active'); b.setAttribute('aria-expanded', 'false');
+    });
+  };
+  block.querySelectorAll('button.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      closeAll();
+      if (wasActive) return;
+      btn.classList.add('active');
+      btn.setAttribute('aria-expanded', 'true');
+      const items = COURSES[btn.dataset.unit] || [];
+      panel.querySelector('.cp-title').textContent = btn.dataset.unit;
+      panel.querySelector('.cp-count').textContent = items.length + ' 項課程';
+      const ul = panel.querySelector('.cp-list');
+      ul.innerHTML = '';
+      items.forEach(c => {
+        const li = document.createElement('li');
+        if (typeof c === 'string') {
+          li.textContent = c;
+        } else {
+          const a = document.createElement('a');
+          a.href = c.u; a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = c.t;
+          li.appendChild(a);
+        }
+        ul.appendChild(li);
+      });
+      panel.classList.add('open');
+    });
+  });
+  panel.querySelector('.cp-close').addEventListener('click', closeAll);
+});
+</script>
+</body>
+</html>
