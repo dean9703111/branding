@@ -194,9 +194,10 @@ body::after{
 .hero-social a:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
 .hero-social svg{width:17px;height:17px;fill:currentColor}
 
-.hero-photo{position:relative;display:flex;align-items:flex-end;justify-content:center}
+/* 桌機版：照片於 nav（64px）與底部統計帶（約 100px）之間垂直置中 */
+.hero-photo{position:relative;display:flex;align-items:center;justify-content:center;padding:64px 0 100px}
 .hero-photo img{
-  width:min(46vw,470px);max-height:88svh;object-fit:contain;object-position:bottom;
+  width:min(46vw,470px);max-height:calc(100svh - 164px);object-fit:contain;object-position:center;
   -webkit-mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
   mask-image:radial-gradient(105% 100% at 50% 42%,#000 52%,transparent 96%);
 }
@@ -220,7 +221,7 @@ body::after{
 @media (max-width:860px){
   .hero-grid{grid-template-columns:1fr}
   .hero-copy{padding:110px 0 0;text-align:left}
-  .hero-photo{margin:22px 0 48px;align-items:center}
+  .hero-photo{margin:22px 0 48px;padding:0;align-items:center}
   .hero-photo img{
     width:min(82vw,360px);aspect-ratio:1/1;max-height:none;
     object-fit:cover;object-position:top;border-radius:16px;
