@@ -2,9 +2,10 @@
 
 ```toml
 title       = "林鼎淵 Dean Lin｜生成式 AI 講師・暢銷書作家・軟體專家"
-description = "外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場場授課與顧問經驗。"
+description = "外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場授課與顧問經驗。"
 url         = "https://deanlin.net/branding/"
 og_image    = "assets/og.png"
+favicon     = "https://deanlin.net/images/favicon.png"
 ```
 
 # Hero

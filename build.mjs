@@ -169,6 +169,7 @@ function build() {
     "{{TITLE}}": esc(site.title),
     "{{DESCRIPTION}}": esc(site.description),
     "{{URL}}": site.url ?? fail("網站設定缺少 url"),
+    "{{FAVICON}}": site.favicon ?? fail("網站設定缺少 favicon"),
     "{{OG_IMAGE}}": new URL(site.og_image ?? fail("網站設定缺少 og_image"), site.url).href,
     "{{EYEBROW}}": esc(hero.eyebrow),
     "{{NAME}}": esc(hero.name),
