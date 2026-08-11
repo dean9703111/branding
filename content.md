@@ -207,7 +207,7 @@ caption = "校園講座・大安高工"
 - 富強鑫精密工業 (×2)
     - 利用生成式 AI，改變工作型態 Part 1（ChatGPT）
     - 利用生成式 AI，改變工作型態 Part 2（Gamma、Copilot、NotebookLM、UPDF、Runway、Suno）
-- 銘真科技 (×2)
+- 銘異科技 (×2)
     - 生成式 AI 的全方位工作應用 Part 1
     - 生成式 AI 的全方位工作應用 Part 2
 - 中華郵政
@@ -300,7 +300,7 @@ caption = "校園講座・大安高工"
 - T 客邦 (×2)
     - [用 ChatGPT 實作自然語言處理專案：串接 OpenAI API，把影音變文字](https://www.techbang.com/posts/105873-chatgpt-coding-nlp-project)
     - [導入 ChatGPT 加速程式開發攻略：進階提問技巧、程式優化與需求規格書實戰演練](https://www.techbang.com/posts/104856-chatgpt-skills)
-- 商業週刊 (×2)
+- 商業周刊 (×2)
     - [AI 高效工作術：ChatGPT 職場全方位應用](https://smart.businessweekly.com.tw/Event/2023/chatgptaiclass/)
     - [AI 高效簡報術](https://smart.businessweekly.com.tw/Event/2023/aiwork/)
 - Mastertalk (×2)
