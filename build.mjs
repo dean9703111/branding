@@ -83,6 +83,11 @@ function parseToml(src, ctx) {
           x[1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\")
         );
       } else {
+        // 支援跨多行的 "..." 字串（吃行直到引號閉合）
+        while (val.startsWith('"') && !/^"((?:[^"\\]|\\.)*)"\s*(?:#.*)?$/.test(val)) {
+          if (++i >= lines.length) fail(`字串沒有結尾 "（${ctx}：${key}）`);
+          val += "\n" + lines[i];
+        }
         cur[key] = parseString(val, `${ctx}：${key}`);
       }
     } else {
@@ -166,7 +171,12 @@ function build() {
     "{{EYEBROW}}": esc(hero.eyebrow),
     "{{NAME}}": esc(hero.name),
     "{{NAME_EN}}": esc(hero.name_en),
-    "{{LEAD}}": esc(hero.lead),
+    // 空行分段成多個 <p>，段內 \n 轉 <br>
+    "{{LEAD}}": hero.lead
+      .trim()
+      .split(/\n\s*\n/)
+      .map((p) => `        <p>${esc(p.trim()).replaceAll("\n", "<br>")}</p>`)
+      .join("\n"),
     "{{PHOTO}}": hero.photo,
     "{{ABOUT_TITLE}}": esc(about.heading),
     "{{ABOUT_SUB}}": gold(about.sub),

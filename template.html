@@ -169,6 +169,7 @@ body::after{
 }
 @media (max-width:560px){.hero-titles{grid-template-columns:1fr;gap:10px}}
 .hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
+.hero-lead p+p{margin-top:12px}
 .hero-social{display:flex;gap:14px;margin-top:36px}
 .hero-social a{
   width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
@@ -480,7 +481,9 @@ footer{
       <div class="hero-titles">
 {{TITLES}}
       </div>
-      <p class="hero-lead">{{LEAD}}</p>
+      <div class="hero-lead">
+{{LEAD}}
+      </div>
       <div class="hero-social">
 {{SOCIAL_HERO}}
       </div>
