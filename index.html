@@ -173,16 +173,31 @@ body::after{
   display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
   font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:.28em;color:var(--gold);margin-top:14px;
 }
+/* 資歷徽章：金框膠囊，四項並排成 2×2 */
 .hero-titles{
-  margin-top:30px;display:grid;grid-template-columns:repeat(2,auto);
-  justify-content:start;gap:12px 40px;
-  font-size:clamp(.86rem,1.4vw,.98rem);color:var(--hero-muted);letter-spacing:.06em;
+  margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;
 }
-.hero-titles span{position:relative;padding-left:20px}
-.hero-titles span::before{
-  content:"";position:absolute;left:0;top:.7em;width:10px;height:1px;background:var(--gold);
+.hero-titles .cred{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:9px 16px 9px 13px;border-radius:999px;
+  border:1px solid rgba(217,164,65,.34);
+  background:linear-gradient(180deg,rgba(217,164,65,.11),rgba(217,164,65,.035));
+  color:var(--hero-ink);
+  transition:border-color .3s ease,background .3s ease,transform .3s ease;
 }
-@media (max-width:560px){.hero-titles{grid-template-columns:1fr;gap:10px}}
+.hero-titles .cred svg{width:17px;height:17px;flex:0 0 17px;color:var(--gold)}
+.hero-titles .cred b{
+  font-weight:500;font-size:clamp(.83rem,1.25vw,.94rem);letter-spacing:.04em;line-height:1.5;
+}
+.hero-titles .cred:hover{
+  border-color:rgba(217,164,65,.62);
+  background:linear-gradient(180deg,rgba(217,164,65,.18),rgba(217,164,65,.06));
+  transform:translateY(-2px);
+}
+@media (max-width:560px){
+  .hero-titles{flex-direction:column;align-items:flex-start;gap:8px;margin-top:24px}
+  .hero-titles .cred{padding:8px 14px 8px 12px}
+}
 .hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
 .hero-lead p+p{margin-top:12px}
 .hero-social{display:flex;gap:14px;margin-top:36px}
@@ -237,8 +252,7 @@ body::after{
   .hero-copy{align-items:center;text-align:center;padding-top:96px}
   .hero-eyebrow{justify-content:center;margin-bottom:20px}
   .hero-eyebrow::after{content:"";width:44px;height:1px;background:var(--gold-line)}
-  .hero-titles{justify-content:center;gap:12px 48px;margin-top:24px}
-  .hero-titles span{text-align:left;justify-self:start}
+  .hero-titles{justify-content:center;margin-top:24px}
   .hero-lead{margin:16px auto 0}
   .hero-social{justify-content:center;margin-top:28px}
   .hero-photo{margin:30px 0 12px}
@@ -492,13 +506,13 @@ footer{
 <header class="hero" id="top">
   <div class="hero-grid">
     <div class="hero-copy">
-      <div class="hero-eyebrow">企業內訓講師・暢銷書作家・外商工程師</div>
+      <div class="hero-eyebrow">讓 AI 成為每個人的即戰力</div>
       <h1 class="hero-name">林鼎淵<span class="en">DEAN LIN</span></h1>
       <div class="hero-titles">
-        <span>外商資安公司軟體專家</span>
-        <span>生成式 AI 創新學院發起人</span>
-        <span>全台第一本 ChatGPT 應用專書作者</span>
-        <span>科技島、商業周刊專欄作家</span>
+        <span class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.6 4.6 5.8v5.4c0 4.5 3 8.5 7.4 10 4.4-1.5 7.4-5.5 7.4-10V5.8z"/><path d="m8.8 11.7 2.4 2.4 4.2-4.5"/></svg><b>外商資安公司軟體專家</b></span>
+        <span class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.5 3.4 13.3 8.7l5.3 1.8-5.3 1.8-1.8 5.3-1.8-5.3-5.3-1.8 5.3-1.8z"/><path d="M18.6 3.6v3.2M17 5.2h3.2"/></svg><b>生成式 AI 創新學院發起人</b></span>
+        <span class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7.2C10.3 5.6 7.8 4.8 4.4 4.8v12.1c3.4 0 5.9.8 7.6 2.3 1.7-1.5 4.2-2.3 7.6-2.3V4.8c-3.4 0-5.9.8-7.6 2.4z"/><path d="M12 7.2v12"/></svg><b><span style="color:var(--gold)">全台第一本</span> ChatGPT 應用專書作者</b></span>
+        <span class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 20.3 8 19.8 19.3 8.5a2.3 2.3 0 0 0-3.2-3.2L4.7 16.6z"/><path d="m14.9 6.7 3.2 3.2"/></svg><b>科技島、商業周刊專欄作家</b></span>
       </div>
       <div class="hero-lead">
         <p>擅長用最白話的語言，把 AI 工具轉化為「聽得懂、秒上手、立刻見效」的行動方案。<br>實測 100+ 款 AI 工具，並將實戰心得分享到 Medium 部落格與 YT 影片；帶領 8000+ 名學員做出月報產生器、排班網頁、內部知識庫等落地成果。</p>

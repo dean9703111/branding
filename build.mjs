@@ -39,6 +39,17 @@ const ICONS = {
   github: '<svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>',
   medium: '<svg viewBox="0 0 24 24"><path d="M13.5 12A6.8 6.8 0 1 1 0 12a6.8 6.8 0 0 1 13.5 0zm7.4 0c0 3.5-1.5 6.4-3.4 6.4s-3.4-2.9-3.4-6.4 1.5-6.4 3.4-6.4 3.4 2.9 3.4 6.4zm3.1 0c0 3.2-.5 5.7-1.2 5.7S21.6 15.2 21.6 12s.5-5.7 1.2-5.7S24 8.8 24 12z"/></svg>',
 };
+// Hero 資歷徽章用的線性 icon（stroke 版，跟社群 icon 的 fill 版不同）
+const svg = (body) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+const TITLE_ICONS = {
+  shield: svg('<path d="M12 2.6 4.6 5.8v5.4c0 4.5 3 8.5 7.4 10 4.4-1.5 7.4-5.5 7.4-10V5.8z"/><path d="m8.8 11.7 2.4 2.4 4.2-4.5"/>'),
+  spark: svg('<path d="M11.5 3.4 13.3 8.7l5.3 1.8-5.3 1.8-1.8 5.3-1.8-5.3-5.3-1.8 5.3-1.8z"/><path d="M18.6 3.6v3.2M17 5.2h3.2"/>'),
+  book: svg('<path d="M12 7.2C10.3 5.6 7.8 4.8 4.4 4.8v12.1c3.4 0 5.9.8 7.6 2.3 1.7-1.5 4.2-2.3 7.6-2.3V4.8c-3.4 0-5.9.8-7.6 2.4z"/><path d="M12 7.2v12"/>'),
+  pen: svg('<path d="M4.2 20.3 8 19.8 19.3 8.5a2.3 2.3 0 0 0-3.2-3.2L4.7 16.6z"/><path d="m14.9 6.7 3.2 3.2"/>'),
+  mic: svg('<rect x="9.2" y="2.8" width="5.6" height="10.4" rx="2.8"/><path d="M5.5 11.4a6.5 6.5 0 0 0 13 0M12 17.9V21"/>'),
+  award: svg('<circle cx="12" cy="9.2" r="5.6"/><path d="m8.6 14 -1.3 7 4.7-2.6 4.7 2.6-1.3-7"/>'),
+};
 const SOCIAL_NAMES = { youtube: "YouTube", facebook: "Facebook", github: "GitHub", medium: "Medium" };
 const ROMAN = ["i.", "ii.", "iii.", "iv.", "v.", "vi.", "vii.", "viii.", "ix.", "x."];
 
@@ -198,7 +209,12 @@ function build() {
     "{{COPYRIGHT}}": esc(footer.copyright),
   };
 
-  rep["{{TITLES}}"] = hero.titles.map((t) => `        <span>${esc(t)}</span>`).join("\n");
+  rep["{{TITLES}}"] = (hero.titles ?? fail("Hero 區塊缺少 [[titles]]"))
+    .map((t) => {
+      const icon = TITLE_ICONS[t.icon] ?? fail(`未知的 title icon「${t.icon}」（可用：${Object.keys(TITLE_ICONS).join("、")}）`);
+      return `        <span class="cred">${icon}<b>${gold(t.text)}</b></span>`;
+    })
+    .join("\n");
 
   rep["{{SOCIAL_HERO}}"] = Object.entries(social)
     .map(([k, url]) => `        <a href="${url}" target="_blank" rel="noopener" aria-label="${SOCIAL_NAMES[k]}">${ICONS[k]}</a>`)

@@ -11,18 +11,30 @@ favicon     = "https://deanlin.net/images/favicon.png"
 # Hero
 
 ```toml
-eyebrow = "企業內訓講師・暢銷書作家・外商工程師"
+eyebrow = "讓 AI 成為每個人的即戰力"
 name    = "林鼎淵"
 name_en = "DEAN LIN"
-titles  = [
-  "外商資安公司軟體專家",
-  "生成式 AI 創新學院發起人",
-  "全台第一本 ChatGPT 應用專書作者",
-  "科技島、商業周刊專欄作家",
-]
 # lead 用空行分段（段內 \n 也會換行）
 lead  = "擅長用最白話的語言，把 AI 工具轉化為「聽得懂、秒上手、立刻見效」的行動方案。\n實測 100+ 款 AI 工具，並將實戰心得分享到 Medium 部落格與 YT 影片；帶領 8000+ 名學員做出月報產生器、排班網頁、內部知識庫等落地成果。"
 photo = "assets/形象照/個人照.jpg"
+
+# 資歷徽章（icon 可選：shield 資安／spark 創新／book 著作／pen 專欄／mic 講座／award 獎項）
+# text 可用 **粗體** 把關鍵字標成金色
+[[titles]]
+icon = "shield"
+text = "外商資安公司軟體專家"
+
+[[titles]]
+icon = "spark"
+text = "生成式 AI 創新學院發起人"
+
+[[titles]]
+icon = "book"
+text = "**全台第一本** ChatGPT 應用專書作者"
+
+[[titles]]
+icon = "pen"
+text = "科技島、商業周刊專欄作家"
 
 # 底部統計帶（num 大數字、plus 小上標、label 說明）
 [[stats]]
