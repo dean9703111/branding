@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{TITLE}}</title>
 <meta name="description" content="{{DESCRIPTION}}">
+<meta name="author" content="{{NAME}} {{NAME_EN}}">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="{{URL}}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{TITLE}}">
@@ -13,17 +15,26 @@
 <meta property="og:image" content="{{OG_IMAGE}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{NAME}} {{NAME_EN}} 形象卡片">
 <meta property="og:site_name" content="{{NAME}} {{NAME_EN}}">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{TITLE}}">
 <meta name="twitter:description" content="{{DESCRIPTION}}">
 <meta name="twitter:image" content="{{OG_IMAGE}}">
+<meta name="twitter:image:alt" content="{{NAME}} {{NAME_EN}} 形象卡片">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<!-- 字型 CSS 近 1MB（中文字型切片多），改為非阻塞：先 preload，再用 media=print 載入後切回 all -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap"></noscript>
+<link rel="preload" as="image" href="{{PHOTO}}" fetchpriority="high">
 <link rel="icon" type="image/png" href="{{FAVICON}}">
 <link rel="apple-touch-icon" href="{{FAVICON}}">
+<script type="application/ld+json">
+{{JSON_LD}}
+</script>
 <style>
 /* ============ Design Tokens ============ */
 :root{
@@ -93,7 +104,7 @@ body{
   overflow-x:hidden;
 }
 .serif{font-family:"Noto Serif TC","Songti TC","STSong",serif}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--gold);color:#141310}
 
@@ -519,7 +530,7 @@ footer{
       </div>
     </div>
     <div class="hero-photo">
-      <img src="{{PHOTO}}" alt="{{NAME}}形象照" fetchpriority="high">
+      <img src="{{PHOTO}}" alt="{{NAME}}形象照"{{PHOTO_SIZE}} fetchpriority="high">
     </div>
   </div>
   <div class="hero-stats">

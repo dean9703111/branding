@@ -6,6 +6,8 @@ description = "外商資安公司軟體專家、生成式 AI 創新學院發起�
 url         = "https://deanlin.net/branding/"
 og_image    = "assets/og.png"
 favicon     = "https://deanlin.net/images/favicon.png"
+# 專長領域（寫進結構化資料 Person.knowsAbout，幫助搜尋引擎理解品牌主題）
+knows_about = ["生成式 AI", "ChatGPT", "Claude", "Gemini", "Vibe Coding", "AI 簡報製作", "AI 圖片與影片生成", "企業 AI 導入", "AI 輔助程式開發", "工程師職涯", "n8n 自動化"]
 ```
 
 # Hero
@@ -16,7 +18,7 @@ name    = "林鼎淵"
 name_en = "DEAN LIN"
 # lead 用空行分段（段內 \n 也會換行）
 lead  = "擅長用最白話的語言，把 AI 工具轉化為「聽得懂、秒上手、立刻見效」的行動方案。\n實測 100+ 款 AI 工具，並將實戰心得分享到 Medium 部落格與 YT 影片；帶領 8000+ 名學員做出月報產生器、排班網頁、內部知識庫等落地成果。"
-photo = "assets/形象照/個人照.jpg"
+photo = "assets/形象照/個人照.webp"
 
 # 資歷徽章（icon 可選：shield 資安／spark 創新／book 著作／pen 專欄／mic 講座／award 獎項）
 # text 可用 **粗體** 把關鍵字標成金色
@@ -86,58 +88,58 @@ proof_label = "暢銷實績・百大排行榜"
 
 # 書籍依序排列在書架上
 [[books]]
-cover = "assets/書籍/下班有約.jpg"
+cover = "assets/書籍/下班有約.webp"
 tag   = "2025 新作"
 title = "工程師下班有約：企業內訓講師帶你認清職涯真相！"
 url   = "https://www.books.com.tw/products/E050284460"
 
 [[books]]
-cover = "assets/書籍/ChatGPT3.png"
+cover = "assets/書籍/ChatGPT3.webp"
 tag   = "第三版"
 title = "ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）"
 url   = "https://www.books.com.tw/products/E050249393"
 
 [[books]]
-cover = "assets/書籍/ChatGPT2.png"
+cover = "assets/書籍/ChatGPT2.webp"
 tag   = "第二版"
 title = "ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）"
 url   = "https://www.books.com.tw/products/E050170586"
 
 [[books]]
-cover = "assets/書籍/ChatGPT1.png"
+cover = "assets/書籍/ChatGPT1.webp"
 tag   = "全台第一本"
 title = "ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用"
 url   = "https://www.books.com.tw/products/E050161203"
 
 [[books]]
-cover = "assets/書籍/工程師職涯v2.png"
+cover = "assets/書籍/工程師職涯v2.webp"
 tag   = "加強版"
 title = "給全端工程師的職涯生存筆記（ChatGPT 加強版）"
 url   = "https://www.books.com.tw/products/E050170581"
 
 [[books]]
-cover = "assets/書籍/工程師職涯v1.png"
+cover = "assets/書籍/工程師職涯v1.webp"
 tag   = "職涯"
 title = "給全端工程師的職涯生存筆記：履歷×面試×職場"
 url   = "https://www.books.com.tw/products/E050140367"
 
 [[books]]
-cover = "assets/書籍/網路爬蟲.png"
+cover = "assets/書籍/網路爬蟲.webp"
 tag   = "實戰"
 title = "JavaScript 爬蟲新思路！用 Node.js 打造 FB & IG 爬蟲專案"
 url   = "https://www.books.com.tw/products/E050106521"
 
 # 暢銷排行榜截圖
 [[proof]]
-img     = "assets/成就/ChatGPT排行榜.jpeg"
+img     = "assets/成就/ChatGPT排行榜.webp"
 caption = "《ChatGPT 與 AI 繪圖效率大師》登上暢銷排行榜"
 
 [[proof]]
-img     = "assets/成就/工程師職涯排行榜.png"
+img     = "assets/成就/工程師職涯排行榜.webp"
 caption = "《給全端工程師的職涯生存筆記》入選百大暢銷榜"
 
 [[proof]]
-img     = "assets/成就/爬蟲排行榜.jpeg"
+img     = "assets/成就/爬蟲排行榜.webp"
 caption = "《JavaScript 爬蟲新思路》登上暢銷排行榜"
 ```
 
@@ -168,19 +170,19 @@ sub = "含 2 次課後諮詢"
 
 # 授課現場相簿（第 1 張較寬、第 2 張較窄，之後兩兩並排）
 [[gallery]]
-img     = "assets/企業內訓/企業.jpeg"
+img     = "assets/企業內訓/企業.webp"
 caption = "企業內訓・授課現場"
 
 [[gallery]]
-img     = "assets/企業內訓/企業2.jpeg"
+img     = "assets/企業內訓/企業2.webp"
 caption = "企業內訓・實戰工作坊"
 
 [[gallery]]
-img     = "assets/校園講座/台藝大.jpeg"
+img     = "assets/校園講座/台藝大.webp"
 caption = "校園講座・臺灣藝術大學"
 
 [[gallery]]
-img     = "assets/校園講座/大安高工.jpg"
+img     = "assets/校園講座/大安高工.webp"
 caption = "校園講座・大安高工"
 ```
 
@@ -350,20 +352,20 @@ sub     = "商周名人堂、科技島駐站專家，並受經理人雜誌、人
 
 # 截圖卡（瀏覽器視窗樣式）
 [[shots]]
-img     = "assets/專欄作家/講師履歷_image3.png"
+img     = "assets/專欄作家/講師履歷_image3.webp"
 caption = "商周財富網・名人堂專欄《林鼎淵 AI 工作術》"
 
 [[shots]]
-img     = "assets/專欄作家/講師履歷_image2.png"
+img     = "assets/專欄作家/講師履歷_image2.webp"
 caption = "科技島・駐站專家"
 
 # 現場照片卡
 [[photos]]
-img     = "assets/節目錄影/人間衛視.jpg"
+img     = "assets/節目錄影/人間衛視.webp"
 caption = "節目錄影・人間衛視"
 
 [[photos]]
-img     = "assets/節目錄影/1111.jpg"
+img     = "assets/節目錄影/1111.webp"
 caption = "專訪・1111 人力銀行"
 
 # 收尾金句（\n 會換行）

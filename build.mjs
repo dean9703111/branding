@@ -8,7 +8,7 @@
  *
  * 零依賴，只用 Node.js 內建模組。
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -60,6 +60,23 @@ const gold = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<span style="color:var(--g
 const fail = (msg) => {
   console.error(`✗ ${msg}`);
   process.exit(1);
+};
+
+// 讀 WebP 檔頭取得尺寸（VP8 / VP8L / VP8X 三種容器），非 WebP 或檔案不存在回傳 null
+function webpSize(file) {
+  if (!existsSync(file)) return null;
+  const b = readFileSync(file);
+  if (b.toString("ascii", 0, 4) !== "RIFF" || b.toString("ascii", 8, 12) !== "WEBP") return null;
+  const chunk = b.toString("ascii", 12, 16);
+  if (chunk === "VP8X") return { w: b.readUIntLE(24, 3) + 1, h: b.readUIntLE(27, 3) + 1 };
+  if (chunk === "VP8L") { const bits = b.readUInt32LE(21); return { w: (bits & 0x3fff) + 1, h: ((bits >> 14) & 0x3fff) + 1 }; }
+  if (chunk === "VP8 ") return { w: b.readUInt16LE(26) & 0x3fff, h: b.readUInt16LE(28) & 0x3fff };
+  return null;
+}
+// 圖片的 width/height 屬性（預留版位避免 CLS）；讀不到尺寸就不加
+const dim = (src) => {
+  const d = webpSize(join(DIR, src));
+  return d ? ` width="${d.w}" height="${d.h}"` : "";
 };
 
 // ---------- TOML 子集解析（字串、字串陣列、[表格]、[[清單]]、# 註解） ----------
@@ -176,7 +193,47 @@ function build() {
   const media = sec.media.data;
   const footer = sec.footer.data;
 
+  // 結構化資料：ProfilePage（Google 個人檔案頁規範）＋ Person（sameAs 串社群）＋ 著作 Book
+  const personId = `${site.url}#person`;
+  const nameEn = hero.name_en.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()); // "DEAN LIN" → "Dean Lin"
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": site.url,
+        url: site.url,
+        name: site.title,
+        description: site.description,
+        inLanguage: "zh-Hant",
+        dateModified: new Date().toISOString().slice(0, 10),
+        mainEntity: { "@id": personId },
+      },
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: hero.name,
+        alternateName: nameEn,
+        description: site.description,
+        url: site.url,
+        image: new URL(encodeURI(hero.photo), site.url).href,
+        jobTitle: hero.titles.map((t) => t.text.replaceAll("**", "")),
+        knowsAbout: site.knows_about ?? [],
+        sameAs: Object.values(social),
+      },
+      ...books.books.map((b) => ({
+        "@type": "Book",
+        name: b.title,
+        url: b.url,
+        image: new URL(encodeURI(b.cover), site.url).href,
+        author: { "@id": personId },
+        inLanguage: "zh-Hant",
+      })),
+    ],
+  };
+
   const rep = {
+    "{{JSON_LD}}": JSON.stringify(jsonLd, null, 2).replaceAll("</", "<\\/"),
     "{{TITLE}}": esc(site.title),
     "{{DESCRIPTION}}": esc(site.description),
     "{{URL}}": site.url ?? fail("網站設定缺少 url"),
@@ -192,6 +249,7 @@ function build() {
       .map((p) => `        <p>${esc(p.trim()).replaceAll("\n", "<br>")}</p>`)
       .join("\n"),
     "{{PHOTO}}": hero.photo,
+    "{{PHOTO_SIZE}}": dim(hero.photo),
     "{{ABOUT_TITLE}}": esc(about.heading),
     "{{ABOUT_SUB}}": gold(about.sub),
     "{{BOOKS_TITLE}}": esc(books.heading),
@@ -245,7 +303,7 @@ function build() {
       [
         '      <figure class="book">',
         `        <a href="${b.url}" target="_blank" rel="noopener">`,
-        `          <div class="cover"><img src="${b.cover}" alt="${esc(b.title)}" loading="lazy"></div>`,
+        `          <div class="cover"><img src="${b.cover}" alt="${esc(b.title)}"${dim(b.cover)} loading="lazy" decoding="async"></div>`,
         `          <figcaption><span class="tag">${esc(b.tag)}</span><br>${esc(b.title)}</figcaption>`,
         "        </a>",
         "      </figure>",
@@ -257,7 +315,7 @@ function build() {
     [
       `${indent}<figure class="shot">`,
       `${indent}  <div class="bar"><i></i><i></i><i></i></div>`,
-      `${indent}  <img src="${p.img}" alt="${esc(p.caption)}" loading="lazy">`,
+      `${indent}  <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
       `${indent}  <figcaption>${esc(p.caption)}</figcaption>`,
       `${indent}</figure>`,
     ].join("\n");
@@ -288,7 +346,7 @@ function build() {
   rep["{{GALLERY}}"] = teaching.gallery
     .map(
       (g, i) =>
-        `      <figure class="gitem ${gClasses[i]}"><img src="${g.img}" alt="${esc(g.caption)}" loading="lazy"><figcaption>${esc(g.caption)}</figcaption></figure>`
+        `      <figure class="gitem ${gClasses[i]}"><img src="${g.img}" alt="${esc(g.caption)}"${dim(g.img)} loading="lazy" decoding="async"><figcaption>${esc(g.caption)}</figcaption></figure>`
     )
     .join("\n");
 
@@ -298,7 +356,7 @@ function build() {
     .map((p) =>
       [
         '      <figure class="gitem">',
-        `        <img src="${p.img}" alt="${esc(p.caption)}" loading="lazy">`,
+        `        <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
         `        <figcaption>${esc(p.caption)}</figcaption>`,
         "      </figure>",
       ].join("\n")
@@ -319,6 +377,17 @@ function build() {
 
   writeFileSync(OUT, out);
   console.log(`✓ 已產生 ${OUT}（${out.length.toLocaleString()} 字元）`);
+
+  // sitemap.xml：單頁站，供 Google Search Console 提交
+  const sitemap = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    `  <url><loc>${site.url}</loc><lastmod>${jsonLd["@graph"][0].dateModified}</lastmod></url>`,
+    "</urlset>",
+    "",
+  ].join("\n");
+  writeFileSync(join(DIR, "sitemap.xml"), sitemap);
+  console.log(`✓ 已產生 ${join(DIR, "sitemap.xml")}`);
 }
 
 build();
