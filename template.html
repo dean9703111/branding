@@ -444,6 +444,10 @@ section{padding:clamp(70px,10vw,130px) 0}
 .media-grid .gitem{aspect-ratio:2/1}
 .media-grid .gitem img{object-position:top}
 .media-grid+.media-grid{margin-top:clamp(16px,2.4vw,26px)}
+.media-grid figure{position:relative}
+.card-link{position:absolute;inset:0;z-index:2}
+.media-grid .shot:has(.card-link):hover{border-color:var(--gold-line)}
+.media-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(16px,2.4vw,26px)}
 /* 收尾金句：置中壓軸 */
 .quote-final{
   margin:clamp(60px,9vw,100px) auto 0;max-width:30em;text-align:center;position:relative;
@@ -633,6 +637,9 @@ footer{
     </div>
     <div class="media-grid reveal">
 {{MEDIA_PHOTOS}}
+    </div>
+    <div class="media-links reveal">
+{{MEDIA_LINKS}}
     </div>
     <blockquote class="quote-final reveal">
       {{QUOTE}}

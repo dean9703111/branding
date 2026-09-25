@@ -43,7 +43,7 @@
       "name": "林鼎淵 Dean Lin｜生成式 AI 講師・暢銷書作家・軟體專家",
       "description": "外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場授課與顧問經驗。",
       "inLanguage": "zh-Hant",
-      "dateModified": "2026-08-25",
+      "dateModified": "2026-09-25",
       "mainEntity": {
         "@id": "https://deanlin.net/branding/#person"
       }
@@ -564,6 +564,10 @@ section{padding:clamp(70px,10vw,130px) 0}
 .media-grid .gitem{aspect-ratio:2/1}
 .media-grid .gitem img{object-position:top}
 .media-grid+.media-grid{margin-top:clamp(16px,2.4vw,26px)}
+.media-grid figure{position:relative}
+.card-link{position:absolute;inset:0;z-index:2}
+.media-grid .shot:has(.card-link):hover{border-color:var(--gold-line)}
+.media-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(16px,2.4vw,26px)}
 /* 收尾金句：置中壓軸 */
 .quote-final{
   margin:clamp(60px,9vw,100px) auto 0;max-width:30em;text-align:center;position:relative;
@@ -783,11 +787,11 @@ footer{
 <section id="teaching">
   <div class="wrap">
     <div class="sec-head reveal"><span class="sec-no">03</span><h2 class="sec-title">授課足跡</h2></div>
-    <p class="sec-sub reveal">從上市企業到國小教室，累積 93 場授課與 9 次顧問諮詢——<span style="color:var(--gold)">點擊單位名稱</span>即可展開課程清單。</p>
+    <p class="sec-sub reveal">從上市企業到國小教室，累積 95 場授課與 9 次顧問諮詢——<span style="color:var(--gold)">點擊單位名稱</span>即可展開課程清單。</p>
 
     <div class="teach-stats reveal">
       <div class="tstat"><div class="num">21</div><div class="lbl">線上／平台課程</div><div class="sub">跨 15 個合作平台</div></div>
-      <div class="tstat"><div class="num">47<span class="plus">+7</span></div><div class="lbl">企業內訓</div><div class="sub">含 7 次顧問陪跑</div></div>
+      <div class="tstat"><div class="num">49<span class="plus">+7</span></div><div class="lbl">企業內訓</div><div class="sub">含 7 次顧問陪跑</div></div>
       <div class="tstat"><div class="num">25<span class="plus">+2</span></div><div class="lbl">校園講座</div><div class="sub">含 2 次課後諮詢</div></div>
     </div>
 
@@ -820,6 +824,8 @@ footer{
         <button class="chip" data-unit="青農會" aria-expanded="false">青農會</button>
         <button class="chip" data-unit="Rmagic Club" aria-expanded="false">Rmagic Club</button>
         <button class="chip" data-unit="EDA" aria-expanded="false">EDA</button>
+        <button class="chip" data-unit="安美諾" aria-expanded="false">安美諾</button>
+        <button class="chip" data-unit="達和環保" aria-expanded="false">達和環保</button>
       </div>
       <div class="chip-panel" role="region" aria-label="課程清單">
         <button class="cp-close" aria-label="關閉課程清單">×</button>
@@ -899,6 +905,7 @@ footer{
         <figcaption>商周財富網・名人堂專欄《林鼎淵 AI 工作術》</figcaption>
       </figure>
       <figure class="shot">
+        <a class="card-link" href="https://www.technice.com.tw/tag/%E6%9E%97%E9%BC%8E%E6%B7%B5/" target="_blank" rel="noopener" aria-label="科技島・駐站專家"></a>
         <div class="bar"><i></i><i></i><i></i></div>
         <img src="assets/專欄作家/講師履歷_image2.webp" alt="科技島・駐站專家" width="1400" height="734" loading="lazy" decoding="async">
         <figcaption>科技島・駐站專家</figcaption>
@@ -906,13 +913,20 @@ footer{
     </div>
     <div class="media-grid reveal">
       <figure class="gitem">
+        <a class="card-link" href="https://www.youtube.com/watch?v=kMAlF7m5QYQ" target="_blank" rel="noopener" aria-label="節目錄影・人間衛視"></a>
         <img src="assets/節目錄影/人間衛視.webp" alt="節目錄影・人間衛視" width="1400" height="1026" loading="lazy" decoding="async">
         <figcaption>節目錄影・人間衛視</figcaption>
       </figure>
       <figure class="gitem">
+        <a class="card-link" href="https://www.youtube.com/watch?v=nr9eD6vGKVk" target="_blank" rel="noopener" aria-label="專訪・1111 人力銀行"></a>
         <img src="assets/節目錄影/1111.webp" alt="專訪・1111 人力銀行" width="1400" height="1011" loading="lazy" decoding="async">
         <figcaption>專訪・1111 人力銀行</figcaption>
       </figure>
+    </div>
+    <div class="media-links reveal">
+      <a class="chip" href="https://booksofa.airitibooks.com/masterselection-TechDecode/" target="_blank" rel="noopener">華藝數位 ↗</a>
+      <a class="chip" href="https://www.managertoday.com.tw/magazine/view/129432" target="_blank" rel="noopener">經理人月刊 ↗</a>
+      <a class="chip" href="https://www.books.com.tw/products/0010973650" target="_blank" rel="noopener">英文時事閱讀選 ↗</a>
     </div>
     <blockquote class="quote-final reveal">
       AI 時代，是將想法化為成果的最好時機
@@ -1081,6 +1095,12 @@ const COURSES = {
     "ChatGPT 與 AI 繪圖效率大師，實戰分享會"
   ],
   "EDA": [
+    "Claude 企業級自動化實戰，掌握 Connector / Project / Skill / Cowork 的使用技巧"
+  ],
+  "安美諾": [
+    "ChatGPT 工作實務應用——行銷文案、簡報製作、客服應對與資安觀念"
+  ],
+  "達和環保": [
     "Claude 企業級自動化實戰，掌握 Connector / Project / Skill / Cowork 的使用技巧"
   ],
   "數位實驗中學": [

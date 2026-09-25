@@ -311,9 +311,14 @@ function build() {
     )
     .join("\n");
 
+  // 有 url 的卡片疊一層整張可點的連結
+  const cardLink = (p, indent) =>
+    p.url ? [`${indent}  <a class="card-link" href="${p.url}" target="_blank" rel="noopener" aria-label="${esc(p.caption)}"></a>`] : [];
+
   const shotCard = (p, indent) =>
     [
       `${indent}<figure class="shot">`,
+      ...cardLink(p, indent),
       `${indent}  <div class="bar"><i></i><i></i><i></i></div>`,
       `${indent}  <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
       `${indent}  <figcaption>${esc(p.caption)}</figcaption>`,
@@ -350,12 +355,17 @@ function build() {
     )
     .join("\n");
 
+  rep["{{MEDIA_LINKS}}"] = (media.links ?? [])
+    .map((l) => `      <a class="chip" href="${l.url}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`)
+    .join("\n");
+
   rep["{{MEDIA_SHOTS}}"] = media.shots.map((p) => shotCard(p, "      ")).join("\n");
 
   rep["{{MEDIA_PHOTOS}}"] = media.photos
     .map((p) =>
       [
         '      <figure class="gitem">',
+        ...cardLink(p, "      "),
         `        <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
         `        <figcaption>${esc(p.caption)}</figcaption>`,
         "      </figure>",

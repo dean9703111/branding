@@ -147,7 +147,7 @@ caption = "《JavaScript 爬蟲新思路》登上暢銷排行榜"
 
 ```toml
 heading = "授課足跡"
-sub     = "從上市企業到國小教室，累積 93 場授課與 9 次顧問諮詢——**點擊單位名稱**即可展開課程清單。"
+sub     = "從上市企業到國小教室，累積 95 場授課與 9 次顧問諮詢——**點擊單位名稱**即可展開課程清單。"
 
 # 三格統計（sub 是數字下方的小字）
 [[stats]]
@@ -157,7 +157,7 @@ label = "線上／平台課程"
 sub = "跨 15 個合作平台"
 
 [[stats]]
-num = "47"
+num = "49"
 plus = "+7"
 label = "企業內訓"
 sub = "含 7 次顧問陪跑"
@@ -262,6 +262,10 @@ caption = "校園講座・大安高工"
     - ChatGPT 與 AI 繪圖效率大師，實戰分享會
 - EDA
     - Claude 企業級自動化實戰，掌握 Connector / Project / Skill / Cowork 的使用技巧
+- 安美諾
+    - ChatGPT 工作實務應用——行銷文案、簡報製作、客服應對與資安觀念
+- 達和環保
+    - Claude 企業級自動化實戰，掌握 Connector / Project / Skill / Cowork 的使用技巧
 
 ## 校園講座
 
@@ -358,15 +362,31 @@ caption = "商周財富網・名人堂專欄《林鼎淵 AI 工作術》"
 [[shots]]
 img     = "assets/專欄作家/講師履歷_image2.webp"
 caption = "科技島・駐站專家"
+url     = "https://www.technice.com.tw/tag/%E6%9E%97%E9%BC%8E%E6%B7%B5/"
 
 # 現場照片卡
 [[photos]]
 img     = "assets/節目錄影/人間衛視.webp"
 caption = "節目錄影・人間衛視"
+url     = "https://www.youtube.com/watch?v=kMAlF7m5QYQ"
 
 [[photos]]
 img     = "assets/節目錄影/1111.webp"
 caption = "專訪・1111 人力銀行"
+url     = "https://www.youtube.com/watch?v=nr9eD6vGKVk"
+
+# 延伸連結（截圖卡下方的一排文字連結）
+[[links]]
+label = "華藝數位"
+url   = "https://booksofa.airitibooks.com/masterselection-TechDecode/"
+
+[[links]]
+label = "經理人月刊"
+url   = "https://www.managertoday.com.tw/magazine/view/129432"
+
+[[links]]
+label = "英文時事閱讀選"
+url   = "https://www.books.com.tw/products/0010973650"
 
 # 收尾金句（\n 會換行）
 [quote]
