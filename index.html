@@ -709,47 +709,56 @@ footer{
   border-top:1px solid var(--line-soft);padding:clamp(50px,7vw,80px) 0 40px;
   background:var(--bg-2);transition:background .45s ease;
 }
+/* 桌機頁尾：第一列「品牌｜導覽與社群各一列」、第二列整寬的合作邀約橫帶、最後版權。每列矮而滿，避免左高右低的空白 */
 .foot-top{
-  display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(36px,6vw,80px);
-  align-items:start;
+  display:grid;grid-template-columns:1fr auto;gap:30px clamp(36px,6vw,80px);
+  align-items:center;
 }
-.foot-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:.12em;color:var(--ink-strong)}
-.foot-name em{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.5em;color:var(--gold);letter-spacing:.26em;margin-top:8px}
-.foot-tag{margin-top:18px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:22em}
-/* 合作洽詢：放在品牌區下方，按鈕與 hero 同款（淺色背景用深色外框） */
-.foot-contact{margin-top:30px}
-.foot-contact h6,.foot-col h6{
-  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;
-  margin-bottom:16px;text-transform:uppercase;
+.foot-name{
+  font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.6rem,2.4vw,2rem);letter-spacing:.12em;color:var(--ink-strong);
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;line-height:1.1;
 }
+.foot-name em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.6em;color:var(--gold);letter-spacing:.22em}
+.foot-tag{margin-top:12px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:26em}
+.foot-cols{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.foot-col{display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px}
+.foot-col h6,.foot-contact h6{
+  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;text-transform:uppercase;margin:0 6px 0 0;
+}
+.foot-col a,.foot-col p{
+  display:flex;align-items:center;gap:8px;margin:0;
+  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;transition:color .25s;
+}
+.foot-col a:hover{color:var(--gold)}
+.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+/* 合作邀約橫帶：左邊標籤與服務項目，右邊兩顆按鈕（與 hero 同款，淺色背景用深色外框） */
+.foot-contact{
+  grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:20px 28px;flex-wrap:wrap;
+  padding:20px 26px;border:1px solid var(--line-soft);border-radius:14px;background:var(--surface);
+}
+.foot-contact h6{display:block;margin:0 0 8px}
+.foot-services{margin:0;font-size:.84rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
 .foot-cta{display:flex;flex-wrap:wrap;gap:10px}
 .foot-cta .btn{padding:9px 16px;font-size:.82rem;letter-spacing:.06em}
 .foot-cta .btn svg{width:16px;height:16px;fill:none}
 .foot-cta .btn-primary{color:#17140f}
 .foot-cta .btn-ghost{color:var(--ink-strong);border-color:var(--gold-line);background:transparent}
 .foot-cta .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
-.foot-services{margin-top:14px;font-size:.8rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
-.foot-cols{display:grid;grid-template-columns:repeat(2,auto);gap:clamp(28px,5vw,72px);justify-content:end}
-.foot-col a,.foot-col p{
-  display:flex;align-items:center;gap:9px;
-  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;
-  margin-bottom:10px;transition:color .25s;
-}
-.foot-col a:hover{color:var(--gold)}
-.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
-.copy{margin-top:clamp(40px,6vw,60px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
-/* 手機版頁尾：品牌一行、洽詢按鈕緊接、導覽與社群並排兩欄、版權獨立堆疊 */
+.copy{margin-top:clamp(32px,5vw,48px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
+/* 手機版頁尾：品牌 → 洽詢 → 導覽與社群兩欄 → 版權 */
 @media (max-width:860px){
   footer{padding:44px 0 calc(28px + env(safe-area-inset-bottom))}
-  .foot-top{grid-template-columns:1fr;gap:30px}
-  .foot-name{font-size:1.55rem;letter-spacing:.1em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .foot-name em{display:inline;font-size:.62em;margin-top:0;letter-spacing:.2em}
+  .foot-top{grid-template-columns:1fr;gap:26px;align-items:start}
+  .foot-name{font-size:1.55rem;letter-spacing:.1em;gap:12px}
   .foot-tag{margin-top:8px;font-size:.84rem}
-  .foot-contact{margin-top:22px}
+  .foot-contact{order:2;display:block;padding:0;border:0;background:transparent;border-radius:0}
   .foot-contact h6{margin-bottom:12px}
+  .foot-services{margin-top:10px;font-size:.8rem}
+  .foot-contact .foot-cta{margin-top:16px}
   .foot-cta .btn{flex:1 1 140px;justify-content:center;white-space:nowrap;padding:9px 12px;font-size:.8rem;letter-spacing:.04em}
-  .foot-cols{width:100%;grid-template-columns:1fr 1fr;gap:22px 16px;justify-content:start}
-  .foot-col h6{margin-bottom:12px}
+  .foot-cols{order:3;display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;align-items:start}
+  .foot-col{display:block}
+  .foot-col h6{display:block;margin:0 0 12px}
   .foot-col a,.foot-col p{margin-bottom:8px;font-size:.84rem}
   .copy{flex-direction:column;align-items:flex-start;gap:12px;margin-top:30px;letter-spacing:.06em;line-height:1.7}
   .copy .to-top{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--line-soft);border-radius:99px;color:var(--ink);letter-spacing:.1em}
@@ -1088,14 +1097,6 @@ footer{
       <div class="foot-brand">
         <div class="foot-name">林鼎淵<em>DEAN LIN</em></div>
         <p class="foot-tag">把複雜的技術，變成人人都能上手的生產力。</p>
-        <div class="foot-contact">
-          <h6>合作邀約</h6>
-          <div class="foot-cta">
-            <a class="btn btn-primary" href="mailto:babydragon9703111@gmail.com?subject=%E5%85%A7%E8%A8%93%E9%82%80%E7%B4%84%EF%BD%9C%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%EF%BD%9C%EF%BC%88%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%89&amp;body=Dean%20%E6%82%A8%E5%A5%BD%EF%BC%8C%0D%0A%0D%0A%E6%88%91%E6%98%AF%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%E7%9A%84%EF%BC%88%E5%A7%93%E5%90%8D%EF%BC%8F%E8%81%B7%E7%A8%B1%EF%BC%89%EF%BC%8C%E6%83%B3%E9%82%80%E8%AB%8B%E6%82%A8%E6%8E%88%E8%AA%B2%EF%BC%8C%E8%B3%87%E8%A8%8A%E5%A6%82%E4%B8%8B%EF%BC%9A%0D%0A%0D%0A%E2%96%A0%20%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%9A%0D%0A%E2%96%A0%20%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%8F%E6%83%B3%E8%A7%A3%E6%B1%BA%E7%9A%84%E5%95%8F%E9%A1%8C%EF%BC%9A%0D%0A%E2%96%A0%20%E5%AD%B8%E5%93%A1%E5%B0%8D%E8%B1%A1%E8%88%87%E4%BA%BA%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E8%A8%88%E6%99%82%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E5%B8%8C%E6%9C%9B%E6%97%A5%E6%9C%9F%EF%BC%88%E5%8F%AF%E7%B5%A6%E5%8D%80%E9%96%93%EF%BC%89%EF%BC%9A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%BD%A2%E5%BC%8F%EF%BC%9A%E5%AF%A6%E9%AB%94%EF%BC%8F%E7%B7%9A%E4%B8%8A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%9C%B0%E9%BB%9E%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E7%AE%97%E7%AF%84%E5%9C%8D%EF%BC%9A%0D%0A%0D%0A%E8%81%AF%E7%B5%A1%E6%96%B9%E5%BC%8F%EF%BC%88%E9%9B%BB%E8%A9%B1%EF%BC%8FLINE%20ID%20%E7%AD%89%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E8%AC%9D%E8%AC%9D%EF%BC%81"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email 洽詢</a>
-            <a class="btn btn-ghost" href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Facebook 私訊</a>
-          </div>
-          <p class="foot-services">企業內訓・校園講座・線上課程・媒體邀訪</p>
-        </div>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
@@ -1111,6 +1112,16 @@ footer{
           <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Facebook</a>
           <a href="https://github.com/dean9703111" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>GitHub</a>
           <a href="https://medium.com/@dean-lin" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M13.5 12A6.8 6.8 0 1 1 0 12a6.8 6.8 0 0 1 13.5 0zm7.4 0c0 3.5-1.5 6.4-3.4 6.4s-3.4-2.9-3.4-6.4 1.5-6.4 3.4-6.4 3.4 2.9 3.4 6.4zm3.1 0c0 3.2-.5 5.7-1.2 5.7S21.6 15.2 21.6 12s.5-5.7 1.2-5.7S24 8.8 24 12z"/></svg>Medium</a>
+        </div>
+      </div>
+      <div class="foot-contact">
+        <div>
+          <h6>合作邀約</h6>
+          <p class="foot-services">企業內訓・校園講座・線上課程・媒體邀訪</p>
+        </div>
+        <div class="foot-cta">
+            <a class="btn btn-primary" href="mailto:babydragon9703111@gmail.com?subject=%E5%85%A7%E8%A8%93%E9%82%80%E7%B4%84%EF%BD%9C%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%EF%BD%9C%EF%BC%88%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%89&amp;body=Dean%20%E6%82%A8%E5%A5%BD%EF%BC%8C%0D%0A%0D%0A%E6%88%91%E6%98%AF%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%E7%9A%84%EF%BC%88%E5%A7%93%E5%90%8D%EF%BC%8F%E8%81%B7%E7%A8%B1%EF%BC%89%EF%BC%8C%E6%83%B3%E9%82%80%E8%AB%8B%E6%82%A8%E6%8E%88%E8%AA%B2%EF%BC%8C%E8%B3%87%E8%A8%8A%E5%A6%82%E4%B8%8B%EF%BC%9A%0D%0A%0D%0A%E2%96%A0%20%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%9A%0D%0A%E2%96%A0%20%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%8F%E6%83%B3%E8%A7%A3%E6%B1%BA%E7%9A%84%E5%95%8F%E9%A1%8C%EF%BC%9A%0D%0A%E2%96%A0%20%E5%AD%B8%E5%93%A1%E5%B0%8D%E8%B1%A1%E8%88%87%E4%BA%BA%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E8%A8%88%E6%99%82%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E5%B8%8C%E6%9C%9B%E6%97%A5%E6%9C%9F%EF%BC%88%E5%8F%AF%E7%B5%A6%E5%8D%80%E9%96%93%EF%BC%89%EF%BC%9A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%BD%A2%E5%BC%8F%EF%BC%9A%E5%AF%A6%E9%AB%94%EF%BC%8F%E7%B7%9A%E4%B8%8A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%9C%B0%E9%BB%9E%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E7%AE%97%E7%AF%84%E5%9C%8D%EF%BC%9A%0D%0A%0D%0A%E8%81%AF%E7%B5%A1%E6%96%B9%E5%BC%8F%EF%BC%88%E9%9B%BB%E8%A9%B1%EF%BC%8FLINE%20ID%20%E7%AD%89%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E8%AC%9D%E8%AC%9D%EF%BC%81"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email 洽詢</a>
+            <a class="btn btn-ghost" href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Facebook 私訊</a>
         </div>
       </div>
     </div>
