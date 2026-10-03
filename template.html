@@ -210,6 +210,32 @@ body::after{
 }
 .hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
 .hero-lead p+p{margin-top:12px}
+/* 合作洽詢按鈕（hero） */
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 20px;border-radius:99px;
+  font-size:.86rem;letter-spacing:.08em;font-weight:500;line-height:1.2;
+  transition:transform .25s,background .25s,border-color .25s,color .25s;
+}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn-primary{background:var(--gold);color:#17140f;border:1px solid var(--gold)}
+.btn-primary:hover{transform:translateY(-2px);background:#e5b45a}
+.btn-ghost{border:1px solid rgba(236,231,219,.3);color:#ecE7db}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+/* 手機：捲過 hero 後出現的固定洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複） */
+.cta-bar{
+  position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
+  display:none;gap:8px;padding:8px;border-radius:16px;
+  background:rgba(23,20,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(217,164,65,.35);box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transform:translateY(calc(100% + 24px));opacity:0;transition:transform .35s cubic-bezier(.2,.65,.25,1),opacity .35s;
+}
+.cta-bar .btn{flex:1;justify-content:center;padding:10px 8px;font-size:.8rem;letter-spacing:.03em;gap:6px;white-space:nowrap}
+.cta-bar .btn svg{width:14px;height:14px;flex:none}
+.cta-bar .to-top-btn{flex:0 0 44px;width:44px;height:44px;border-radius:12px;border:1px solid rgba(236,231,219,.25);display:grid;place-items:center;color:#ecE7db}
+.cta-bar.show{transform:none;opacity:1}
+@media (max-width:860px){.cta-bar{display:flex}}
+@media (prefers-reduced-motion:reduce){.cta-bar{transition:none}}
 .hero-social{display:flex;gap:14px;margin-top:36px}
 .hero-social a{
   width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
@@ -260,6 +286,7 @@ body::after{
 /* 平板區間：置中的封面式構圖，避免單欄靠左造成右側大片留白 */
 @media (min-width:561px) and (max-width:860px){
   .hero-copy{align-items:center;text-align:center;padding-top:96px}
+  .hero-cta{justify-content:center}
   .hero-eyebrow{justify-content:center;margin-bottom:20px}
   .hero-eyebrow::after{content:"";width:44px;height:1px;background:var(--gold-line)}
   .hero-titles{justify-content:center;margin-top:24px}
@@ -534,6 +561,9 @@ footer{
       <div class="hero-lead">
 {{LEAD}}
       </div>
+      <div class="hero-cta">
+{{HERO_CTA}}
+      </div>
       <div class="hero-social">
 {{SOCIAL_HERO}}
       </div>
@@ -678,7 +708,7 @@ footer{
         <div class="foot-col">
           <h6>合作邀約</h6>
 {{FOOT_SERVICES}}
-          <a class="gold-link" href="{{FACEBOOK}}" target="_blank" rel="noopener">{{FOOT_CTA}}</a>
+{{FOOT_CONTACT}}
         </div>
       </div>
     </div>
@@ -765,6 +795,19 @@ document.querySelectorAll('.chips-block').forEach(block => {
     if (active && panel.classList.contains('open')) placeAfterRow(active);
   });
 });
+</script>
+<div class="cta-bar" role="complementary" aria-label="合作洽詢">
+{{CTA_BAR}}
+</div>
+<script>
+// 手機浮動洽詢列：hero 離開視窗才出現；頁尾（已有洽詢連結）進視窗就收起
+(function(){
+  var bar=document.querySelector('.cta-bar'),hero=document.querySelector('.hero'),foot=document.querySelector('footer');
+  if(!bar||!hero||!foot||!('IntersectionObserver' in window))return;
+  var heroOut=false,footIn=false,sync=function(){bar.classList.toggle('show',heroOut&&!footIn)};
+  new IntersectionObserver(function(e){heroOut=!e[0].isIntersecting;sync()},{threshold:0}).observe(hero);
+  new IntersectionObserver(function(e){footIn=e[0].isIntersecting;sync()},{threshold:0}).observe(foot);
+})();
 </script>
 <script>
 // 首屏以外用到的字型：等首屏字型載完再掛上，首屏文字只等小檔；下方區塊本來就捲到才淡入

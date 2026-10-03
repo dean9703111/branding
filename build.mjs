@@ -441,6 +441,32 @@ async function build() {
     return { "{{PHOTO_SRCSET}}": srcsetAttrs(photo), "{{PHOTO_PRELOAD}}": preload(` imagesrcset="${v.srcset}" imagesizes="${v.sizes}"`) };
   }
 
+  // 合作洽詢：hero 兩顆按鈕、手機浮動列、頁尾連結。Email 用 mailto 帶主旨與填寫格式，點開就能填
+  function contactTokens(c, facebook, footCta) {
+    const email = (c.email ?? "").trim();
+    const emailLabel = c.email_label ?? "Email 洽詢", fbLabel = c.facebook_label ?? "Facebook 私訊";
+    const mailto = email
+      ? `mailto:${email}?subject=${encodeURIComponent(c.email_subject ?? "")}&body=${encodeURIComponent((c.email_body ?? "").replace(/\n/g, "\r\n"))}`.replaceAll("&", "&amp;")
+      : "";
+    if (!email) console.warn("! content.md 的 [contact] email 還沒填，Email 洽詢按鈕先不顯示，只有 Facebook");
+    const mailIcon = svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>');
+    const fbIcon = `<svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none">${ICONS.facebook.match(/<path[^>]*>/)[0]}</svg>`;
+    const emailBtn = (cls) => (email ? `<a class="btn ${cls}" href="${mailto}">${mailIcon}${esc(emailLabel)}</a>` : "");
+    const fbBtn = (cls) => `<a class="btn ${cls}" href="${facebook}" target="_blank" rel="noopener">${fbIcon}${esc(fbLabel)}</a>`;
+    return {
+      "{{HERO_CTA}}": [emailBtn("btn-primary"), fbBtn(email ? "btn-ghost" : "btn-primary")].filter(Boolean).map((b) => `        ${b}`).join("\n"),
+      "{{CTA_BAR}}": [
+        emailBtn("btn-primary"),
+        fbBtn(email ? "btn-ghost" : "btn-primary"),
+        `<a class="to-top-btn" href="#top" aria-label="回到頂部">${svg('<path d="M12 19V5M5 12l7-7 7 7"/>')}</a>`,
+      ].filter(Boolean).map((b) => `  ${b}`).join("\n"),
+      "{{FOOT_CONTACT}}": [
+        email ? `          <a class="gold-link" href="${mailto}">${esc(emailLabel)} →</a>` : "",
+        `          <a class="gold-link" href="${facebook}" target="_blank" rel="noopener">${esc(footCta)}</a>`,
+      ].filter(Boolean).join("\n"),
+    };
+  }
+
   const rep = {
     "{{JSON_LD}}": JSON.stringify(jsonLd, null, 2).replaceAll("</", "<\\/"),
     "{{TITLE}}": esc(site.title),
@@ -472,8 +498,8 @@ async function build() {
     "{{QUOTE}}": esc(media.quote.text).replaceAll("\n", "<br>"),
     "{{QUOTE_SRC}}": esc(media.quote.source),
     "{{FOOT_TAGLINE}}": gold(footer.tagline),
-    "{{FOOT_CTA}}": esc(footer.cta),
     "{{FACEBOOK}}": social.facebook,
+    ...contactTokens(hero.contact ?? {}, social.facebook, footer.cta),
     "{{COPYRIGHT}}": esc(footer.copyright),
   };
 

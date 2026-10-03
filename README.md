@@ -37,7 +37,7 @@ branding/
 | 區塊 | 內容 |
 |---|---|
 | `# 網站設定` | 分頁標題、SEO 描述、`url`（canonical／OG 網址）、`og_image`（社群預覽圖路徑）、`favicon`（圖示網址）、`knows_about`（專長關鍵字，寫進結構化資料）、`asset_base`／`r2_bucket`（圖片 CDN，見下方） |
-| `# Hero` | 名字、頭銜、介紹、形象照、`[[stats]]` 統計帶、`[social]` 社群連結 |
+| `# Hero` | 名字、頭銜、介紹、形象照、`[[stats]]` 統計帶、`[social]` 社群連結、`[contact]` 合作洽詢（Email／Facebook） |
 | `# 關於` | 標題副標＋`- 身分：描述` 清單 |
 | `# 出版著作` | `[[books]]` 書籍（封面/標籤/書名/連結）＋`[[proof]]` 排行榜截圖 |
 | `# 授課足跡` | `[[stats]]` 三格統計、`[[gallery]]` 現場相簿＋三個 `##` 分類的單位清單 |
@@ -52,6 +52,12 @@ branding/
     - 課程名稱                 ← 縮排 4 格；點擊單位時展開的清單
     - [課程名稱](https://…)    ← 有連結的課程用 Markdown 連結語法
 ```
+
+### 合作洽詢（`[contact]`）
+
+- hero 的兩顆按鈕、手機捲過首屏後的浮動洽詢列、頁尾「合作邀約」都讀這組設定
+- `email` 填了才會出現 Email 按鈕；點開是 `mailto`，自動帶 `email_subject` 當主旨、`email_body` 當內文（`\n` 換行），對方只要填空格
+- `email` 留空只顯示 Facebook（連結沿用 `[social]` 的 `facebook`），build 會印提醒
 
 ### 其他規則
 
