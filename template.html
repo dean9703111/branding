@@ -532,8 +532,8 @@ footer{
 }
 /* 桌機頁尾：第一列「品牌｜導覽與社群各一列」、第二列整寬的合作邀約橫帶、最後版權。每列矮而滿，避免左高右低的空白 */
 .foot-top{
-  display:grid;grid-template-columns:1fr auto;gap:30px clamp(36px,6vw,80px);
-  align-items:center;
+  display:grid;grid-template-columns:1fr auto;gap:34px clamp(36px,6vw,80px);
+  align-items:start;
 }
 .foot-name{
   font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.6rem,2.4vw,2rem);letter-spacing:.12em;color:var(--ink-strong);
@@ -541,10 +541,11 @@ footer{
 }
 .foot-name em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.6em;color:var(--gold);letter-spacing:.22em}
 .foot-tag{margin-top:12px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:26em}
-.foot-cols{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
-.foot-col{display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px}
+.foot-cols{display:grid;grid-template-columns:max-content auto;column-gap:28px;row-gap:16px;align-items:baseline;padding-top:10px}
+.foot-col{display:contents}
+.foot-links{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 22px}
 .foot-col h6,.foot-contact h6{
-  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;text-transform:uppercase;margin:0 6px 0 0;
+  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;text-transform:uppercase;margin:0;
 }
 .foot-col a,.foot-col p{
   display:flex;align-items:center;gap:8px;margin:0;
@@ -555,7 +556,7 @@ footer{
 /* 合作邀約橫帶：左邊標籤與服務項目，右邊兩顆按鈕（與 hero 同款，淺色背景用深色外框） */
 .foot-contact{
   grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:20px 28px;flex-wrap:wrap;
-  padding:20px 26px;border:1px solid var(--line-soft);border-radius:14px;background:var(--surface);
+  padding:26px 0 0;border-top:1px solid var(--line-soft);
 }
 .foot-contact h6{display:block;margin:0 0 8px}
 .foot-services{margin:0;font-size:.84rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
@@ -565,20 +566,22 @@ footer{
 .foot-cta .btn-primary{color:#17140f}
 .foot-cta .btn-ghost{color:var(--ink-strong);border-color:var(--gold-line);background:transparent}
 .foot-cta .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
-.copy{margin-top:clamp(32px,5vw,48px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
+.copy{margin-top:34px;padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
 /* 手機版頁尾：品牌 → 洽詢 → 導覽與社群兩欄 → 版權 */
 @media (max-width:860px){
   footer{padding:44px 0 calc(28px + env(safe-area-inset-bottom))}
   .foot-top{grid-template-columns:1fr;gap:26px;align-items:start}
   .foot-name{font-size:1.55rem;letter-spacing:.1em;gap:12px}
   .foot-tag{margin-top:8px;font-size:.84rem}
-  .foot-contact{order:2;display:block;padding:0;border:0;background:transparent;border-radius:0}
+  .foot-contact{order:2;display:block;padding:0;border:0}
   .foot-contact h6{margin-bottom:12px}
   .foot-services{margin-top:10px;font-size:.8rem}
   .foot-contact .foot-cta{margin-top:16px}
   .foot-cta .btn{flex:1 1 140px;justify-content:center;white-space:nowrap;padding:9px 12px;font-size:.8rem;letter-spacing:.04em}
   .foot-cols{order:3;display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;align-items:start}
+  .foot-cols{padding-top:0}
   .foot-col{display:block}
+  .foot-links{display:block}
   .foot-col h6{display:block;margin:0 0 12px}
   .foot-col a,.foot-col p{margin-bottom:8px;font-size:.84rem}
   .copy{flex-direction:column;align-items:flex-start;gap:12px;margin-top:30px;letter-spacing:.06em;line-height:1.7}
@@ -754,14 +757,18 @@ footer{
       <div class="foot-cols">
         <div class="foot-col">
           <h6>導覽</h6>
-          <a href="#about">關於</a>
-          <a href="#books">出版著作</a>
-          <a href="#teaching">授課足跡</a>
-          <a href="#media">媒體與專欄</a>
+          <div class="foot-links">
+            <a href="#about">關於</a>
+            <a href="#books">出版著作</a>
+            <a href="#teaching">授課足跡</a>
+            <a href="#media">媒體與專欄</a>
+          </div>
         </div>
         <div class="foot-col">
           <h6>社群</h6>
+          <div class="foot-links">
 {{SOCIAL_FOOT}}
+          </div>
         </div>
       </div>
       <div class="foot-contact">
