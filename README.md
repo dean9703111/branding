@@ -23,6 +23,7 @@ branding/
 ├── optimize-images.mjs ← 圖片轉 WebP 並縮到版面所需尺寸（cwebp）
 ├── upload-assets.mjs   ← 把 assets/ 上傳到 Cloudflare R2（wrangler）
 ├── .r2-manifest.json   ← 已上傳到 R2 的檔案與雜湊（upload 時自動更新，要一起 commit）
+├── .font-cache.json    ← build 抓回來的字型 CSS 快取（自動更新，要一起 commit，沒網路也能 build）
 ├── assets/         ← 圖片資產來源（一律 WebP；只有社群預覽圖 og.png 維持 PNG）
 ├── index.html      ← 產生物，不要直接編輯
 └── sitemap.xml     ← 產生物，build 時一併更新
@@ -58,6 +59,19 @@ branding/
 - `[quote]` 的 `text` 中 `\n` 會換行
 - 圖片放進 `assets/` 對應子資料夾後跑 `npm run optimize:branding -- --replace` 轉成 WebP，路徑寫 `assets/….webp`（書封上限 640px 寬、形象照 1000px、其他 1400px，改上限在 `optimize-images.mjs`）
 - build 會讀 WebP 檔頭把 `width`/`height` 寫進 `<img>`（避免版面跳動），並產生 JSON-LD（ProfilePage／Person／Book）與 `sitemap.xml`
+- 形象照若有同名的 `-640.webp` 小圖（`optimize:branding` 會自動產），build 會給手機版 `srcset`，LCP 圖片體積降到四分之一
+- 書封緊接首屏，直接載入（低優先序）；排行榜截圖、授課相簿、媒體卡才用 `loading="lazy"`
+
+## 字型載入（build 自動處理）
+
+中文網頁字型是首次載入最大的成本：完整版 Noto 要先抓 200 KB 的 CSS、再抓 30 多個切片檔（約 1 MB）。
+build 會掃描產生好的頁面，算出**實際用到的字**，用 Google Fonts 的 `text=` 參數只要這些字：
+
+- 襯線字（Noto Serif TC 700／900）只收標題、單位名稱等用到襯線的字；黑體（Noto Sans TC 300／400／500）收全頁的字，含 JS 渲染的課程清單
+- 抓回來的 `@font-face` 直接內嵌進 `index.html`，字型檔加 `<link rel="preload">`，第一次繪製就是正確字型
+- 需要網路；抓不到時退回外連 `<link>`（仍是子集網址），有網路再 build 一次即可。結果快取在 `.font-cache.json`，字沒變就不會再連網（`BRANDING_OFFLINE=1` 可強制不連網）
+- 哪些元素算襯線字，列在 `build.mjs` 的 `SERIF_CLASSES`／`SERIF_TAGS`；模板若新增用 `Noto Serif TC` 的 class，記得補上，否則該處文字會退回系統襯線字
+- Google 對 `text=` 子集檔的快取是一天（完整切片是一年），回訪超過一天會重抓一次，約 300 KB
 
 ## 圖片放到 Cloudflare R2（CDN）
 

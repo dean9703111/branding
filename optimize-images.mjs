@@ -8,6 +8,7 @@
  *
  * 需要 cwebp（brew install webp）。og.png 是社群預覽圖，維持 PNG 不轉（部分平台不吃 WebP）。
  * 已存在且比原檔新的 .webp 會跳過，可重複執行。
+ * 形象照會多產一張 -640.webp 給手機版 srcset 用。
  */
 import { readdirSync, readFileSync, statSync, unlinkSync, openSync, readSync, closeSync } from "node:fs";
 import { dirname, join, extname, basename, relative } from "node:path";
@@ -76,3 +77,15 @@ for (const src of walk(ASSETS)) {
   if (replace) unlinkSync(src);
 }
 console.log(`✓ 轉換 ${done} 張（跳過 ${skipped} 張已是最新）：${(before / 1024).toFixed(0)}K → ${(after / 1024).toFixed(0)}K${replace ? "，原檔已刪除" : ""}`);
+
+// 形象照另產一張 640px 寬的小圖給手機 srcset（build 會自動偵測同名的 -640.webp）
+const HERO_DIR = join(ASSETS, "形象照");
+const HERO_SMALL = 640;
+for (const name of readdirSync(HERO_DIR)) {
+  if (!name.endsWith(".webp") || /-\d+\.webp$/.test(name)) continue;
+  const src = join(HERO_DIR, name);
+  const out = src.replace(/\.webp$/, `-${HERO_SMALL}.webp`);
+  try { if (statSync(out).mtimeMs >= statSync(src).mtimeMs) continue; } catch {}
+  execFileSync("cwebp", ["-quiet", "-q", String(QUALITY), "-metadata", "none", "-resize", String(HERO_SMALL), "0", src, "-o", out]);
+  console.log(`  ${relative(DIR, out)}  手機用小圖（${HERO_SMALL}px 寬）${(statSync(out).size / 1024).toFixed(0)}K`);
+}

@@ -93,6 +93,102 @@ const assetUrl = (src) => {
 // 絕對網址（JSON-LD、OG 用）：CDN 模式直接用 CDN 網址，否則以 site.url 為基底
 const absUrl = (src, base) => (assetBase ? assetUrl(src) : new URL(encodeURI(src), base).href);
 
+// ---------- 字型子集：只向 Google Fonts 要本頁用到的字 ----------
+// 中文字型完整版要靠 100 多個切片檔，首次載入要先抓 200KB 的 CSS 再抓 30 多個 woff2。
+// 改成 build 時算出頁面用到的字，用 text= 參數向 Google 要「只含這些字」的單一字型檔，
+// 再把 CSS 內嵌、字型檔 preload：請求數從 30 多個降到個位數，位元組減半，文字不再反覆閃動。
+const FONT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
+const FONT_CACHE = join(DIR, ".font-cache.json"); // url → css，讓之後沒網路也能 build（請一起 commit）
+// 用襯線字（Noto Serif TC）的元素：class 名或標籤名，對應 template.html 的 CSS；
+// chip 是因為點開的課程面板標題（.cp-title）由 JS 把單位名稱填進去
+const SERIF_CLASSES = new Set(["serif", "nav-logo", "hero-name", "sec-title", "cp-title", "quote-final", "foot-name", "chip"]);
+const SERIF_TAGS = new Set(["h3", "h4"]);
+const VOID_TAGS = new Set(["br", "img", "link", "meta", "input", "hr", "source", "wbr", "area", "base", "col", "embed", "param", "track"]);
+// 任何字型都一定帶上的基本字元：可見 ASCII ＋ 常用中文標點（JS 動態產生的文字也用得到）
+const BASE_CHARS = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join("") + "，。、：；！？（）「」『』《》〈〉・…—–×＋％／～　";
+const isCJK = (c) => c.codePointAt(0) >= 0x2e80;
+const decodeEntities = (s) =>
+  s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
+
+// 掃描產生好的 HTML，回傳 { all: 全頁用到的字, serif: 襯線字元素用到的字 }
+function collectChars(html) {
+  const all = new Set(BASE_CHARS), serif = new Set(BASE_CHARS);
+  for (const m of html.matchAll(/content:\s*"([^"]*)"/g)) for (const c of m[1]) all.add(c); // CSS 產生的文字
+  for (const m of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) for (const c of m[1]) all.add(c); // JS 渲染的課程清單
+  const body = html.replace(/<!--[\s\S]*?-->/g, "").replace(/<style[\s\S]*?<\/style>/g, "").replace(/<script[\s\S]*?<\/script>/g, "");
+  const stack = []; // 目前所在元素是否為襯線字
+  const re = /<\/?([a-zA-Z][\w-]*)([^>]*)>|([^<]+)/g;
+  let m;
+  while ((m = re.exec(body))) {
+    if (m[3] !== undefined) {
+      const inSerif = stack.length > 0 && stack[stack.length - 1].serif;
+      for (const c of decodeEntities(m[3])) if (c.trim()) { all.add(c); if (inSerif) serif.add(c); }
+      continue;
+    }
+    const tag = m[1].toLowerCase();
+    if (m[0].startsWith("</")) { const i = stack.map((e) => e.tag).lastIndexOf(tag); if (i >= 0) stack.length = i; continue; }
+    if (VOID_TAGS.has(tag) || m[2].trimEnd().endsWith("/")) continue;
+    const cls = (m[2].match(/class="([^"]*)"/)?.[1] ?? "").split(/\s+/);
+    const inSerif = (stack.length > 0 && stack[stack.length - 1].serif) || SERIF_TAGS.has(tag) || cls.some((c) => SERIF_CLASSES.has(c));
+    stack.push({ tag, serif: inSerif });
+  }
+  return { all, serif };
+}
+
+const fontCssUrl = (family, chars) =>
+  `https://fonts.googleapis.com/css2?family=${family}&display=swap&text=${encodeURIComponent([...chars].sort().join(""))}`;
+
+// 先用內建 fetch，失敗（例如公司網路要走 proxy）再退回 curl
+async function fetchText(url) {
+  if (process.env.BRANDING_OFFLINE) throw new Error("BRANDING_OFFLINE=1，略過網路"); // 測退路或 CI 離線用
+  try {
+    const r = await fetch(url, { headers: { "User-Agent": FONT_UA }, signal: AbortSignal.timeout(10000) });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.text();
+  } catch (e1) {
+    try {
+      return execFileSync("curl", ["-sSfL", "--max-time", "20", "-A", FONT_UA, url], { encoding: "utf8", maxBuffer: 1 << 24 });
+    } catch (e2) {
+      throw new Error(`${e1.message}；curl 也失敗：${String(e2.stderr || e2.message).trim().split("\n")[0]}`);
+    }
+  }
+}
+
+// 回傳 { css: 內嵌用的 @font-face, links: preload 標籤 }；抓不到又沒快取就退回外連 <link>
+async function buildFonts(html) {
+  const { all, serif } = collectChars(html);
+  const latin = new Set([...all].filter((c) => !isCJK(c)));
+  const urls = [
+    fontCssUrl("Noto+Serif+TC:wght@700;900", serif),
+    fontCssUrl("Noto+Sans+TC:wght@300;400;500", all),
+    fontCssUrl("Cormorant+Garamond:ital,wght@0,700;1,500", latin),
+  ];
+  const cache = existsSync(FONT_CACHE) ? JSON.parse(readFileSync(FONT_CACHE, "utf8")) : {};
+  const fresh = {};
+  let css = "";
+  for (const url of urls) {
+    if (!cache[url]) {
+      try {
+        cache[url] = await fetchText(url);
+      } catch (e) {
+        console.warn(`! 抓不到字型 CSS（${e.message}），這次退回外連 Google Fonts；有網路時重跑 build 即可`);
+        const links = [
+          '<link rel="preconnect" href="https://fonts.googleapis.com">',
+          ...urls.map((u) => `<link rel="stylesheet" href="${u.replaceAll("&", "&amp;")}">`),
+        ];
+        return { css: "", links: links.join("\n") };
+      }
+    }
+    fresh[url] = cache[url];
+    css += cache[url].trim() + "\n";
+  }
+  writeFileSync(FONT_CACHE, JSON.stringify(fresh, null, 2) + "\n"); // 只留目前用到的三筆
+  const files = [...new Set([...css.matchAll(/url\(([^)]+)\)/g)].map((m) => m[1]))];
+  const links = files.map((u) => `<link rel="preload" as="font" type="font/woff2" href="${u}" crossorigin>`);
+  console.log(`✓ 字型子集：襯線 ${serif.size} 字、黑體 ${all.size} 字 → ${files.length} 個字型檔（CSS 已內嵌）`);
+  return { css, links: links.join("\n") };
+}
+
 // ---------- TOML 子集解析（字串、字串陣列、[表格]、[[清單]]、# 註解） ----------
 
 function parseString(raw, ctx) {
@@ -194,7 +290,7 @@ function parseUnits(lines) {
 
 // ---------- 產生 HTML ----------
 
-function build() {
+async function build() {
   const sec = parseContent(readFileSync(join(DIR, "content.md"), "utf8"));
   const tpl = readFileSync(join(DIR, "template.html"), "utf8");
 
@@ -247,6 +343,19 @@ function build() {
     ],
   };
 
+  // 形象照：有 -640.webp 小圖（optimize-images 會產）就給手機 srcset，preload 也跟著切
+  function heroPhoto(photo) {
+    const small = photo.replace(/\.webp$/, "-640.webp");
+    const preload = (extra = "") => `<link rel="preload" as="image" href="${assetUrl(photo)}"${extra} fetchpriority="high">`;
+    if (!existsSync(join(DIR, small))) return { "{{PHOTO_SRCSET}}": "", "{{PHOTO_PRELOAD}}": preload() };
+    const sizes = "(max-width:860px) min(82vw,360px), min(46vw,470px)"; // 對應 template 的 .hero-photo img 寬度
+    const srcset = `${assetUrl(small)} ${webpSize(join(DIR, small)).w}w, ${assetUrl(photo)} ${webpSize(join(DIR, photo)).w}w`;
+    return {
+      "{{PHOTO_SRCSET}}": ` srcset="${srcset}" sizes="${sizes}"`,
+      "{{PHOTO_PRELOAD}}": preload(` imagesrcset="${srcset}" imagesizes="${sizes}"`),
+    };
+  }
+
   const rep = {
     "{{JSON_LD}}": JSON.stringify(jsonLd, null, 2).replaceAll("</", "<\\/"),
     "{{TITLE}}": esc(site.title),
@@ -265,6 +374,7 @@ function build() {
       .join("\n"),
     "{{PHOTO}}": assetUrl(hero.photo),
     "{{PHOTO_SIZE}}": dim(hero.photo),
+    ...heroPhoto(hero.photo),
     "{{ABOUT_TITLE}}": esc(about.heading),
     "{{ABOUT_SUB}}": gold(about.sub),
     "{{BOOKS_TITLE}}": esc(books.heading),
@@ -318,7 +428,7 @@ function build() {
       [
         '      <figure class="book">',
         `        <a href="${b.url}" target="_blank" rel="noopener">`,
-        `          <div class="cover"><img src="${assetUrl(b.cover)}" alt="${esc(b.title)}"${dim(b.cover)} loading="lazy" decoding="async"></div>`,
+        `          <div class="cover"><img src="${assetUrl(b.cover)}" alt="${esc(b.title)}"${dim(b.cover)} fetchpriority="low" decoding="async"></div>`,
         `          <figcaption><span class="tag">${esc(b.tag)}</span><br>${esc(b.title)}</figcaption>`,
         "        </a>",
         "      </figure>",
@@ -397,6 +507,10 @@ function build() {
   let out = tpl;
   for (const [token, value] of Object.entries(rep)) out = out.replaceAll(token, value);
 
+  // 字型最後處理：要先有完整頁面才知道用到哪些字
+  const fonts = await buildFonts(out);
+  out = out.replace("{{FONT_CSS}}", () => fonts.css).replace("{{FONT_LINKS}}", () => fonts.links);
+
   const leftover = [...new Set(out.match(/\{\{[A-Z_]+\}\}/g) ?? [])];
   if (leftover.length) fail(`模板還有未替換的 token：${leftover.join(", ")}`);
 
@@ -415,5 +529,5 @@ function build() {
   console.log(`✓ 已產生 ${join(DIR, "sitemap.xml")}`);
 }
 
-build();
+await build();
 if (process.argv.includes("--open")) execFileSync("open", [OUT]);
