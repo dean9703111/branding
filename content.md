@@ -74,7 +74,7 @@ medium   = "https://medium.com/@dean-lin"
 # email 留空時只顯示 Facebook；Facebook 連結沿用上面 [social] 的 facebook
 # email_body 是對方點開 Email 就看到的填寫格式，\n 換行
 [contact]
-email          = ""
+email          = "babydragon9703111@gmail.com"
 email_label    = "Email 洽詢"
 facebook_label = "Facebook 私訊"
 email_subject  = "內訓邀約｜（單位名稱）｜（課程主題）"
