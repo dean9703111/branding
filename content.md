@@ -414,6 +414,5 @@ source = "DEAN LIN・工程師下班有約"
 ```toml
 tagline   = "把複雜的技術，變成人人都能上手的生產力。"
 services  = ["企業內訓・校園講座", "線上課程・媒體邀訪"]
-cta       = "透過 Facebook 洽詢 →"
 copyright = "© 2026 Dean Lin 林鼎淵・生成式 AI 講師・暢銷書作家・外商工程師"
 ```
