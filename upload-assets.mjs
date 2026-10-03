@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 把 assets/ 裡的圖片上傳到 Cloudflare R2（透過 wrangler，零依賴）
+ * 把 assets/ 裡的圖片與字型上傳到 Cloudflare R2（透過 wrangler，零依賴）
  *
  * 用法（在專案根目錄）：
  *   npm run upload:branding              # 只上傳新增或內容有變的檔案
@@ -28,6 +28,7 @@ const CACHE_CONTROL = "public, max-age=31536000, immutable";
 const MIME = {
   ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
   ".gif": "image/gif", ".svg": "image/svg+xml", ".avif": "image/avif", ".ico": "image/x-icon",
+  ".woff2": "font/woff2", ".woff": "font/woff",
 };
 const all = process.argv.includes("--all");
 const dryRun = process.argv.includes("--dry-run");
@@ -50,13 +51,14 @@ function* walk(dir) {
 
 const sha = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, "utf8")) : {};
+for (const key of Object.keys(manifest)) if (!existsSync(join(DIR, key))) delete manifest[key]; // 本機已刪的（如舊字型檔）不再追蹤
 const npx = process.platform === "win32" ? "npx.cmd" : "npx";
 
 let uploaded = 0, skipped = 0, bytes = 0;
 for (const file of walk(ASSETS)) {
   const key = relative(DIR, file).split("\\").join("/"); // assets/書籍/xxx.webp
   const mime = MIME[extname(file).toLowerCase()];
-  if (!mime) { console.log(`  略過（不是圖片）：${key}`); continue; }
+  if (!mime) { console.log(`  略過（不是圖片或字型）：${key}`); continue; }
   const hash = sha(file);
   if (!all && manifest[key] === hash) { skipped++; continue; }
 

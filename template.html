@@ -23,8 +23,7 @@
 <meta name="twitter:description" content="{{DESCRIPTION}}">
 <meta name="twitter:image" content="{{OG_IMAGE}}">
 <meta name="twitter:image:alt" content="{{NAME}} {{NAME_EN}} 形象卡片">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- 字型：build 時只向 Google Fonts 要本頁用到的字（text= 子集），CSS 內嵌、字型檔 preload（見 build.mjs 的 buildFonts） -->
+<!-- 字型：build 時算出本頁用到的字，抓回只含這些字的字型檔放 assets/fonts/ 自行託管；CSS 內嵌、字型檔 preload（見 build.mjs 的 buildFonts） -->
 {{FONT_LINKS}}
 <style>
 {{FONT_CSS}}

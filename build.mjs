@@ -8,7 +8,7 @@
  *
  * 零依賴，只用 Node.js 內建模組。
  */
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -93,12 +93,15 @@ const assetUrl = (src) => {
 // 絕對網址（JSON-LD、OG 用）：CDN 模式直接用 CDN 網址，否則以 site.url 為基底
 const absUrl = (src, base) => (assetBase ? assetUrl(src) : new URL(encodeURI(src), base).href);
 
-// ---------- 字型子集：只向 Google Fonts 要本頁用到的字 ----------
+// ---------- 字型子集：只載本頁用到的字，字型檔自行託管 ----------
 // 中文字型完整版要靠 100 多個切片檔，首次載入要先抓 200KB 的 CSS 再抓 30 多個 woff2。
-// 改成 build 時算出頁面用到的字，用 text= 參數向 Google 要「只含這些字」的單一字型檔，
-// 再把 CSS 內嵌、字型檔 preload：請求數從 30 多個降到個位數，位元組減半，文字不再反覆閃動。
+// 改成 build 時算出頁面用到的字，用 Google Fonts 的 text= 參數當「子集產生器」，
+// 把只含這些字的字型檔抓回 assets/fonts/，CSS 內嵌、字型檔 preload：
+// 訪客只連自己的網域，請求數從 30 多個降到個位數，位元組減半，文字不再反覆閃動。
+// 字沒變就不會再連 Google（結果記在 .font-cache.json，請一起 commit）。
 const FONT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
-const FONT_CACHE = join(DIR, ".font-cache.json"); // url → css，讓之後沒網路也能 build（請一起 commit）
+const FONT_CACHE = join(DIR, ".font-cache.json");
+const FONT_DIR = "assets/fonts";
 // 用襯線字（Noto Serif TC）的元素：class 名或標籤名，對應 template.html 的 CSS；
 // chip 是因為點開的課程面板標題（.cp-title）由 JS 把單位名稱填進去
 const SERIF_CLASSES = new Set(["serif", "nav-logo", "hero-name", "sec-title", "cp-title", "quote-final", "foot-name", "chip"]);
@@ -138,23 +141,25 @@ function collectChars(html) {
 const fontCssUrl = (family, chars) =>
   `https://fonts.googleapis.com/css2?family=${family}&display=swap&text=${encodeURIComponent([...chars].sort().join(""))}`;
 
-// 先用內建 fetch，失敗（例如公司網路要走 proxy）再退回 curl
-async function fetchText(url) {
+// 先用內建 fetch，失敗（例如公司網路要走 proxy）再退回 curl；回傳 Buffer
+async function fetchBytes(url) {
   if (process.env.BRANDING_OFFLINE) throw new Error("BRANDING_OFFLINE=1，略過網路"); // 測退路或 CI 離線用
   try {
-    const r = await fetch(url, { headers: { "User-Agent": FONT_UA }, signal: AbortSignal.timeout(10000) });
+    const r = await fetch(url, { headers: { "User-Agent": FONT_UA }, signal: AbortSignal.timeout(15000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return await r.text();
+    return Buffer.from(await r.arrayBuffer());
   } catch (e1) {
     try {
-      return execFileSync("curl", ["-sSfL", "--max-time", "20", "-A", FONT_UA, url], { encoding: "utf8", maxBuffer: 1 << 24 });
+      return execFileSync("curl", ["-sSfL", "--max-time", "30", "-A", FONT_UA, url], { maxBuffer: 1 << 26 });
     } catch (e2) {
       throw new Error(`${e1.message}；curl 也失敗：${String(e2.stderr || e2.message).trim().split("\n")[0]}`);
     }
   }
 }
 
-// 回傳 { css: 內嵌用的 @font-face, links: preload 標籤 }；抓不到又沒快取就退回外連 <link>
+// 回傳 { css: 內嵌用的 @font-face（已指向本機檔）, links: preload 標籤 }
+// 流程：算用字 → 向 Google 要子集 CSS → 把 woff2 抓回 assets/fonts/（檔名含內容雜湊）→ CSS 改指本機
+// 抓不到時依序退回：上次成功的本機字型（新字會用系統字型）→ 外連 Google（頁面仍可看）
 async function buildFonts(html) {
   const { all, serif } = collectChars(html);
   const latin = new Set([...all].filter((c) => !isCJK(c)));
@@ -163,30 +168,64 @@ async function buildFonts(html) {
     fontCssUrl("Noto+Sans+TC:wght@300;400;500", all),
     fontCssUrl("Cormorant+Garamond:ital,wght@0,700;1,500", latin),
   ];
+  const key = createHash("sha256").update(urls.join("\n")).digest("hex").slice(0, 12);
   const cache = existsSync(FONT_CACHE) ? JSON.parse(readFileSync(FONT_CACHE, "utf8")) : {};
-  const fresh = {};
-  let css = "";
-  for (const url of urls) {
-    if (!cache[url]) {
-      try {
-        cache[url] = await fetchText(url);
-      } catch (e) {
-        console.warn(`! 抓不到字型 CSS（${e.message}），這次退回外連 Google Fonts；有網路時重跑 build 即可`);
-        const links = [
-          '<link rel="preconnect" href="https://fonts.googleapis.com">',
-          ...urls.map((u) => `<link rel="stylesheet" href="${u.replaceAll("&", "&amp;")}">`),
-        ];
-        return { css: "", links: links.join("\n") };
+  const summary = `襯線 ${serif.size} 字、黑體 ${all.size} 字`;
+  const fontDirAbs = join(DIR, FONT_DIR);
+  mkdirSync(fontDirAbs, { recursive: true });
+
+  const render = (entry) => ({
+    // CSS 裡的本機路徑在這裡才套 assetUrl（asset_base 可能變，快取只存相對路徑）
+    css: entry.css.replace(/url\((assets\/fonts\/[^)]+)\)/g, (_, p) => `url(${assetUrl(p)})`),
+    links: entry.files.map((p) => `<link rel="preload" as="font" type="font/woff2" href="${assetUrl(p)}" crossorigin>`).join("\n"),
+  });
+  const filesPresent = (entry) => entry?.files?.every((p) => existsSync(join(DIR, p)));
+
+  let entry = cache[key];
+  if (!filesPresent(entry)) {
+    try {
+      let css = "";
+      for (const url of urls) css += (await fetchBytes(url)).toString("utf8").trim() + "\n";
+      // 同一個遠端檔可能被多個 @font-face 共用（Noto 是可變字型，三個字重一個檔）
+      const faces = [...css.matchAll(/@font-face\s*{([^}]*)}/g)].map((m) => m[1]);
+      const remote = new Map(); // url → 檔名前綴（家族＋字重）
+      for (const f of faces) {
+        const url = f.match(/url\(([^)]+)\)/)[1];
+        const fam = f.match(/font-family:\s*'([^']+)'/)[1].replace(/\s+/g, "");
+        const w = f.match(/font-weight:\s*([^;]+)/)[1].trim().replace(/\s+/g, "-");
+        const st = /font-style:\s*italic/.test(f) ? "i" : "";
+        const cur = remote.get(url);
+        remote.set(url, cur ? `${cur}_${w}${st}` : `${fam}-${w}${st}`);
       }
+      const files = [];
+      for (const [url, prefix] of remote) {
+        const buf = await fetchBytes(url);
+        if (buf.subarray(0, 4).toString("ascii") !== "wOF2") fail(`${url} 回來的不是 woff2`);
+        const name = `${prefix}-${createHash("sha256").update(buf).digest("hex").slice(0, 8)}.woff2`;
+        const rel = `${FONT_DIR}/${name}`;
+        writeFileSync(join(DIR, rel), buf);
+        css = css.replaceAll(`url(${url})`, `url(${rel})`);
+        files.push(rel);
+      }
+      entry = { css, files, chars: summary };
+      // 快取只留這一筆，並清掉沒用到的舊字型檔
+      writeFileSync(FONT_CACHE, JSON.stringify({ [key]: entry }, null, 2) + "\n");
+      for (const f of readdirSync(fontDirAbs)) if (!files.includes(`${FONT_DIR}/${f}`)) unlinkSync(join(fontDirAbs, f));
+      console.log(`✓ 字型子集更新：${summary} → ${files.length} 個字型檔抓回 ${FONT_DIR}/（${(files.reduce((n, p) => n + statSync(join(DIR, p)).size, 0) / 1024).toFixed(0)}K）`);
+    } catch (e) {
+      const last = Object.values(cache).find(filesPresent);
+      if (last) {
+        console.warn(`! 抓不到字型（${e.message}），沿用上次的本機字型（${last.chars}）；這次新增的字會用系統字型，有網路時重跑 build`);
+        return render(last);
+      }
+      console.warn(`! 抓不到字型（${e.message}）且沒有本機字型，這次退回外連 Google Fonts；有網路時重跑 build`);
+      const links = ['<link rel="preconnect" href="https://fonts.googleapis.com">', ...urls.map((u) => `<link rel="stylesheet" href="${u.replaceAll("&", "&amp;")}">`)];
+      return { css: "", links: links.join("\n") };
     }
-    fresh[url] = cache[url];
-    css += cache[url].trim() + "\n";
+  } else {
+    console.log(`✓ 字型子集未變（${summary}），沿用 ${FONT_DIR}/ 的 ${entry.files.length} 個檔`);
   }
-  writeFileSync(FONT_CACHE, JSON.stringify(fresh, null, 2) + "\n"); // 只留目前用到的三筆
-  const files = [...new Set([...css.matchAll(/url\(([^)]+)\)/g)].map((m) => m[1]))];
-  const links = files.map((u) => `<link rel="preload" as="font" type="font/woff2" href="${u}" crossorigin>`);
-  console.log(`✓ 字型子集：襯線 ${serif.size} 字、黑體 ${all.size} 字 → ${files.length} 個字型檔（CSS 已內嵌）`);
-  return { css, links: links.join("\n") };
+  return render(entry);
 }
 
 // ---------- TOML 子集解析（字串、字串陣列、[表格]、[[清單]]、# 註解） ----------
