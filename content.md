@@ -5,6 +5,11 @@ title       = "林鼎淵 Dean Lin｜生成式 AI 講師・暢銷書作家・軟�
 description = "外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場授課與顧問經驗。"
 url         = "https://deanlin.net/branding/"
 og_image    = "assets/og.png"
+# 圖片 CDN（Cloudflare R2 的公開網址，結尾不加斜線，例如 "https://img.deanlin.net"）
+# 留空 = 圖片維持相對路徑 assets/…；填了之後 build 會把所有圖片網址改成 asset_base/assets/…?v=內容雜湊
+asset_base  = ""
+# 上傳用的 R2 bucket 名稱（npm run upload:branding 會讀這裡）
+r2_bucket   = "deanlin-branding"
 favicon     = "https://deanlin.net/images/favicon.png"
 # 專長領域（寫進結構化資料 Person.knowsAbout，幫助搜尋引擎理解品牌主題）
 knows_about = ["生成式 AI", "ChatGPT", "Claude", "Gemini", "Vibe Coding", "AI 簡報製作", "AI 圖片與影片生成", "企業 AI 導入", "AI 輔助程式開發", "工程師職涯", "n8n 自動化"]

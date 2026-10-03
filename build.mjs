@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const OUT = join(DIR, "index.html");
@@ -78,6 +79,19 @@ const dim = (src) => {
   const d = webpSize(join(DIR, src));
   return d ? ` width="${d.w}" height="${d.h}"` : "";
 };
+// 圖片網址：網站設定有 asset_base（Cloudflare R2 公開網址）時，assets/… 改指向 CDN，
+// 並加上 ?v=內容雜湊 當快取識別（R2 上的物件設成 immutable 快取，換圖只要重 build 網址就變）；
+// 沒設 asset_base 就維持原本的相對路徑。
+let assetBase = "";
+const assetUrl = (src) => {
+  if (!assetBase || !src.startsWith("assets/")) return src;
+  const file = join(DIR, src);
+  if (!existsSync(file)) fail(`找不到圖片 ${src}，無法算快取雜湊（asset_base 模式下圖片必須存在於本機）`);
+  const hash = createHash("sha256").update(readFileSync(file)).digest("hex").slice(0, 8);
+  return `${assetBase}/${encodeURI(src)}?v=${hash}`;
+};
+// 絕對網址（JSON-LD、OG 用）：CDN 模式直接用 CDN 網址，否則以 site.url 為基底
+const absUrl = (src, base) => (assetBase ? assetUrl(src) : new URL(encodeURI(src), base).href);
 
 // ---------- TOML 子集解析（字串、字串陣列、[表格]、[[清單]]、# 註解） ----------
 
@@ -185,6 +199,7 @@ function build() {
   const tpl = readFileSync(join(DIR, "template.html"), "utf8");
 
   const site = sec.site.data;
+  assetBase = (site.asset_base ?? "").trim().replace(/\/+$/, "");
   const hero = sec.hero.data;
   const social = hero.social ?? fail("Hero 區塊缺少 [social]");
   const about = sec.about.data;
@@ -216,7 +231,7 @@ function build() {
         alternateName: nameEn,
         description: site.description,
         url: site.url,
-        image: new URL(encodeURI(hero.photo), site.url).href,
+        image: absUrl(hero.photo, site.url),
         jobTitle: hero.titles.map((t) => t.text.replaceAll("**", "")),
         knowsAbout: site.knows_about ?? [],
         sameAs: Object.values(social),
@@ -225,7 +240,7 @@ function build() {
         "@type": "Book",
         name: b.title,
         url: b.url,
-        image: new URL(encodeURI(b.cover), site.url).href,
+        image: absUrl(b.cover, site.url),
         author: { "@id": personId },
         inLanguage: "zh-Hant",
       })),
@@ -238,7 +253,7 @@ function build() {
     "{{DESCRIPTION}}": esc(site.description),
     "{{URL}}": site.url ?? fail("網站設定缺少 url"),
     "{{FAVICON}}": site.favicon ?? fail("網站設定缺少 favicon"),
-    "{{OG_IMAGE}}": new URL(site.og_image ?? fail("網站設定缺少 og_image"), site.url).href,
+    "{{OG_IMAGE}}": absUrl(site.og_image ?? fail("網站設定缺少 og_image"), site.url),
     "{{EYEBROW}}": esc(hero.eyebrow),
     "{{NAME}}": esc(hero.name),
     "{{NAME_EN}}": esc(hero.name_en),
@@ -248,7 +263,7 @@ function build() {
       .split(/\n\s*\n/)
       .map((p) => `        <p>${esc(p.trim()).replaceAll("\n", "<br>")}</p>`)
       .join("\n"),
-    "{{PHOTO}}": hero.photo,
+    "{{PHOTO}}": assetUrl(hero.photo),
     "{{PHOTO_SIZE}}": dim(hero.photo),
     "{{ABOUT_TITLE}}": esc(about.heading),
     "{{ABOUT_SUB}}": gold(about.sub),
@@ -303,7 +318,7 @@ function build() {
       [
         '      <figure class="book">',
         `        <a href="${b.url}" target="_blank" rel="noopener">`,
-        `          <div class="cover"><img src="${b.cover}" alt="${esc(b.title)}"${dim(b.cover)} loading="lazy" decoding="async"></div>`,
+        `          <div class="cover"><img src="${assetUrl(b.cover)}" alt="${esc(b.title)}"${dim(b.cover)} loading="lazy" decoding="async"></div>`,
         `          <figcaption><span class="tag">${esc(b.tag)}</span><br>${esc(b.title)}</figcaption>`,
         "        </a>",
         "      </figure>",
@@ -320,7 +335,7 @@ function build() {
       `${indent}<figure class="shot">`,
       ...cardLink(p, indent),
       `${indent}  <div class="bar"><i></i><i></i><i></i></div>`,
-      `${indent}  <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
+      `${indent}  <img src="${assetUrl(p.img)}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
       `${indent}  <figcaption>${esc(p.caption)}</figcaption>`,
       `${indent}</figure>`,
     ].join("\n");
@@ -351,7 +366,7 @@ function build() {
   rep["{{GALLERY}}"] = teaching.gallery
     .map(
       (g, i) =>
-        `      <figure class="gitem ${gClasses[i]}"><img src="${g.img}" alt="${esc(g.caption)}"${dim(g.img)} loading="lazy" decoding="async"><figcaption>${esc(g.caption)}</figcaption></figure>`
+        `      <figure class="gitem ${gClasses[i]}"><img src="${assetUrl(g.img)}" alt="${esc(g.caption)}"${dim(g.img)} loading="lazy" decoding="async"><figcaption>${esc(g.caption)}</figcaption></figure>`
     )
     .join("\n");
 
@@ -366,7 +381,7 @@ function build() {
       [
         '      <figure class="gitem">',
         ...cardLink(p, "      "),
-        `        <img src="${p.img}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
+        `        <img src="${assetUrl(p.img)}" alt="${esc(p.caption)}"${dim(p.img)} loading="lazy" decoding="async">`,
         `        <figcaption>${esc(p.caption)}</figcaption>`,
         "      </figure>",
       ].join("\n")
