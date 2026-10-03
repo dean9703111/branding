@@ -530,47 +530,56 @@ footer{
   border-top:1px solid var(--line-soft);padding:clamp(50px,7vw,80px) 0 40px;
   background:var(--bg-2);transition:background .45s ease;
 }
+/* 桌機頁尾：第一列「品牌｜導覽與社群各一列」、第二列整寬的合作邀約橫帶、最後版權。每列矮而滿，避免左高右低的空白 */
 .foot-top{
-  display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(36px,6vw,80px);
-  align-items:start;
+  display:grid;grid-template-columns:1fr auto;gap:30px clamp(36px,6vw,80px);
+  align-items:center;
 }
-.foot-name{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:.12em;color:var(--ink-strong)}
-.foot-name em{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.5em;color:var(--gold);letter-spacing:.26em;margin-top:8px}
-.foot-tag{margin-top:18px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:22em}
-/* 合作洽詢：放在品牌區下方，按鈕與 hero 同款（淺色背景用深色外框） */
-.foot-contact{margin-top:30px}
-.foot-contact h6,.foot-col h6{
-  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;
-  margin-bottom:16px;text-transform:uppercase;
+.foot-name{
+  font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.6rem,2.4vw,2rem);letter-spacing:.12em;color:var(--ink-strong);
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;line-height:1.1;
 }
+.foot-name em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:.6em;color:var(--gold);letter-spacing:.22em}
+.foot-tag{margin-top:12px;font-size:.88rem;font-weight:300;color:var(--muted);letter-spacing:.06em;max-width:26em}
+.foot-cols{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.foot-col{display:flex;align-items:center;flex-wrap:wrap;gap:6px 22px}
+.foot-col h6,.foot-contact h6{
+  font-size:.7rem;letter-spacing:.3em;color:var(--gold);font-weight:500;text-transform:uppercase;margin:0 6px 0 0;
+}
+.foot-col a,.foot-col p{
+  display:flex;align-items:center;gap:8px;margin:0;
+  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;transition:color .25s;
+}
+.foot-col a:hover{color:var(--gold)}
+.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+/* 合作邀約橫帶：左邊標籤與服務項目，右邊兩顆按鈕（與 hero 同款，淺色背景用深色外框） */
+.foot-contact{
+  grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:20px 28px;flex-wrap:wrap;
+  padding:20px 26px;border:1px solid var(--line-soft);border-radius:14px;background:var(--surface);
+}
+.foot-contact h6{display:block;margin:0 0 8px}
+.foot-services{margin:0;font-size:.84rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
 .foot-cta{display:flex;flex-wrap:wrap;gap:10px}
 .foot-cta .btn{padding:9px 16px;font-size:.82rem;letter-spacing:.06em}
 .foot-cta .btn svg{width:16px;height:16px;fill:none}
 .foot-cta .btn-primary{color:#17140f}
 .foot-cta .btn-ghost{color:var(--ink-strong);border-color:var(--gold-line);background:transparent}
 .foot-cta .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
-.foot-services{margin-top:14px;font-size:.8rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
-.foot-cols{display:grid;grid-template-columns:repeat(2,auto);gap:clamp(28px,5vw,72px);justify-content:end}
-.foot-col a,.foot-col p{
-  display:flex;align-items:center;gap:9px;
-  font-size:.86rem;font-weight:300;color:var(--muted);letter-spacing:.06em;
-  margin-bottom:10px;transition:color .25s;
-}
-.foot-col a:hover{color:var(--gold)}
-.foot-col svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
-.copy{margin-top:clamp(40px,6vw,60px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
-/* 手機版頁尾：品牌一行、洽詢按鈕緊接、導覽與社群並排兩欄、版權獨立堆疊 */
+.copy{margin-top:clamp(32px,5vw,48px);padding-top:22px;border-top:1px solid var(--line-soft);font-size:.74rem;color:var(--muted);letter-spacing:.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center}
+/* 手機版頁尾：品牌 → 洽詢 → 導覽與社群兩欄 → 版權 */
 @media (max-width:860px){
   footer{padding:44px 0 calc(28px + env(safe-area-inset-bottom))}
-  .foot-top{grid-template-columns:1fr;gap:30px}
-  .foot-name{font-size:1.55rem;letter-spacing:.1em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .foot-name em{display:inline;font-size:.62em;margin-top:0;letter-spacing:.2em}
+  .foot-top{grid-template-columns:1fr;gap:26px;align-items:start}
+  .foot-name{font-size:1.55rem;letter-spacing:.1em;gap:12px}
   .foot-tag{margin-top:8px;font-size:.84rem}
-  .foot-contact{margin-top:22px}
+  .foot-contact{order:2;display:block;padding:0;border:0;background:transparent;border-radius:0}
   .foot-contact h6{margin-bottom:12px}
+  .foot-services{margin-top:10px;font-size:.8rem}
+  .foot-contact .foot-cta{margin-top:16px}
   .foot-cta .btn{flex:1 1 140px;justify-content:center;white-space:nowrap;padding:9px 12px;font-size:.8rem;letter-spacing:.04em}
-  .foot-cols{width:100%;grid-template-columns:1fr 1fr;gap:22px 16px;justify-content:start}
-  .foot-col h6{margin-bottom:12px}
+  .foot-cols{order:3;display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;align-items:start}
+  .foot-col{display:block}
+  .foot-col h6{display:block;margin:0 0 12px}
   .foot-col a,.foot-col p{margin-bottom:8px;font-size:.84rem}
   .copy{flex-direction:column;align-items:flex-start;gap:12px;margin-top:30px;letter-spacing:.06em;line-height:1.7}
   .copy .to-top{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--line-soft);border-radius:99px;color:var(--ink);letter-spacing:.1em}
@@ -741,13 +750,6 @@ footer{
       <div class="foot-brand">
         <div class="foot-name">{{NAME}}<em>{{NAME_EN}}</em></div>
         <p class="foot-tag">{{FOOT_TAGLINE}}</p>
-        <div class="foot-contact">
-          <h6>合作邀約</h6>
-          <div class="foot-cta">
-{{FOOT_CONTACT}}
-          </div>
-          <p class="foot-services">{{FOOT_SERVICES}}</p>
-        </div>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
@@ -760,6 +762,15 @@ footer{
         <div class="foot-col">
           <h6>社群</h6>
 {{SOCIAL_FOOT}}
+        </div>
+      </div>
+      <div class="foot-contact">
+        <div>
+          <h6>合作邀約</h6>
+          <p class="foot-services">{{FOOT_SERVICES}}</p>
+        </div>
+        <div class="foot-cta">
+{{FOOT_CONTACT}}
         </div>
       </div>
     </div>
