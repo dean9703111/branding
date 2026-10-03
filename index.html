@@ -23,13 +23,71 @@
 <meta name="twitter:description" content="外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場授課與顧問經驗。">
 <meta name="twitter:image" content="https://deanlin.net/branding/assets/og.png">
 <meta name="twitter:image:alt" content="林鼎淵 DEAN LIN 形象卡片">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- 字型 CSS 近 1MB（中文字型切片多），改為非阻塞：先 preload，再用 media=print 載入後切回 all -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,700;1,500&display=swap"></noscript>
-<link rel="preload" as="image" href="assets/形象照/個人照.webp" fetchpriority="high">
+<!-- 字型：build 時算出本頁用到的字，抓回只含這些字的字型檔放 assets/fonts/ 自行託管；CSS 內嵌、字型檔 preload（見 build.mjs 的 buildFonts） -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/NotoSerifTC-700_900-fffc66c7.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/NotoSansTC-300_400_500-1ae0bdf3.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/CormorantGaramond-500i-840dc265.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/CormorantGaramond-700-2c591376.woff2" crossorigin>
+<style>
+@font-face {
+  font-family: 'Noto Serif TC';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/NotoSerifTC-700_900-fffc66c7.woff2) format('woff2');
+  unicode-range: U+20-7e, U+d7, U+2013-2014, U+2026, U+2197, U+3000-3002, U+3008-300f, U+30fb, U+4e09-4e0b, U+4e0d, U+4e2d, U+4e4b, U+4e8b, U+4eba, U+4ee3, U+4f01, U+4f4d, U+4f5c, U+4fdd, U+4fe1, U+50d1, U+5167-5168, U+51fa, U+520a, U+5238, U+5275, U+529b, U+52d5, U+52d9, U+52de, U+5316-5317, U+5354, U+5357, U+53f0, U+5409, U+540c, U+5468, U+548c, U+54e1, U+5546, U+554f, U+5609, U+570b, U+5712, U+5716, U+5718, U+5730, U+5883, U+5916, U+5927, U+5929, U+597d, U+59d4, U+5a92, U+5b78, U+5b89, U+5ba2, U+5bb6, U+5bc6, U+5bcc, U+5be6, U+5c07-5c08, U+5c0f, U+5c40, U+5c6c, U+5c71, U+5de5, U+5df1, U+5e2b, U+5e38, U+5e73, U+5e9c, U+5ea7, U+5efa, U+5f0f, U+5f37, U+5fc3, U+60f3, U+6167, U+6210, U+6280, U+6388, U+653e-653f, U+6566, U+6578, U+6587, U+6599, U+65b0, U+65e5, U+662f, U+6642, U+667a, U+66a2, U+66f8, U+6700, U+6703, U+6708-6709, U+677e, U+6797, U+679c, U+6821, U+696d, U+6a5f, U+6b04, U+6c11, U+6c5f, U+6cd5, U+6daf, U+6de1, U+6df5, U+6e90, U+6efe, U+7063, U+70ba, U+7248, U+73ed, U+7406, U+74b0, U+74cf, U+751f, U+7522, U+7528, U+7530, U+7532, U+7570, U+767c, U+7684, U+76ca, U+777f, U+793e, U+79d1, U+7a0b, U+7a4e, U+7ba1, U+7bc9, U+7cbe, U+7d04, U+7d93, U+7dda, U+7def, U+7e23, U+7e3d, U+7f72, U+7f8e, U+7fa4, U+7fa9, U+8001, U+8005, U+80fd, U+81ea, U+81f4, U+81fa, U+8207-8208, U+8272, U+82f1, U+83ef, U+843d, U+8449, U+8457, U+85dd, U+8853, U+885b, U+898b, U+89d2, U+8a08, U+8a0a, U+8a13, U+8a2d, U+8a62, U+8a8c, U+8aa0, U+8ab2, U+8aee, U+8afe, U+8b1b, U+8b49, U+8b80, U+8ca1, U+8cc7, U+8db3, U+8de1, U+8def, U+8ecd, U+8edf, U+8fb2, U+9020, U+9054, U+9060, U+9078, U+90a6, U+90e8, U+90f5, U+91ab, U+91d1, U+9298, U+92b7, U+935b, U+946b, U+9580, U+958b, U+95b1, U+9632, U+9662, U+969b, U+96dc, U+96fb, U+9752, U+9801, U+9867, U+9928, U+99a8, U+9a57, U+9ad4, U+9ad8, U+9ec3, U+9f0e, U+ff01, U+ff05, U+ff08-ff09, U+ff0b-ff0c, U+ff0f, U+ff1a-ff1b, U+ff1f, U+ff5e;
+}
+@font-face {
+  font-family: 'Noto Serif TC';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/NotoSerifTC-700_900-fffc66c7.woff2) format('woff2');
+  unicode-range: U+20-7e, U+d7, U+2013-2014, U+2026, U+2197, U+3000-3002, U+3008-300f, U+30fb, U+4e09-4e0b, U+4e0d, U+4e2d, U+4e4b, U+4e8b, U+4eba, U+4ee3, U+4f01, U+4f4d, U+4f5c, U+4fdd, U+4fe1, U+50d1, U+5167-5168, U+51fa, U+520a, U+5238, U+5275, U+529b, U+52d5, U+52d9, U+52de, U+5316-5317, U+5354, U+5357, U+53f0, U+5409, U+540c, U+5468, U+548c, U+54e1, U+5546, U+554f, U+5609, U+570b, U+5712, U+5716, U+5718, U+5730, U+5883, U+5916, U+5927, U+5929, U+597d, U+59d4, U+5a92, U+5b78, U+5b89, U+5ba2, U+5bb6, U+5bc6, U+5bcc, U+5be6, U+5c07-5c08, U+5c0f, U+5c40, U+5c6c, U+5c71, U+5de5, U+5df1, U+5e2b, U+5e38, U+5e73, U+5e9c, U+5ea7, U+5efa, U+5f0f, U+5f37, U+5fc3, U+60f3, U+6167, U+6210, U+6280, U+6388, U+653e-653f, U+6566, U+6578, U+6587, U+6599, U+65b0, U+65e5, U+662f, U+6642, U+667a, U+66a2, U+66f8, U+6700, U+6703, U+6708-6709, U+677e, U+6797, U+679c, U+6821, U+696d, U+6a5f, U+6b04, U+6c11, U+6c5f, U+6cd5, U+6daf, U+6de1, U+6df5, U+6e90, U+6efe, U+7063, U+70ba, U+7248, U+73ed, U+7406, U+74b0, U+74cf, U+751f, U+7522, U+7528, U+7530, U+7532, U+7570, U+767c, U+7684, U+76ca, U+777f, U+793e, U+79d1, U+7a0b, U+7a4e, U+7ba1, U+7bc9, U+7cbe, U+7d04, U+7d93, U+7dda, U+7def, U+7e23, U+7e3d, U+7f72, U+7f8e, U+7fa4, U+7fa9, U+8001, U+8005, U+80fd, U+81ea, U+81f4, U+81fa, U+8207-8208, U+8272, U+82f1, U+83ef, U+843d, U+8449, U+8457, U+85dd, U+8853, U+885b, U+898b, U+89d2, U+8a08, U+8a0a, U+8a13, U+8a2d, U+8a62, U+8a8c, U+8aa0, U+8ab2, U+8aee, U+8afe, U+8b1b, U+8b49, U+8b80, U+8ca1, U+8cc7, U+8db3, U+8de1, U+8def, U+8ecd, U+8edf, U+8fb2, U+9020, U+9054, U+9060, U+9078, U+90a6, U+90e8, U+90f5, U+91ab, U+91d1, U+9298, U+92b7, U+935b, U+946b, U+9580, U+958b, U+95b1, U+9632, U+9662, U+969b, U+96dc, U+96fb, U+9752, U+9801, U+9867, U+9928, U+99a8, U+9a57, U+9ad4, U+9ad8, U+9ec3, U+9f0e, U+ff01, U+ff05, U+ff08-ff09, U+ff0b-ff0c, U+ff0f, U+ff1a-ff1b, U+ff1f, U+ff5e;
+}
+@font-face {
+  font-family: 'Noto Sans TC';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(assets/fonts/NotoSansTC-300_400_500-1ae0bdf3.woff2) format('woff2');
+  unicode-range: U+a, U+20-7e, U+a9, U+b7, U+d7, U+2013-2014, U+2026, U+2191-2192, U+2197, U+2260, U+3000-3002, U+3008-300f, U+30fb, U+4e00, U+4e03, U+4e09-4e0b, U+4e0d, U+4e26, U+4e2d, U+4e32, U+4e3b, U+4e4b, U+4e5f, U+4e86, U+4e8b-4e8c, U+4eab, U+4eae, U+4eba, U+4ecb, U+4ee3, U+4ee5, U+4ef6, U+4efb, U+4efd, U+4f01, U+4f46, U+4f4d, U+4f55, U+4f5c, U+4f60, U+4f7f, U+4f86, U+4f8b, U+4fdd, U+4fe1, U+500b, U+5011, U+501f, U+505a, U+5099, U+50d1, U+512a, U+5145, U+5165, U+5167-5168, U+516c, U+5177, U+518d, U+51fa, U+5206-5207, U+520a, U+5217, U+5229, U+5230, U+5238, U+523b, U+524d, U+5275, U+5283, U+529b, U+529f-52a0, U+52a9, U+52d5, U+52d9, U+52dd-52de, U+5305, U+5316-5317, U+5347, U+5354, U+5357, U+5373, U+53b2, U+53d7, U+53ef-53f0, U+53f8, U+5404, U+5408-5409, U+540c-540d, U+5411, U+542b, U+5438, U+5468, U+548c, U+54c1, U+54e1, U+5546, U+554f, U+555f, U+5584, U+55ae, U+55ce, U+5609, U+5668, U+56de, U+570b, U+5712, U+5716, U+5718, U+5728, U+5730, U+574a, U+578b, U+57df, U+57f9-57fa, U+5802, U+5831, U+5834, U+5883, U+589e, U+5916, U+591a, U+5927, U+5929, U+592f, U+597d, U+5982, U+59cb, U+59d4, U+5a01, U+5a92, U+5b57-5b58, U+5b78, U+5b89, U+5b8c, U+5b98, U+5b9a, U+5ba2, U+5ba4, U+5bb3, U+5bb6, U+5bb9, U+5bc6, U+5bcc, U+5be6, U+5beb, U+5c07-5c08, U+5c0d-5c0f, U+5c31, U+5c40, U+5c55, U+5c65, U+5c6c, U+5c71, U+5cf6, U+5dba, U+5de5, U+5de7, U+5df1, U+5e02, U+5e2b, U+5e36, U+5e38, U+5e73-5e74, U+5e9c, U+5ea6-5ea7, U+5eab, U+5eb8, U+5efa, U+5f0f, U+5f15, U+5f37, U+5f71, U+5f8c, U+5f91, U+5f97, U+5f9e, U+5fc3, U+5feb, U+5ff5, U+601d, U+60a8, U+60c5, U+60f3, U+610f, U+611f, U+614b, U+6167, U+61b6, U+61c2, U+61c9, U+6210-6211, U+6230, U+624b, U+624d, U+6253, U+6280, U+628a, U+62d3, U+62ec, U+6307, U+6388, U+638c, U+6392, U+63a5, U+63d0, U+63db, U+63e1, U+641e, U+64b0, U+64c5, U+64ca, U+64d4, U+64f4, U+6539, U+653b, U+653e-653f, U+6548, U+6559, U+6566, U+6574, U+6578, U+6587, U+6599, U+659c, U+65b0, U+65b9, U+65bc, U+65e5, U+65e9, U+662f, U+6642, U+667a, U+66a2, U+66f8, U+6700, U+6703, U+6708-6709, U+670d, U+671f, U+672a, U+672c, U+677e, U+6790, U+6797, U+679c, U+6821, U+683c, U+6848, U+696d, U+6975, U+699c, U+69d3, U+6a5f, U+6b04, U+6b21, U+6b3e, U+6b65, U+6b77, U+6bcf, U+6c11, U+6c34, U+6c42, U+6c5f, U+6c7a, U+6cd5, U+6ce8, U+6d3b, U+6d3d, U+6d41, U+6daf, U+6db5, U+6de1, U+6df5, U+6dfb, U+6e05, U+6e2c, U+6e90, U+6e9d, U+6efe, U+6f14, U+6f3e, U+700f, U+7063, U+70ba, U+7136, U+71df, U+721b, U+722c, U+7247-7248, U+7387, U+73ed, U+73fe, U+7406, U+7463, U+74b0, U+74cf, U+751f, U+7522, U+7528, U+7530, U+7532, U+7559, U+7565, U+756b, U+7570, U+7576, U+75db, U+7642, U+767b-767e, U+7684, U+76ca, U+76ee, U+76f4, U+76f8, U+771f, U+773c, U+775b, U+777f, U+77e5, U+77ed, U+7891, U+790e, U+793a, U+793e, U+795e, U+79d1-79d2, U+7a0b, U+7a31, U+7a4d-7a4e, U+7a97, U+7acb, U+7ad9, U+7ae0, U+7aef, U+7b2c, U+7b46, U+7b49, U+7ba1, U+7bc0, U+7bc7, U+7bc9, U+7c21, U+7cbe, U+7cfb, U+7d04, U+7d1a, U+7d2f, U+7d39, U+7d42, U+7d66, U+7d71, U+7d93, U+7dad, U+7db2, U+7dda, U+7def, U+7df4, U+7e23, U+7e3d-7e3e, U+7e41, U+7e6a, U+7f72, U+7f8e, U+7fa4, U+7fa9, U+7fd2, U+8001, U+8005, U+804a, U+8077, U+807d, U+80b2, U+80fd, U+8105, U+8166, U+8173, U+81c9, U+81ea, U+81f4, U+81fa, U+8207-8208, U+8272, U+82f1, U+83ef, U+842c, U+843d, U+8449, U+8457, U+84cb, U+85dd, U+8655, U+87f2, U+884c, U+8853, U+885b, U+8868, U+88fd, U+8907, U+898b, U+898f, U+8996, U+89bd, U+89c0, U+89d2, U+89e3, U+8a00, U+8a02, U+8a08, U+8a0a, U+8a13, U+8a18, U+8a2a, U+8a2d, U+8a62, U+8a66, U+8a71, U+8a8c-8a8d, U+8a9e, U+8aa0, U+8ab2, U+8ac7, U+8aee, U+8afe, U+8b1b, U+8b49, U+8b58, U+8b77, U+8b80, U+8b8a, U+8b93, U+8ca1, U+8cb7, U+8cc7, U+8cea, U+8d70, U+8d77, U+8d85, U+8db3, U+8dd1, U+8ddf, U+8de1, U+8de8, U+8def, U+8eab, U+8ecd, U+8edf, U+8f14-8f15, U+8f49, U+8fa6, U+8fb2, U+900f, U+9019-901a, U+901f-9020, U+9032, U+904b, U+904e, U+9053-9054, U+9060, U+9078, U+9080, U+90a6, U+90e8, U+90f5, U+90fd, U+91ab, U+91cc, U+91cf, U+91d1, U+9280, U+9298, U+92b7, U+9304, U+935b, U+9375, U+9418, U+946b, U+9577, U+9580, U+958b, U+9593, U+95b1, U+95dc, U+9632, U+9662, U+966a, U+968a, U+968e, U+969b, U+96a8, U+96aa, U+96c5, U+96dc, U+96f6, U+96fb, U+9700, U+9732, U+9752, U+9760, U+9762, U+9769, U+97f3, U+9801-9802, U+9805, U+9810, U+9818, U+983b, U+984c, U+985e, U+9867, U+986f, U+98a8, U+9928, U+99a8, U+99d0, U+9a45, U+9a57, U+9ad4, U+9ad8, U+9b06, U+9b54, U+9ebc, U+9ec3, U+9ede, U+9f0e, U+ff01, U+ff05, U+ff08-ff09, U+ff0b-ff0c, U+ff0f, U+ff1a-ff1b, U+ff1f, U+ff5c, U+ff5e;
+}
+@font-face {
+  font-family: 'Noto Sans TC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/NotoSansTC-300_400_500-1ae0bdf3.woff2) format('woff2');
+  unicode-range: U+a, U+20-7e, U+a9, U+b7, U+d7, U+2013-2014, U+2026, U+2191-2192, U+2197, U+2260, U+3000-3002, U+3008-300f, U+30fb, U+4e00, U+4e03, U+4e09-4e0b, U+4e0d, U+4e26, U+4e2d, U+4e32, U+4e3b, U+4e4b, U+4e5f, U+4e86, U+4e8b-4e8c, U+4eab, U+4eae, U+4eba, U+4ecb, U+4ee3, U+4ee5, U+4ef6, U+4efb, U+4efd, U+4f01, U+4f46, U+4f4d, U+4f55, U+4f5c, U+4f60, U+4f7f, U+4f86, U+4f8b, U+4fdd, U+4fe1, U+500b, U+5011, U+501f, U+505a, U+5099, U+50d1, U+512a, U+5145, U+5165, U+5167-5168, U+516c, U+5177, U+518d, U+51fa, U+5206-5207, U+520a, U+5217, U+5229, U+5230, U+5238, U+523b, U+524d, U+5275, U+5283, U+529b, U+529f-52a0, U+52a9, U+52d5, U+52d9, U+52dd-52de, U+5305, U+5316-5317, U+5347, U+5354, U+5357, U+5373, U+53b2, U+53d7, U+53ef-53f0, U+53f8, U+5404, U+5408-5409, U+540c-540d, U+5411, U+542b, U+5438, U+5468, U+548c, U+54c1, U+54e1, U+5546, U+554f, U+555f, U+5584, U+55ae, U+55ce, U+5609, U+5668, U+56de, U+570b, U+5712, U+5716, U+5718, U+5728, U+5730, U+574a, U+578b, U+57df, U+57f9-57fa, U+5802, U+5831, U+5834, U+5883, U+589e, U+5916, U+591a, U+5927, U+5929, U+592f, U+597d, U+5982, U+59cb, U+59d4, U+5a01, U+5a92, U+5b57-5b58, U+5b78, U+5b89, U+5b8c, U+5b98, U+5b9a, U+5ba2, U+5ba4, U+5bb3, U+5bb6, U+5bb9, U+5bc6, U+5bcc, U+5be6, U+5beb, U+5c07-5c08, U+5c0d-5c0f, U+5c31, U+5c40, U+5c55, U+5c65, U+5c6c, U+5c71, U+5cf6, U+5dba, U+5de5, U+5de7, U+5df1, U+5e02, U+5e2b, U+5e36, U+5e38, U+5e73-5e74, U+5e9c, U+5ea6-5ea7, U+5eab, U+5eb8, U+5efa, U+5f0f, U+5f15, U+5f37, U+5f71, U+5f8c, U+5f91, U+5f97, U+5f9e, U+5fc3, U+5feb, U+5ff5, U+601d, U+60a8, U+60c5, U+60f3, U+610f, U+611f, U+614b, U+6167, U+61b6, U+61c2, U+61c9, U+6210-6211, U+6230, U+624b, U+624d, U+6253, U+6280, U+628a, U+62d3, U+62ec, U+6307, U+6388, U+638c, U+6392, U+63a5, U+63d0, U+63db, U+63e1, U+641e, U+64b0, U+64c5, U+64ca, U+64d4, U+64f4, U+6539, U+653b, U+653e-653f, U+6548, U+6559, U+6566, U+6574, U+6578, U+6587, U+6599, U+659c, U+65b0, U+65b9, U+65bc, U+65e5, U+65e9, U+662f, U+6642, U+667a, U+66a2, U+66f8, U+6700, U+6703, U+6708-6709, U+670d, U+671f, U+672a, U+672c, U+677e, U+6790, U+6797, U+679c, U+6821, U+683c, U+6848, U+696d, U+6975, U+699c, U+69d3, U+6a5f, U+6b04, U+6b21, U+6b3e, U+6b65, U+6b77, U+6bcf, U+6c11, U+6c34, U+6c42, U+6c5f, U+6c7a, U+6cd5, U+6ce8, U+6d3b, U+6d3d, U+6d41, U+6daf, U+6db5, U+6de1, U+6df5, U+6dfb, U+6e05, U+6e2c, U+6e90, U+6e9d, U+6efe, U+6f14, U+6f3e, U+700f, U+7063, U+70ba, U+7136, U+71df, U+721b, U+722c, U+7247-7248, U+7387, U+73ed, U+73fe, U+7406, U+7463, U+74b0, U+74cf, U+751f, U+7522, U+7528, U+7530, U+7532, U+7559, U+7565, U+756b, U+7570, U+7576, U+75db, U+7642, U+767b-767e, U+7684, U+76ca, U+76ee, U+76f4, U+76f8, U+771f, U+773c, U+775b, U+777f, U+77e5, U+77ed, U+7891, U+790e, U+793a, U+793e, U+795e, U+79d1-79d2, U+7a0b, U+7a31, U+7a4d-7a4e, U+7a97, U+7acb, U+7ad9, U+7ae0, U+7aef, U+7b2c, U+7b46, U+7b49, U+7ba1, U+7bc0, U+7bc7, U+7bc9, U+7c21, U+7cbe, U+7cfb, U+7d04, U+7d1a, U+7d2f, U+7d39, U+7d42, U+7d66, U+7d71, U+7d93, U+7dad, U+7db2, U+7dda, U+7def, U+7df4, U+7e23, U+7e3d-7e3e, U+7e41, U+7e6a, U+7f72, U+7f8e, U+7fa4, U+7fa9, U+7fd2, U+8001, U+8005, U+804a, U+8077, U+807d, U+80b2, U+80fd, U+8105, U+8166, U+8173, U+81c9, U+81ea, U+81f4, U+81fa, U+8207-8208, U+8272, U+82f1, U+83ef, U+842c, U+843d, U+8449, U+8457, U+84cb, U+85dd, U+8655, U+87f2, U+884c, U+8853, U+885b, U+8868, U+88fd, U+8907, U+898b, U+898f, U+8996, U+89bd, U+89c0, U+89d2, U+89e3, U+8a00, U+8a02, U+8a08, U+8a0a, U+8a13, U+8a18, U+8a2a, U+8a2d, U+8a62, U+8a66, U+8a71, U+8a8c-8a8d, U+8a9e, U+8aa0, U+8ab2, U+8ac7, U+8aee, U+8afe, U+8b1b, U+8b49, U+8b58, U+8b77, U+8b80, U+8b8a, U+8b93, U+8ca1, U+8cb7, U+8cc7, U+8cea, U+8d70, U+8d77, U+8d85, U+8db3, U+8dd1, U+8ddf, U+8de1, U+8de8, U+8def, U+8eab, U+8ecd, U+8edf, U+8f14-8f15, U+8f49, U+8fa6, U+8fb2, U+900f, U+9019-901a, U+901f-9020, U+9032, U+904b, U+904e, U+9053-9054, U+9060, U+9078, U+9080, U+90a6, U+90e8, U+90f5, U+90fd, U+91ab, U+91cc, U+91cf, U+91d1, U+9280, U+9298, U+92b7, U+9304, U+935b, U+9375, U+9418, U+946b, U+9577, U+9580, U+958b, U+9593, U+95b1, U+95dc, U+9632, U+9662, U+966a, U+968a, U+968e, U+969b, U+96a8, U+96aa, U+96c5, U+96dc, U+96f6, U+96fb, U+9700, U+9732, U+9752, U+9760, U+9762, U+9769, U+97f3, U+9801-9802, U+9805, U+9810, U+9818, U+983b, U+984c, U+985e, U+9867, U+986f, U+98a8, U+9928, U+99a8, U+99d0, U+9a45, U+9a57, U+9ad4, U+9ad8, U+9b06, U+9b54, U+9ebc, U+9ec3, U+9ede, U+9f0e, U+ff01, U+ff05, U+ff08-ff09, U+ff0b-ff0c, U+ff0f, U+ff1a-ff1b, U+ff1f, U+ff5c, U+ff5e;
+}
+@font-face {
+  font-family: 'Noto Sans TC';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(assets/fonts/NotoSansTC-300_400_500-1ae0bdf3.woff2) format('woff2');
+  unicode-range: U+a, U+20-7e, U+a9, U+b7, U+d7, U+2013-2014, U+2026, U+2191-2192, U+2197, U+2260, U+3000-3002, U+3008-300f, U+30fb, U+4e00, U+4e03, U+4e09-4e0b, U+4e0d, U+4e26, U+4e2d, U+4e32, U+4e3b, U+4e4b, U+4e5f, U+4e86, U+4e8b-4e8c, U+4eab, U+4eae, U+4eba, U+4ecb, U+4ee3, U+4ee5, U+4ef6, U+4efb, U+4efd, U+4f01, U+4f46, U+4f4d, U+4f55, U+4f5c, U+4f60, U+4f7f, U+4f86, U+4f8b, U+4fdd, U+4fe1, U+500b, U+5011, U+501f, U+505a, U+5099, U+50d1, U+512a, U+5145, U+5165, U+5167-5168, U+516c, U+5177, U+518d, U+51fa, U+5206-5207, U+520a, U+5217, U+5229, U+5230, U+5238, U+523b, U+524d, U+5275, U+5283, U+529b, U+529f-52a0, U+52a9, U+52d5, U+52d9, U+52dd-52de, U+5305, U+5316-5317, U+5347, U+5354, U+5357, U+5373, U+53b2, U+53d7, U+53ef-53f0, U+53f8, U+5404, U+5408-5409, U+540c-540d, U+5411, U+542b, U+5438, U+5468, U+548c, U+54c1, U+54e1, U+5546, U+554f, U+555f, U+5584, U+55ae, U+55ce, U+5609, U+5668, U+56de, U+570b, U+5712, U+5716, U+5718, U+5728, U+5730, U+574a, U+578b, U+57df, U+57f9-57fa, U+5802, U+5831, U+5834, U+5883, U+589e, U+5916, U+591a, U+5927, U+5929, U+592f, U+597d, U+5982, U+59cb, U+59d4, U+5a01, U+5a92, U+5b57-5b58, U+5b78, U+5b89, U+5b8c, U+5b98, U+5b9a, U+5ba2, U+5ba4, U+5bb3, U+5bb6, U+5bb9, U+5bc6, U+5bcc, U+5be6, U+5beb, U+5c07-5c08, U+5c0d-5c0f, U+5c31, U+5c40, U+5c55, U+5c65, U+5c6c, U+5c71, U+5cf6, U+5dba, U+5de5, U+5de7, U+5df1, U+5e02, U+5e2b, U+5e36, U+5e38, U+5e73-5e74, U+5e9c, U+5ea6-5ea7, U+5eab, U+5eb8, U+5efa, U+5f0f, U+5f15, U+5f37, U+5f71, U+5f8c, U+5f91, U+5f97, U+5f9e, U+5fc3, U+5feb, U+5ff5, U+601d, U+60a8, U+60c5, U+60f3, U+610f, U+611f, U+614b, U+6167, U+61b6, U+61c2, U+61c9, U+6210-6211, U+6230, U+624b, U+624d, U+6253, U+6280, U+628a, U+62d3, U+62ec, U+6307, U+6388, U+638c, U+6392, U+63a5, U+63d0, U+63db, U+63e1, U+641e, U+64b0, U+64c5, U+64ca, U+64d4, U+64f4, U+6539, U+653b, U+653e-653f, U+6548, U+6559, U+6566, U+6574, U+6578, U+6587, U+6599, U+659c, U+65b0, U+65b9, U+65bc, U+65e5, U+65e9, U+662f, U+6642, U+667a, U+66a2, U+66f8, U+6700, U+6703, U+6708-6709, U+670d, U+671f, U+672a, U+672c, U+677e, U+6790, U+6797, U+679c, U+6821, U+683c, U+6848, U+696d, U+6975, U+699c, U+69d3, U+6a5f, U+6b04, U+6b21, U+6b3e, U+6b65, U+6b77, U+6bcf, U+6c11, U+6c34, U+6c42, U+6c5f, U+6c7a, U+6cd5, U+6ce8, U+6d3b, U+6d3d, U+6d41, U+6daf, U+6db5, U+6de1, U+6df5, U+6dfb, U+6e05, U+6e2c, U+6e90, U+6e9d, U+6efe, U+6f14, U+6f3e, U+700f, U+7063, U+70ba, U+7136, U+71df, U+721b, U+722c, U+7247-7248, U+7387, U+73ed, U+73fe, U+7406, U+7463, U+74b0, U+74cf, U+751f, U+7522, U+7528, U+7530, U+7532, U+7559, U+7565, U+756b, U+7570, U+7576, U+75db, U+7642, U+767b-767e, U+7684, U+76ca, U+76ee, U+76f4, U+76f8, U+771f, U+773c, U+775b, U+777f, U+77e5, U+77ed, U+7891, U+790e, U+793a, U+793e, U+795e, U+79d1-79d2, U+7a0b, U+7a31, U+7a4d-7a4e, U+7a97, U+7acb, U+7ad9, U+7ae0, U+7aef, U+7b2c, U+7b46, U+7b49, U+7ba1, U+7bc0, U+7bc7, U+7bc9, U+7c21, U+7cbe, U+7cfb, U+7d04, U+7d1a, U+7d2f, U+7d39, U+7d42, U+7d66, U+7d71, U+7d93, U+7dad, U+7db2, U+7dda, U+7def, U+7df4, U+7e23, U+7e3d-7e3e, U+7e41, U+7e6a, U+7f72, U+7f8e, U+7fa4, U+7fa9, U+7fd2, U+8001, U+8005, U+804a, U+8077, U+807d, U+80b2, U+80fd, U+8105, U+8166, U+8173, U+81c9, U+81ea, U+81f4, U+81fa, U+8207-8208, U+8272, U+82f1, U+83ef, U+842c, U+843d, U+8449, U+8457, U+84cb, U+85dd, U+8655, U+87f2, U+884c, U+8853, U+885b, U+8868, U+88fd, U+8907, U+898b, U+898f, U+8996, U+89bd, U+89c0, U+89d2, U+89e3, U+8a00, U+8a02, U+8a08, U+8a0a, U+8a13, U+8a18, U+8a2a, U+8a2d, U+8a62, U+8a66, U+8a71, U+8a8c-8a8d, U+8a9e, U+8aa0, U+8ab2, U+8ac7, U+8aee, U+8afe, U+8b1b, U+8b49, U+8b58, U+8b77, U+8b80, U+8b8a, U+8b93, U+8ca1, U+8cb7, U+8cc7, U+8cea, U+8d70, U+8d77, U+8d85, U+8db3, U+8dd1, U+8ddf, U+8de1, U+8de8, U+8def, U+8eab, U+8ecd, U+8edf, U+8f14-8f15, U+8f49, U+8fa6, U+8fb2, U+900f, U+9019-901a, U+901f-9020, U+9032, U+904b, U+904e, U+9053-9054, U+9060, U+9078, U+9080, U+90a6, U+90e8, U+90f5, U+90fd, U+91ab, U+91cc, U+91cf, U+91d1, U+9280, U+9298, U+92b7, U+9304, U+935b, U+9375, U+9418, U+946b, U+9577, U+9580, U+958b, U+9593, U+95b1, U+95dc, U+9632, U+9662, U+966a, U+968a, U+968e, U+969b, U+96a8, U+96aa, U+96c5, U+96dc, U+96f6, U+96fb, U+9700, U+9732, U+9752, U+9760, U+9762, U+9769, U+97f3, U+9801-9802, U+9805, U+9810, U+9818, U+983b, U+984c, U+985e, U+9867, U+986f, U+98a8, U+9928, U+99a8, U+99d0, U+9a45, U+9a57, U+9ad4, U+9ad8, U+9b06, U+9b54, U+9ebc, U+9ec3, U+9ede, U+9f0e, U+ff01, U+ff05, U+ff08-ff09, U+ff0b-ff0c, U+ff0f, U+ff1a-ff1b, U+ff1f, U+ff5c, U+ff5e;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(assets/fonts/CormorantGaramond-500i-840dc265.woff2) format('woff2');
+  unicode-range: U+a, U+20-7e, U+a9, U+b7, U+d7, U+338, U+2013-2014, U+2026, U+2191-2192, U+2197, U+219b, U+2260, U+226e-226f;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/CormorantGaramond-700-2c591376.woff2) format('woff2');
+  unicode-range: U+a, U+20-7e, U+a9, U+b7, U+d7, U+338, U+2013-2014, U+2026, U+2191-2192, U+2197, U+219b, U+2260, U+226e-226f;
+}
+
+</style>
+<link rel="preload" as="image" href="assets/形象照/個人照.webp" imagesrcset="assets/形象照/個人照-640.webp 640w, assets/形象照/個人照.webp 1000w" imagesizes="(max-width:860px) min(82vw,360px), min(46vw,470px)" fetchpriority="high">
 <link rel="icon" type="image/png" href="https://deanlin.net/images/favicon.png">
 <link rel="apple-touch-icon" href="https://deanlin.net/images/favicon.png">
 <script type="application/ld+json">
@@ -43,7 +101,7 @@
       "name": "林鼎淵 Dean Lin｜生成式 AI 講師・暢銷書作家・軟體專家",
       "description": "外商資安公司軟體專家、生成式 AI 創新學院發起人、全台第一本 ChatGPT 應用專書作者。超過百場授課與顧問經驗。",
       "inLanguage": "zh-Hant",
-      "dateModified": "2026-09-25",
+      "dateModified": "2026-10-03",
       "mainEntity": {
         "@id": "https://deanlin.net/branding/#person"
       }
@@ -406,7 +464,7 @@ section{padding:clamp(70px,10vw,130px) 0}
 .sec-sub{margin:-24px 0 40px;color:var(--muted);font-size:.92rem;letter-spacing:.04em}
 
 /* reveal animation */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.65,.25,1),transform .8s cubic-bezier(.2,.65,.25,1)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .45s cubic-bezier(.2,.65,.25,1),transform .45s cubic-bezier(.2,.65,.25,1)}
 .reveal.in{opacity:1;transform:none}
 
 /* ============ 01 關於 ============ */
@@ -571,7 +629,7 @@ section{padding:clamp(70px,10vw,130px) 0}
 /* 收尾金句：置中壓軸 */
 .quote-final{
   margin:clamp(60px,9vw,100px) auto 0;max-width:30em;text-align:center;position:relative;
-  font-family:"Noto Serif TC",serif;font-weight:600;
+  font-family:"Noto Serif TC",serif;font-weight:700;
   font-size:clamp(1.15rem,2.6vw,1.55rem);line-height:2;color:var(--ink-strong);
   padding-top:36px;
 }
@@ -660,7 +718,7 @@ footer{
       </div>
     </div>
     <div class="hero-photo">
-      <img src="assets/形象照/個人照.webp" alt="林鼎淵形象照" width="1000" height="1500" fetchpriority="high">
+      <img src="assets/形象照/個人照.webp" srcset="assets/形象照/個人照-640.webp 640w, assets/形象照/個人照.webp 1000w" sizes="(max-width:860px) min(82vw,360px), min(46vw,470px)" alt="林鼎淵形象照" width="1000" height="1500" fetchpriority="high">
     </div>
   </div>
   <div class="hero-stats">
@@ -718,43 +776,43 @@ footer{
     <div class="shelf reveal">
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050284460" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/下班有約.webp" alt="工程師下班有約：企業內訓講師帶你認清職涯真相！" width="640" height="892" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/下班有約.webp" alt="工程師下班有約：企業內訓講師帶你認清職涯真相！" width="640" height="892" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">2025 新作</span><br>工程師下班有約：企業內訓講師帶你認清職涯真相！</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050249393" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/ChatGPT3.webp" alt="ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）" width="640" height="837" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/ChatGPT3.webp" alt="ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）" width="640" height="837" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">第三版</span><br>ChatGPT 與 AI 繪圖效率大師（新增 Copilot、Gamma、Runway、Suno）</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050170586" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/ChatGPT2.webp" alt="ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）" width="640" height="824" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/ChatGPT2.webp" alt="ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）" width="640" height="824" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">第二版</span><br>ChatGPT 與 AI 繪圖效率大師（添加 GPT-4、Bing Chat 全新章節）</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050161203" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/ChatGPT1.webp" alt="ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用" width="640" height="866" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/ChatGPT1.webp" alt="ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用" width="640" height="866" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">全台第一本</span><br>ChatGPT 與 AI 繪圖效率大師：從日常到職場的全方位應用</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050170581" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/工程師職涯v2.webp" alt="給全端工程師的職涯生存筆記（ChatGPT 加強版）" width="640" height="864" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/工程師職涯v2.webp" alt="給全端工程師的職涯生存筆記（ChatGPT 加強版）" width="640" height="864" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">加強版</span><br>給全端工程師的職涯生存筆記（ChatGPT 加強版）</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050140367" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/工程師職涯v1.webp" alt="給全端工程師的職涯生存筆記：履歷×面試×職場" width="630" height="850" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/工程師職涯v1.webp" alt="給全端工程師的職涯生存筆記：履歷×面試×職場" width="630" height="850" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">職涯</span><br>給全端工程師的職涯生存筆記：履歷×面試×職場</figcaption>
         </a>
       </figure>
       <figure class="book">
         <a href="https://www.books.com.tw/products/E050106521" target="_blank" rel="noopener">
-          <div class="cover"><img src="assets/書籍/網路爬蟲.webp" alt="JavaScript 爬蟲新思路！用 Node.js 打造 FB &amp; IG 爬蟲專案" width="599" height="793" loading="lazy" decoding="async"></div>
+          <div class="cover"><img src="assets/書籍/網路爬蟲.webp" alt="JavaScript 爬蟲新思路！用 Node.js 打造 FB &amp; IG 爬蟲專案" width="599" height="793" fetchpriority="low" decoding="async"></div>
           <figcaption><span class="tag">實戰</span><br>JavaScript 爬蟲新思路！用 Node.js 打造 FB &amp; IG 爬蟲專案</figcaption>
         </a>
       </figure>
@@ -992,7 +1050,7 @@ btn.addEventListener('click', () => {
 // ===== 進場顯示動畫 =====
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+}, { threshold: .05, rootMargin: '0px 0px 12% 0px' }); // 進視窗前 12% 就開始，淡入不再等圖
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
 // ===== 點擊單位展開課程清單 =====
