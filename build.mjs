@@ -442,7 +442,7 @@ async function build() {
   }
 
   // 合作洽詢：hero 兩顆按鈕、手機浮動列、頁尾連結。Email 用 mailto 帶主旨與填寫格式，點開就能填
-  function contactTokens(c, facebook, footCta) {
+  function contactTokens(c, facebook) {
     const email = (c.email ?? "").trim();
     const emailLabel = c.email_label ?? "Email 洽詢", fbLabel = c.facebook_label ?? "Facebook 私訊";
     const mailto = email
@@ -459,10 +459,7 @@ async function build() {
       "{{CTA_FAB_ICONS}}":
         svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>').replace("<svg ", '<svg class="ico-mail" ') +
         svg('<path d="M6 6l12 12M18 6 6 18"/>').replace("<svg ", '<svg class="ico-close" '),
-      "{{FOOT_CONTACT}}": [
-        email ? `          <a class="gold-link" href="${mailto}">${esc(emailLabel)} →</a>` : "",
-        `          <a class="gold-link" href="${facebook}" target="_blank" rel="noopener">${esc(footCta)}</a>`,
-      ].filter(Boolean).join("\n"),
+      "{{FOOT_CONTACT}}": [emailBtn("btn-primary"), fbBtn("btn-ghost")].filter(Boolean).map((b) => `            ${b}`).join("\n"),
     };
   }
 
@@ -498,7 +495,7 @@ async function build() {
     "{{QUOTE_SRC}}": esc(media.quote.source),
     "{{FOOT_TAGLINE}}": gold(footer.tagline),
     "{{FACEBOOK}}": social.facebook,
-    ...contactTokens(hero.contact ?? {}, social.facebook, footer.cta),
+    ...contactTokens(hero.contact ?? {}, social.facebook),
     "{{COPYRIGHT}}": esc(footer.copyright),
   };
 
