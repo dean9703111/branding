@@ -210,6 +210,32 @@ body::after{
 }
 .hero-lead{margin-top:22px;max-width:34em;color:var(--hero-muted);font-weight:300;font-size:.95rem}
 .hero-lead p+p{margin-top:12px}
+/* 合作洽詢按鈕（hero） */
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 20px;border-radius:99px;
+  font-size:.86rem;letter-spacing:.08em;font-weight:500;line-height:1.2;
+  transition:transform .25s,background .25s,border-color .25s,color .25s;
+}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn-primary{background:var(--gold);color:#17140f;border:1px solid var(--gold)}
+.btn-primary:hover{transform:translateY(-2px);background:#e5b45a}
+.btn-ghost{border:1px solid rgba(236,231,219,.3);color:#ecE7db}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+/* 手機：捲過 hero 後出現的固定洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複） */
+.cta-bar{
+  position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
+  display:none;gap:8px;padding:8px;border-radius:16px;
+  background:rgba(23,20,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(217,164,65,.35);box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transform:translateY(calc(100% + 24px));opacity:0;transition:transform .35s cubic-bezier(.2,.65,.25,1),opacity .35s;
+}
+.cta-bar .btn{flex:1;justify-content:center;padding:10px 8px;font-size:.8rem;letter-spacing:.03em;gap:6px;white-space:nowrap}
+.cta-bar .btn svg{width:14px;height:14px;flex:none}
+.cta-bar .to-top-btn{flex:0 0 44px;width:44px;height:44px;border-radius:12px;border:1px solid rgba(236,231,219,.25);display:grid;place-items:center;color:#ecE7db}
+.cta-bar.show{transform:none;opacity:1}
+@media (max-width:860px){.cta-bar{display:flex}}
+@media (prefers-reduced-motion:reduce){.cta-bar{transition:none}}
 .hero-social{display:flex;gap:14px;margin-top:36px}
 .hero-social a{
   width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
@@ -260,6 +286,7 @@ body::after{
 /* 平板區間：置中的封面式構圖，避免單欄靠左造成右側大片留白 */
 @media (min-width:561px) and (max-width:860px){
   .hero-copy{align-items:center;text-align:center;padding-top:96px}
+  .hero-cta{justify-content:center}
   .hero-eyebrow{justify-content:center;margin-bottom:20px}
   .hero-eyebrow::after{content:"";width:44px;height:1px;background:var(--gold-line)}
   .hero-titles{justify-content:center;margin-top:24px}
@@ -377,6 +404,7 @@ section{padding:clamp(70px,10vw,130px) 0}
 .chips-block h4 em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:var(--gold);font-size:.9rem;letter-spacing:.06em}
 .chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{
+  position:relative;
   font-size:.8rem;letter-spacing:.05em;color:var(--ink);
   border:1px solid var(--line);border-radius:99px;padding:5px 15px;font-weight:300;
   transition:border-color .25s,background .25s,color .25s;
@@ -384,11 +412,16 @@ section{padding:clamp(70px,10vw,130px) 0}
 }
 .chip:hover{border-color:var(--gold-line);background:var(--gold-soft)}
 .chip.active{border-color:var(--gold);background:var(--gold-soft);color:var(--ink-strong)}
+/* 被點的單位下方一個小箭頭，指向緊接著展開的面板 */
+.chip.active::after{
+  content:"";position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);
+  border:6px solid transparent;border-bottom-color:var(--gold);border-top:0;
+}
 .chip b{font-weight:500;color:var(--gold);margin-left:6px;font-size:.74rem}
 
-/* 點擊單位展開的課程面板 */
+/* 點擊單位展開的課程面板：JS 會把它搬到被點那一列的最後一個 chip 之後，佔滿整列，所以直接出現在該列下方 */
 .chip-panel{
-  display:none;margin-top:18px;position:relative;
+  display:none;flex-basis:100%;width:100%;margin-top:6px;margin-bottom:4px;position:relative;
   border:1px solid var(--gold-line);border-left:3px solid var(--gold);border-radius:10px;
   background:var(--surface);padding:20px 26px;box-shadow:var(--shadow);
 }
@@ -527,6 +560,9 @@ footer{
       </div>
       <div class="hero-lead">
 {{LEAD}}
+      </div>
+      <div class="hero-cta">
+{{HERO_CTA}}
       </div>
       <div class="hero-social">
 {{SOCIAL_HERO}}
@@ -672,7 +708,7 @@ footer{
         <div class="foot-col">
           <h6>合作邀約</h6>
 {{FOOT_SERVICES}}
-          <a class="gold-link" href="{{FACEBOOK}}" target="_blank" rel="noopener">{{FOOT_CTA}}</a>
+{{FOOT_CONTACT}}
         </div>
       </div>
     </div>
@@ -715,6 +751,11 @@ document.querySelectorAll('.chips-block').forEach(block => {
       b.classList.remove('active'); b.setAttribute('aria-expanded', 'false');
     });
   };
+  // 把面板搬到 btn 所在那一列（offsetTop 相同的 chips）的最後一個之後，面板就會出現在該列正下方
+  const placeAfterRow = btn => {
+    const row = [...block.querySelectorAll('button.chip')].filter(b => b.offsetTop === btn.offsetTop);
+    row[row.length - 1].after(panel);
+  };
   block.querySelectorAll('button.chip').forEach(btn => {
     btn.addEventListener('click', () => {
       const wasActive = btn.classList.contains('active');
@@ -722,6 +763,7 @@ document.querySelectorAll('.chips-block').forEach(block => {
       if (wasActive) return;
       btn.classList.add('active');
       btn.setAttribute('aria-expanded', 'true');
+      placeAfterRow(btn);
       const items = COURSES[btn.dataset.unit] || [];
       panel.querySelector('.cp-title').textContent = btn.dataset.unit;
       panel.querySelector('.cp-count').textContent = items.length + ' 項課程';
@@ -740,10 +782,38 @@ document.querySelectorAll('.chips-block').forEach(block => {
         ul.appendChild(li);
       });
       panel.classList.add('open');
+      // 面板下緣超出畫面（手機常見）就捲到剛好看得見，不改變上緣位置
+      requestAnimationFrame(() => {
+        if (panel.getBoundingClientRect().bottom > innerHeight) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
     });
   });
   panel.querySelector('.cp-close').addEventListener('click', closeAll);
+  // 視窗寬度改變會重排列，面板開著時重新放到正確的那一列
+  addEventListener('resize', () => {
+    const active = block.querySelector('.chip.active');
+    if (active && panel.classList.contains('open')) placeAfterRow(active);
+  });
 });
+</script>
+<div class="cta-bar" role="complementary" aria-label="合作洽詢">
+{{CTA_BAR}}
+</div>
+<script>
+// 手機浮動洽詢列：hero 離開視窗才出現；頁尾（已有洽詢連結）進視窗就收起
+(function(){
+  var bar=document.querySelector('.cta-bar'),hero=document.querySelector('.hero'),foot=document.querySelector('footer');
+  if(!bar||!hero||!foot||!('IntersectionObserver' in window))return;
+  var heroOut=false,footIn=false,sync=function(){bar.classList.toggle('show',heroOut&&!footIn)};
+  new IntersectionObserver(function(e){heroOut=!e[0].isIntersecting;sync()},{threshold:0}).observe(hero);
+  new IntersectionObserver(function(e){footIn=e[0].isIntersecting;sync()},{threshold:0}).observe(foot);
+})();
+</script>
+<script>
+// 首屏以外用到的字型：等首屏字型載完再掛上，首屏文字只等小檔；下方區塊本來就捲到才淡入
+(function(){var css={{FONT_CSS_REST}};if(!css)return;
+var add=function(){var s=document.createElement('style');s.textContent=css;document.head.appendChild(s)};
+document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(function(){(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(add)})});})();
 </script>
 </body>
 </html>

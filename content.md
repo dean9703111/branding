@@ -69,6 +69,16 @@ youtube  = "https://www.youtube.com/@dlcorner"
 facebook = "https://www.facebook.com/deanlinbao"
 github   = "https://github.com/dean9703111"
 medium   = "https://medium.com/@dean-lin"
+
+# 合作洽詢：hero 的兩顆按鈕、手機捲動後的浮動洽詢列、頁尾「合作邀約」都用這組
+# email 留空時只顯示 Facebook；Facebook 連結沿用上面 [social] 的 facebook
+# email_body 是對方點開 Email 就看到的填寫格式，\n 換行
+[contact]
+email          = "babydragon9703111@gmail.com"
+email_label    = "Email 洽詢"
+facebook_label = "Facebook 私訊"
+email_subject  = "內訓邀約｜（單位名稱）｜（課程主題）"
+email_body     = "Dean 您好，\n\n我是（單位名稱）的（姓名／職稱），想邀請您授課，資訊如下：\n\n■ 單位名稱：\n■ 課程主題／想解決的問題：\n■ 學員對象與人數：\n■ 預計時數：\n■ 希望日期（可給區間）：\n■ 上課形式：實體／線上\n■ 上課地點：\n■ 預算範圍：\n\n聯絡方式（電話／LINE ID 等）：\n\n謝謝！"
 ```
 
 # 關於

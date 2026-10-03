@@ -93,12 +93,13 @@ const assetUrl = (src) => {
 // 絕對網址（JSON-LD、OG 用）：CDN 模式直接用 CDN 網址，否則以 site.url 為基底
 const absUrl = (src, base) => (assetBase ? assetUrl(src) : new URL(encodeURI(src), base).href);
 
-// ---------- 字型子集：只載本頁用到的字，字型檔自行託管 ----------
+// ---------- 字型子集：只載本頁用到的字，字型檔自行託管，首屏字另成小檔 ----------
 // 中文字型完整版要靠 100 多個切片檔，首次載入要先抓 200KB 的 CSS 再抓 30 多個 woff2。
 // 改成 build 時算出頁面用到的字，用 Google Fonts 的 text= 參數當「子集產生器」，
-// 把只含這些字的字型檔抓回 assets/fonts/，CSS 內嵌、字型檔 preload：
-// 訪客只連自己的網域，請求數從 30 多個降到個位數，位元組減半，文字不再反覆閃動。
-// 字沒變就不會再連 Google（結果記在 .font-cache.json，請一起 commit）。
+// 把只含這些字的字型檔抓回 assets/fonts/，CSS 內嵌、字型檔 preload：訪客只連自己的網域。
+// 再把字分兩層：首屏（nav + hero）用到的字做成小檔 preload，首屏文字只等這幾十 KB；
+// 其餘的字（下方區塊、JS 渲染的課程清單）等首屏字型載完才掛上（下方區塊本來就捲到才顯示）。
+// 兩層用 unicode-range 分工，字集不重疊。字沒變就不會再連 Google（結果記在 .font-cache.json，請一起 commit）。
 const FONT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
 const FONT_CACHE = join(DIR, ".font-cache.json");
 const FONT_DIR = "assets/fonts";
@@ -106,40 +107,67 @@ const FONT_DIR = "assets/fonts";
 // chip 是因為點開的課程面板標題（.cp-title）由 JS 把單位名稱填進去
 const SERIF_CLASSES = new Set(["serif", "nav-logo", "hero-name", "sec-title", "cp-title", "quote-final", "foot-name", "chip"]);
 const SERIF_TAGS = new Set(["h3", "h4"]);
+// 首屏容器（class）：裡面的字進「首屏層」
+const CRITICAL_CLASSES = new Set(["nav", "hero"]);
 const VOID_TAGS = new Set(["br", "img", "link", "meta", "input", "hr", "source", "wbr", "area", "base", "col", "embed", "param", "track"]);
-// 任何字型都一定帶上的基本字元：可見 ASCII ＋ 常用中文標點（JS 動態產生的文字也用得到）
+// 首屏層一定帶上的基本字元：可見 ASCII ＋ 常用中文標點（JS 動態產生的文字也用得到）
 const BASE_CHARS = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join("") + "，。、：；！？（）「」『』《》〈〉・…—–×＋％／～　";
 const isCJK = (c) => c.codePointAt(0) >= 0x2e80;
 const decodeEntities = (s) =>
   s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
 
-// 掃描產生好的 HTML，回傳 { all: 全頁用到的字, serif: 襯線字元素用到的字 }
+// 掃描產生好的 HTML，回傳 { all: 全頁用到的字, serif: 襯線字元素用到的字, crit: 首屏的字, critSerif: 首屏的襯線字 }
 function collectChars(html) {
-  const all = new Set(BASE_CHARS), serif = new Set(BASE_CHARS);
-  for (const m of html.matchAll(/content:\s*"([^"]*)"/g)) for (const c of m[1]) all.add(c); // CSS 產生的文字
-  for (const m of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) for (const c of m[1]) all.add(c); // JS 渲染的課程清單
+  const all = new Set(BASE_CHARS), serif = new Set(BASE_CHARS), crit = new Set(BASE_CHARS), critSerif = new Set(BASE_CHARS);
+  for (const m of html.matchAll(/content:\s*"([^"]*)"/g)) for (const c of m[1]) { all.add(c); crit.add(c); } // CSS 產生的文字（hero 有）
+  // JS 渲染的課程清單（資料在 <script> 裡）；先去掉註解，中文註解不是畫面文字
+  for (const m of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g))
+    for (const c of m[1].replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "")) all.add(c);
   const body = html.replace(/<!--[\s\S]*?-->/g, "").replace(/<style[\s\S]*?<\/style>/g, "").replace(/<script[\s\S]*?<\/script>/g, "");
-  const stack = []; // 目前所在元素是否為襯線字
+  const stack = []; // 目前所在元素：是否襯線字、是否首屏
   const re = /<\/?([a-zA-Z][\w-]*)([^>]*)>|([^<]+)/g;
   let m;
   while ((m = re.exec(body))) {
     if (m[3] !== undefined) {
-      const inSerif = stack.length > 0 && stack[stack.length - 1].serif;
-      for (const c of decodeEntities(m[3])) if (c.trim()) { all.add(c); if (inSerif) serif.add(c); }
+      const top = stack[stack.length - 1] ?? { serif: false, crit: false };
+      for (const c of decodeEntities(m[3])) {
+        if (!c.trim()) continue;
+        all.add(c);
+        if (top.serif) serif.add(c);
+        if (top.crit) { crit.add(c); if (top.serif) critSerif.add(c); }
+      }
       continue;
     }
     const tag = m[1].toLowerCase();
     if (m[0].startsWith("</")) { const i = stack.map((e) => e.tag).lastIndexOf(tag); if (i >= 0) stack.length = i; continue; }
     if (VOID_TAGS.has(tag) || m[2].trimEnd().endsWith("/")) continue;
     const cls = (m[2].match(/class="([^"]*)"/)?.[1] ?? "").split(/\s+/);
-    const inSerif = (stack.length > 0 && stack[stack.length - 1].serif) || SERIF_TAGS.has(tag) || cls.some((c) => SERIF_CLASSES.has(c));
-    stack.push({ tag, serif: inSerif });
+    const top = stack[stack.length - 1] ?? { serif: false, crit: false };
+    stack.push({
+      tag,
+      serif: top.serif || SERIF_TAGS.has(tag) || cls.some((c) => SERIF_CLASSES.has(c)),
+      crit: top.crit || cls.some((c) => CRITICAL_CLASSES.has(c)),
+    });
   }
-  return { all, serif };
+  return { all, serif, crit, critSerif };
 }
 
 const fontCssUrl = (family, chars) =>
   `https://fonts.googleapis.com/css2?family=${family}&display=swap&text=${encodeURIComponent([...chars].sort().join(""))}`;
+
+// 字集 → unicode-range 描述（連續碼位合併成區間）
+function unicodeRange(chars) {
+  const cps = [...new Set([...chars].map((c) => c.codePointAt(0)))].sort((a, b) => a - b);
+  const out = [];
+  for (let i = 0; i < cps.length; i++) {
+    let j = i;
+    while (j + 1 < cps.length && cps[j + 1] === cps[j] + 1) j++;
+    const hex = (n) => n.toString(16).toUpperCase();
+    out.push(i === j ? `U+${hex(cps[i])}` : `U+${hex(cps[i])}-${hex(cps[j])}`);
+    i = j;
+  }
+  return out.join(",");
+}
 
 // 先用內建 fetch，失敗（例如公司網路要走 proxy）再退回 curl；回傳 Buffer
 async function fetchBytes(url) {
@@ -157,61 +185,72 @@ async function fetchBytes(url) {
   }
 }
 
-// 回傳 { css: 內嵌用的 @font-face（已指向本機檔）, links: preload 標籤 }
-// 流程：算用字 → 向 Google 要子集 CSS → 把 woff2 抓回 assets/fonts/（檔名含內容雜湊）→ CSS 改指本機
+// 回傳 { css: 首屏層 @font-face（內嵌）, cssRest: 其餘層（載完首屏字型後掛上）, links: preload 標籤 }
 // 抓不到時依序退回：上次成功的本機字型（新字會用系統字型）→ 外連 Google（頁面仍可看）
 async function buildFonts(html) {
-  const { all, serif } = collectChars(html);
+  const { all, serif, crit, critSerif } = collectChars(html);
+  const minus = (a, b) => new Set([...a].filter((c) => !b.has(c)));
   const latin = new Set([...all].filter((c) => !isCJK(c)));
-  const urls = [
-    fontCssUrl("Noto+Serif+TC:wght@700;900", serif),
-    fontCssUrl("Noto+Sans+TC:wght@300;400;500", all),
-    fontCssUrl("Cormorant+Garamond:ital,wght@0,700;1,500", latin),
-  ];
+  // 五個子集：首屏襯線／首屏黑體／英文（首屏）＋ 其餘襯線／其餘黑體；兩層字集不重疊
+  const tiers = [
+    { tier: "crit", family: "Noto+Serif+TC:wght@700;900", chars: critSerif, ranged: true },
+    { tier: "crit", family: "Noto+Sans+TC:wght@300;400;500", chars: crit, ranged: true },
+    { tier: "crit", family: "Cormorant+Garamond:ital,wght@0,700;1,500", chars: latin, ranged: false },
+    { tier: "rest", family: "Noto+Serif+TC:wght@700;900", chars: minus(serif, critSerif), ranged: true },
+    { tier: "rest", family: "Noto+Sans+TC:wght@300;400;500", chars: minus(all, crit), ranged: true },
+  ].filter((t) => t.chars.size > 0);
+  const urls = tiers.map((t) => fontCssUrl(t.family, t.chars));
   const key = createHash("sha256").update(urls.join("\n")).digest("hex").slice(0, 12);
   const cache = existsSync(FONT_CACHE) ? JSON.parse(readFileSync(FONT_CACHE, "utf8")) : {};
-  const summary = `襯線 ${serif.size} 字、黑體 ${all.size} 字`;
+  const summary = `首屏 ${crit.size} 字（襯線 ${critSerif.size}）、其餘黑體 ${all.size - crit.size} 字、其餘襯線 ${serif.size - critSerif.size} 字`;
   const fontDirAbs = join(DIR, FONT_DIR);
   mkdirSync(fontDirAbs, { recursive: true });
 
+  const toLocal = (css) => css.replace(/url\((assets\/fonts\/[^)]+)\)/g, (_, p) => `url(${assetUrl(p)})`); // asset_base 可能變，快取只存相對路徑
   const render = (entry) => ({
-    // CSS 裡的本機路徑在這裡才套 assetUrl（asset_base 可能變，快取只存相對路徑）
-    css: entry.css.replace(/url\((assets\/fonts\/[^)]+)\)/g, (_, p) => `url(${assetUrl(p)})`),
-    links: entry.files.map((p) => `<link rel="preload" as="font" type="font/woff2" href="${assetUrl(p)}" crossorigin>`).join("\n"),
+    css: toLocal(entry.css),
+    cssRest: toLocal(entry.cssRest),
+    links: entry.critFiles.map((p) => `<link rel="preload" as="font" type="font/woff2" href="${assetUrl(p)}" crossorigin>`).join("\n"),
   });
   const filesPresent = (entry) => entry?.files?.every((p) => existsSync(join(DIR, p)));
 
   let entry = cache[key];
   if (!filesPresent(entry)) {
     try {
-      let css = "";
-      for (const url of urls) css += (await fetchBytes(url)).toString("utf8").trim() + "\n";
-      // 同一個遠端檔可能被多個 @font-face 共用（Noto 是可變字型，三個字重一個檔）
-      const faces = [...css.matchAll(/@font-face\s*{([^}]*)}/g)].map((m) => m[1]);
-      const remote = new Map(); // url → 檔名前綴（家族＋字重）
-      for (const f of faces) {
-        const url = f.match(/url\(([^)]+)\)/)[1];
-        const fam = f.match(/font-family:\s*'([^']+)'/)[1].replace(/\s+/g, "");
-        const w = f.match(/font-weight:\s*([^;]+)/)[1].trim().replace(/\s+/g, "-");
-        const st = /font-style:\s*italic/.test(f) ? "i" : "";
-        const cur = remote.get(url);
-        remote.set(url, cur ? `${cur}_${w}${st}` : `${fam}-${w}${st}`);
+      const out = { crit: "", rest: "" }, files = [], critFiles = [];
+      for (let i = 0; i < tiers.length; i++) {
+        const t = tiers[i];
+        let css = (await fetchBytes(urls[i])).toString("utf8").trim() + "\n";
+        // 同一個遠端檔可能被多個 @font-face 共用（Noto 是可變字型，三個字重一個檔）
+        const faces = [...css.matchAll(/@font-face\s*{([^}]*)}/g)].map((m) => m[1]);
+        const remote = new Map(); // url → 檔名前綴（家族＋字重）
+        for (const f of faces) {
+          const url = f.match(/url\(([^)]+)\)/)[1];
+          const fam = f.match(/font-family:\s*'([^']+)'/)[1].replace(/\s+/g, "");
+          const w = f.match(/font-weight:\s*([^;]+)/)[1].trim().replace(/\s+/g, "-");
+          const st = /font-style:\s*italic/.test(f) ? "i" : "";
+          const cur = remote.get(url);
+          remote.set(url, cur ? `${cur}_${w}${st}` : `${fam}-${w}${st}`);
+        }
+        for (const [url, prefix] of remote) {
+          const buf = await fetchBytes(url);
+          if (buf.subarray(0, 4).toString("ascii") !== "wOF2") fail(`${url} 回來的不是 woff2`);
+          const rel = `${FONT_DIR}/${prefix}-${t.tier}-${createHash("sha256").update(buf).digest("hex").slice(0, 8)}.woff2`;
+          writeFileSync(join(DIR, rel), buf);
+          css = css.replaceAll(`url(${url})`, `url(${rel})`);
+          files.push(rel);
+          if (t.tier === "crit") critFiles.push(rel);
+        }
+        // 兩層字集不重疊，各自用 unicode-range 分工（Google 若已附上就以我們算的取代，避免重複宣告）
+        if (t.ranged) css = css.replace(/\n\s*unicode-range:[^;]*;/g, "").replace(/\n}/g, `\n  unicode-range: ${unicodeRange(t.chars)};\n}`);
+        out[t.tier] += css;
       }
-      const files = [];
-      for (const [url, prefix] of remote) {
-        const buf = await fetchBytes(url);
-        if (buf.subarray(0, 4).toString("ascii") !== "wOF2") fail(`${url} 回來的不是 woff2`);
-        const name = `${prefix}-${createHash("sha256").update(buf).digest("hex").slice(0, 8)}.woff2`;
-        const rel = `${FONT_DIR}/${name}`;
-        writeFileSync(join(DIR, rel), buf);
-        css = css.replaceAll(`url(${url})`, `url(${rel})`);
-        files.push(rel);
-      }
-      entry = { css, files, chars: summary };
+      entry = { css: out.crit, cssRest: out.rest, files, critFiles, chars: summary };
       // 快取只留這一筆，並清掉沒用到的舊字型檔
       writeFileSync(FONT_CACHE, JSON.stringify({ [key]: entry }, null, 2) + "\n");
       for (const f of readdirSync(fontDirAbs)) if (!files.includes(`${FONT_DIR}/${f}`)) unlinkSync(join(fontDirAbs, f));
-      console.log(`✓ 字型子集更新：${summary} → ${files.length} 個字型檔抓回 ${FONT_DIR}/（${(files.reduce((n, p) => n + statSync(join(DIR, p)).size, 0) / 1024).toFixed(0)}K）`);
+      const kb = (list) => (list.reduce((n, p) => n + statSync(join(DIR, p)).size, 0) / 1024).toFixed(0);
+      console.log(`✓ 字型子集更新：${summary} → ${files.length} 個檔（首屏 ${kb(critFiles)}K、全部 ${kb(files)}K）抓回 ${FONT_DIR}/`);
     } catch (e) {
       const last = Object.values(cache).find(filesPresent);
       if (last) {
@@ -220,7 +259,7 @@ async function buildFonts(html) {
       }
       console.warn(`! 抓不到字型（${e.message}）且沒有本機字型，這次退回外連 Google Fonts；有網路時重跑 build`);
       const links = ['<link rel="preconnect" href="https://fonts.googleapis.com">', ...urls.map((u) => `<link rel="stylesheet" href="${u.replaceAll("&", "&amp;")}">`)];
-      return { css: "", links: links.join("\n") };
+      return { css: "", cssRest: "", links: links.join("\n") };
     }
   } else {
     console.log(`✓ 字型子集未變（${summary}），沿用 ${FONT_DIR}/ 的 ${entry.files.length} 個檔`);
@@ -382,16 +421,49 @@ async function build() {
     ],
   };
 
-  // 形象照：有 -640.webp 小圖（optimize-images 會產）就給手機 srcset，preload 也跟著切
+  // 響應式圖片：資料夾有對應的 <名稱>-<寬>.webp 小圖（optimize-images 會自動產）就給 srcset；sizes 對應 template 的 CSS 寬度
+  const VARIANTS = {
+    形象照: { w: 640, sizes: "(max-width:860px) min(82vw,360px), min(46vw,470px)" },
+    書籍: { w: 400, sizes: "(max-width:560px) 45vw, 150px" },
+  };
+  function variant(src) {
+    const v = VARIANTS[src.split("/").at(-2)];
+    if (!v) return null;
+    const small = src.replace(/\.webp$/, `-${v.w}.webp`);
+    if (!existsSync(join(DIR, small))) return null;
+    return { srcset: `${assetUrl(small)} ${webpSize(join(DIR, small)).w}w, ${assetUrl(src)} ${webpSize(join(DIR, src)).w}w`, sizes: v.sizes };
+  }
+  const srcsetAttrs = (src) => { const v = variant(src); return v ? ` srcset="${v.srcset}" sizes="${v.sizes}"` : ""; };
   function heroPhoto(photo) {
-    const small = photo.replace(/\.webp$/, "-640.webp");
+    const v = variant(photo);
     const preload = (extra = "") => `<link rel="preload" as="image" href="${assetUrl(photo)}"${extra} fetchpriority="high">`;
-    if (!existsSync(join(DIR, small))) return { "{{PHOTO_SRCSET}}": "", "{{PHOTO_PRELOAD}}": preload() };
-    const sizes = "(max-width:860px) min(82vw,360px), min(46vw,470px)"; // 對應 template 的 .hero-photo img 寬度
-    const srcset = `${assetUrl(small)} ${webpSize(join(DIR, small)).w}w, ${assetUrl(photo)} ${webpSize(join(DIR, photo)).w}w`;
+    if (!v) return { "{{PHOTO_SRCSET}}": "", "{{PHOTO_PRELOAD}}": preload() };
+    return { "{{PHOTO_SRCSET}}": srcsetAttrs(photo), "{{PHOTO_PRELOAD}}": preload(` imagesrcset="${v.srcset}" imagesizes="${v.sizes}"`) };
+  }
+
+  // 合作洽詢：hero 兩顆按鈕、手機浮動列、頁尾連結。Email 用 mailto 帶主旨與填寫格式，點開就能填
+  function contactTokens(c, facebook, footCta) {
+    const email = (c.email ?? "").trim();
+    const emailLabel = c.email_label ?? "Email 洽詢", fbLabel = c.facebook_label ?? "Facebook 私訊";
+    const mailto = email
+      ? `mailto:${email}?subject=${encodeURIComponent(c.email_subject ?? "")}&body=${encodeURIComponent((c.email_body ?? "").replace(/\n/g, "\r\n"))}`.replaceAll("&", "&amp;")
+      : "";
+    if (!email) console.warn("! content.md 的 [contact] email 還沒填，Email 洽詢按鈕先不顯示，只有 Facebook");
+    const mailIcon = svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>');
+    const fbIcon = `<svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none">${ICONS.facebook.match(/<path[^>]*>/)[0]}</svg>`;
+    const emailBtn = (cls) => (email ? `<a class="btn ${cls}" href="${mailto}">${mailIcon}${esc(emailLabel)}</a>` : "");
+    const fbBtn = (cls) => `<a class="btn ${cls}" href="${facebook}" target="_blank" rel="noopener">${fbIcon}${esc(fbLabel)}</a>`;
     return {
-      "{{PHOTO_SRCSET}}": ` srcset="${srcset}" sizes="${sizes}"`,
-      "{{PHOTO_PRELOAD}}": preload(` imagesrcset="${srcset}" imagesizes="${sizes}"`),
+      "{{HERO_CTA}}": [emailBtn("btn-primary"), fbBtn(email ? "btn-ghost" : "btn-primary")].filter(Boolean).map((b) => `        ${b}`).join("\n"),
+      "{{CTA_BAR}}": [
+        emailBtn("btn-primary"),
+        fbBtn(email ? "btn-ghost" : "btn-primary"),
+        `<a class="to-top-btn" href="#top" aria-label="回到頂部">${svg('<path d="M12 19V5M5 12l7-7 7 7"/>')}</a>`,
+      ].filter(Boolean).map((b) => `  ${b}`).join("\n"),
+      "{{FOOT_CONTACT}}": [
+        email ? `          <a class="gold-link" href="${mailto}">${esc(emailLabel)} →</a>` : "",
+        `          <a class="gold-link" href="${facebook}" target="_blank" rel="noopener">${esc(footCta)}</a>`,
+      ].filter(Boolean).join("\n"),
     };
   }
 
@@ -426,8 +498,8 @@ async function build() {
     "{{QUOTE}}": esc(media.quote.text).replaceAll("\n", "<br>"),
     "{{QUOTE_SRC}}": esc(media.quote.source),
     "{{FOOT_TAGLINE}}": gold(footer.tagline),
-    "{{FOOT_CTA}}": esc(footer.cta),
     "{{FACEBOOK}}": social.facebook,
+    ...contactTokens(hero.contact ?? {}, social.facebook, footer.cta),
     "{{COPYRIGHT}}": esc(footer.copyright),
   };
 
@@ -467,7 +539,7 @@ async function build() {
       [
         '      <figure class="book">',
         `        <a href="${b.url}" target="_blank" rel="noopener">`,
-        `          <div class="cover"><img src="${assetUrl(b.cover)}" alt="${esc(b.title)}"${dim(b.cover)} fetchpriority="low" decoding="async"></div>`,
+        `          <div class="cover"><img src="${assetUrl(b.cover)}"${srcsetAttrs(b.cover)} alt="${esc(b.title)}"${dim(b.cover)} fetchpriority="low" decoding="async"></div>`,
         `          <figcaption><span class="tag">${esc(b.tag)}</span><br>${esc(b.title)}</figcaption>`,
         "        </a>",
         "      </figure>",
@@ -548,7 +620,10 @@ async function build() {
 
   // 字型最後處理：要先有完整頁面才知道用到哪些字
   const fonts = await buildFonts(out);
-  out = out.replace("{{FONT_CSS}}", () => fonts.css).replace("{{FONT_LINKS}}", () => fonts.links);
+  out = out
+    .replace("{{FONT_CSS}}", () => fonts.css)
+    .replace("{{FONT_LINKS}}", () => fonts.links)
+    .replace("{{FONT_CSS_REST}}", () => JSON.stringify(fonts.cssRest).replaceAll("</", "<\\/"));
 
   const leftover = [...new Set(out.match(/\{\{[A-Z_]+\}\}/g) ?? [])];
   if (leftover.length) fail(`模板還有未替換的 token：${leftover.join(", ")}`);
