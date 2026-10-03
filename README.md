@@ -60,7 +60,7 @@ branding/
 - `[quote]` 的 `text` 中 `\n` 會換行
 - 圖片放進 `assets/` 對應子資料夾後跑 `npm run optimize:branding -- --replace` 轉成 WebP，路徑寫 `assets/….webp`（書封上限 640px 寬、形象照 1000px、其他 1400px，改上限在 `optimize-images.mjs`）
 - build 會讀 WebP 檔頭把 `width`/`height` 寫進 `<img>`（避免版面跳動），並產生 JSON-LD（ProfilePage／Person／Book）與 `sitemap.xml`
-- 形象照若有同名的 `-640.webp` 小圖（`optimize:branding` 會自動產），build 會給手機版 `srcset`，LCP 圖片體積降到四分之一
+- 形象照若有同名的 `-640.webp`、書封若有 `-400.webp` 小圖（`optimize:branding` 會自動產），build 會給 `srcset`，手機與一般桌機載的是小圖；對應關係在 `build.mjs` 的 `VARIANTS`
 - 書封緊接首屏，直接載入（低優先序）；排行榜截圖、授課相簿、媒體卡才用 `loading="lazy"`
 
 ## 字型載入（build 自動處理，字型檔自行託管）
@@ -70,7 +70,8 @@ build 會掃描產生好的頁面，算出**實際用到的字**，用 Google Fo
 把只含這些字的 woff2 抓回 `assets/fonts/`，頁面只連自己的網域，**訪客完全不會碰到 Google**：
 
 - 襯線字（Noto Serif TC 700／900）只收標題、單位名稱等用到襯線的字；黑體（Noto Sans TC 300／400／500）收全頁的字，含 JS 渲染的課程清單。Noto 是可變字型，多個字重共用一個檔
-- `@font-face` 直接內嵌進 `index.html`，字型檔加 `<link rel="preload">`，第一次繪製就是正確字型；目前 4 個檔共約 340 KB
+- **字分兩層**：首屏（`nav` + `hero`）用到的字做成小檔，`@font-face` 內嵌、`<link rel="preload">`，首屏文字只等這約 115 KB；其餘的字另成檔，等首屏字型載完才由一小段 JS 掛上（下方區塊本來就捲到才淡入）。兩層用 `unicode-range` 分工、字集不重疊。6 個檔共約 350 KB
+- 哪些容器算首屏，列在 `build.mjs` 的 `CRITICAL_CLASSES`
 - 字沒變就不連網（紀錄在 `.font-cache.json`）；內容新增了字才會重抓，舊檔自動刪除，檔名含內容雜湊所以快取不會髒
 - 抓不到時的退路：沿用上次的本機字型（新字會以系統字型顯示）→ 真的沒有才外連 Google。`BRANDING_OFFLINE=1` 可強制不連網
 - 哪些元素算襯線字，列在 `build.mjs` 的 `SERIF_CLASSES`／`SERIF_TAGS`；模板若新增用 `Noto Serif TC` 的 class，記得補上，否則該處文字會退回系統襯線字

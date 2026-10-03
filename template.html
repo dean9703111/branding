@@ -745,5 +745,11 @@ document.querySelectorAll('.chips-block').forEach(block => {
   panel.querySelector('.cp-close').addEventListener('click', closeAll);
 });
 </script>
+<script>
+// 首屏以外用到的字型：等首屏字型載完再掛上，首屏文字只等小檔；下方區塊本來就捲到才淡入
+(function(){var css={{FONT_CSS_REST}};if(!css)return;
+var add=function(){var s=document.createElement('style');s.textContent=css;document.head.appendChild(s)};
+document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(function(){(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(add)})});})();
+</script>
 </body>
 </html>
