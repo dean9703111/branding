@@ -222,20 +222,36 @@ body::after{
 .btn-primary:hover{transform:translateY(-2px);background:#e5b45a}
 .btn-ghost{border:1px solid rgba(236,231,219,.3);color:#ecE7db}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
-/* 手機：捲過 hero 後出現的固定洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複） */
+/* 手機：捲過 hero 後浮現的洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複）
+   顯示：整列淡入＋由下往上浮起＋微放大，兩顆按鈕再錯開 80ms 依序浮現；收起：較快的淡出下沉 */
 .cta-bar{
-  position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
-  display:none;gap:8px;padding:8px;border-radius:16px;
-  background:rgba(23,20,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(217,164,65,.35);box-shadow:0 10px 30px rgba(0,0,0,.35);
-  transform:translateY(calc(100% + 24px));opacity:0;transition:transform .35s cubic-bezier(.2,.65,.25,1),opacity .35s;
+  position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
+  display:none;gap:10px;padding:8px;border-radius:18px;
+  background:rgba(23,20,15,.86);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  border:1px solid rgba(217,164,65,.32);
+  box-shadow:0 12px 32px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.05);
+  opacity:0;visibility:hidden;transform:translateY(18px) scale(.96);transform-origin:50% 100%;
+  transition:opacity .28s ease-in,transform .28s cubic-bezier(.4,0,.8,.6),visibility 0s linear .28s;
 }
-.cta-bar .btn{flex:1;justify-content:center;padding:10px 8px;font-size:.8rem;letter-spacing:.03em;gap:6px;white-space:nowrap}
-.cta-bar .btn svg{width:14px;height:14px;flex:none}
-.cta-bar .to-top-btn{flex:0 0 44px;width:44px;height:44px;border-radius:12px;border:1px solid rgba(236,231,219,.25);display:grid;place-items:center;color:#ecE7db}
-.cta-bar.show{transform:none;opacity:1}
+.cta-bar::before{ /* 上緣一道金色細光，呼應品牌色 */
+  content:"";position:absolute;left:18%;right:18%;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,164,65,.8),transparent);
+}
+.cta-bar.show{
+  opacity:1;visibility:visible;transform:none;
+  transition:opacity .45s cubic-bezier(.2,.65,.25,1),transform .55s cubic-bezier(.2,.65,.25,1),visibility 0s;
+}
+.cta-bar .btn{
+  flex:1;justify-content:center;padding:11px 10px;font-size:.8rem;letter-spacing:.03em;gap:7px;white-space:nowrap;
+  opacity:0;transform:translateY(10px);transition:opacity .25s ease-in,transform .25s ease-in;
+}
+.cta-bar .btn svg{width:15px;height:15px;flex:none}
+.cta-bar.show .btn{opacity:1;transform:none;transition:opacity .4s cubic-bezier(.2,.65,.25,1) .12s,transform .45s cubic-bezier(.2,.65,.25,1) .12s}
+.cta-bar.show .btn:nth-child(2){transition-delay:.2s}
 @media (max-width:860px){.cta-bar{display:flex}}
-@media (prefers-reduced-motion:reduce){.cta-bar{transition:none}}
+@media (prefers-reduced-motion:reduce){
+  .cta-bar,.cta-bar .btn{transform:none!important;transition:opacity .2s ease,visibility 0s!important}
+}
 .hero-social{display:flex;gap:14px;margin-top:36px}
 .hero-social a{
   width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;

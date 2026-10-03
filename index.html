@@ -401,20 +401,36 @@ body::after{
 .btn-primary:hover{transform:translateY(-2px);background:#e5b45a}
 .btn-ghost{border:1px solid rgba(236,231,219,.3);color:#ecE7db}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
-/* 手機：捲過 hero 後出現的固定洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複） */
+/* 手機：捲過 hero 後浮現的洽詢列（捲到頁尾自動收起，避免與頁尾洽詢重複）
+   顯示：整列淡入＋由下往上浮起＋微放大，兩顆按鈕再錯開 80ms 依序浮現；收起：較快的淡出下沉 */
 .cta-bar{
-  position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;
-  display:none;gap:8px;padding:8px;border-radius:16px;
-  background:rgba(23,20,15,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(217,164,65,.35);box-shadow:0 10px 30px rgba(0,0,0,.35);
-  transform:translateY(calc(100% + 24px));opacity:0;transition:transform .35s cubic-bezier(.2,.65,.25,1),opacity .35s;
+  position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
+  display:none;gap:10px;padding:8px;border-radius:18px;
+  background:rgba(23,20,15,.86);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+  border:1px solid rgba(217,164,65,.32);
+  box-shadow:0 12px 32px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.05);
+  opacity:0;visibility:hidden;transform:translateY(18px) scale(.96);transform-origin:50% 100%;
+  transition:opacity .28s ease-in,transform .28s cubic-bezier(.4,0,.8,.6),visibility 0s linear .28s;
 }
-.cta-bar .btn{flex:1;justify-content:center;padding:10px 8px;font-size:.8rem;letter-spacing:.03em;gap:6px;white-space:nowrap}
-.cta-bar .btn svg{width:14px;height:14px;flex:none}
-.cta-bar .to-top-btn{flex:0 0 44px;width:44px;height:44px;border-radius:12px;border:1px solid rgba(236,231,219,.25);display:grid;place-items:center;color:#ecE7db}
-.cta-bar.show{transform:none;opacity:1}
+.cta-bar::before{ /* 上緣一道金色細光，呼應品牌色 */
+  content:"";position:absolute;left:18%;right:18%;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,164,65,.8),transparent);
+}
+.cta-bar.show{
+  opacity:1;visibility:visible;transform:none;
+  transition:opacity .45s cubic-bezier(.2,.65,.25,1),transform .55s cubic-bezier(.2,.65,.25,1),visibility 0s;
+}
+.cta-bar .btn{
+  flex:1;justify-content:center;padding:11px 10px;font-size:.8rem;letter-spacing:.03em;gap:7px;white-space:nowrap;
+  opacity:0;transform:translateY(10px);transition:opacity .25s ease-in,transform .25s ease-in;
+}
+.cta-bar .btn svg{width:15px;height:15px;flex:none}
+.cta-bar.show .btn{opacity:1;transform:none;transition:opacity .4s cubic-bezier(.2,.65,.25,1) .12s,transform .45s cubic-bezier(.2,.65,.25,1) .12s}
+.cta-bar.show .btn:nth-child(2){transition-delay:.2s}
 @media (max-width:860px){.cta-bar{display:flex}}
-@media (prefers-reduced-motion:reduce){.cta-bar{transition:none}}
+@media (prefers-reduced-motion:reduce){
+  .cta-bar,.cta-bar .btn{transform:none!important;transition:opacity .2s ease,visibility 0s!important}
+}
 .hero-social{display:flex;gap:14px;margin-top:36px}
 .hero-social a{
   width:42px;height:42px;border:1px solid rgba(236,231,219,.22);border-radius:50%;
@@ -1415,7 +1431,6 @@ document.querySelectorAll('.chips-block').forEach(block => {
 <div class="cta-bar" role="complementary" aria-label="合作洽詢">
   <a class="btn btn-primary" href="mailto:babydragon9703111@gmail.com?subject=%E5%85%A7%E8%A8%93%E9%82%80%E7%B4%84%EF%BD%9C%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%EF%BD%9C%EF%BC%88%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%89&amp;body=Dean%20%E6%82%A8%E5%A5%BD%EF%BC%8C%0D%0A%0D%0A%E6%88%91%E6%98%AF%EF%BC%88%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%89%E7%9A%84%EF%BC%88%E5%A7%93%E5%90%8D%EF%BC%8F%E8%81%B7%E7%A8%B1%EF%BC%89%EF%BC%8C%E6%83%B3%E9%82%80%E8%AB%8B%E6%82%A8%E6%8E%88%E8%AA%B2%EF%BC%8C%E8%B3%87%E8%A8%8A%E5%A6%82%E4%B8%8B%EF%BC%9A%0D%0A%0D%0A%E2%96%A0%20%E5%96%AE%E4%BD%8D%E5%90%8D%E7%A8%B1%EF%BC%9A%0D%0A%E2%96%A0%20%E8%AA%B2%E7%A8%8B%E4%B8%BB%E9%A1%8C%EF%BC%8F%E6%83%B3%E8%A7%A3%E6%B1%BA%E7%9A%84%E5%95%8F%E9%A1%8C%EF%BC%9A%0D%0A%E2%96%A0%20%E5%AD%B8%E5%93%A1%E5%B0%8D%E8%B1%A1%E8%88%87%E4%BA%BA%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E8%A8%88%E6%99%82%E6%95%B8%EF%BC%9A%0D%0A%E2%96%A0%20%E5%B8%8C%E6%9C%9B%E6%97%A5%E6%9C%9F%EF%BC%88%E5%8F%AF%E7%B5%A6%E5%8D%80%E9%96%93%EF%BC%89%EF%BC%9A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%BD%A2%E5%BC%8F%EF%BC%9A%E5%AF%A6%E9%AB%94%EF%BC%8F%E7%B7%9A%E4%B8%8A%0D%0A%E2%96%A0%20%E4%B8%8A%E8%AA%B2%E5%9C%B0%E9%BB%9E%EF%BC%9A%0D%0A%E2%96%A0%20%E9%A0%90%E7%AE%97%E7%AF%84%E5%9C%8D%EF%BC%9A%0D%0A%0D%0A%E8%81%AF%E7%B5%A1%E6%96%B9%E5%BC%8F%EF%BC%88%E9%9B%BB%E8%A9%B1%EF%BC%8FLINE%20ID%20%E7%AD%89%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E8%AC%9D%E8%AC%9D%EF%BC%81"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email 洽詢</a>
   <a class="btn btn-ghost" href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Facebook 私訊</a>
-  <a class="to-top-btn" href="#top" aria-label="回到頂部"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
 </div>
 <script>
 // 手機浮動洽詢列：hero 離開視窗才出現；頁尾（已有洽詢連結）進視窗就收起
