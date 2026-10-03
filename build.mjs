@@ -455,11 +455,7 @@ async function build() {
     const fbBtn = (cls) => `<a class="btn ${cls}" href="${facebook}" target="_blank" rel="noopener">${fbIcon}${esc(fbLabel)}</a>`;
     return {
       "{{HERO_CTA}}": [emailBtn("btn-primary"), fbBtn(email ? "btn-ghost" : "btn-primary")].filter(Boolean).map((b) => `        ${b}`).join("\n"),
-      "{{CTA_BAR}}": [
-        emailBtn("btn-primary"),
-        fbBtn(email ? "btn-ghost" : "btn-primary"),
-        `<a class="to-top-btn" href="#top" aria-label="回到頂部">${svg('<path d="M12 19V5M5 12l7-7 7 7"/>')}</a>`,
-      ].filter(Boolean).map((b) => `  ${b}`).join("\n"),
+      "{{CTA_BAR}}": [emailBtn("btn-primary"), fbBtn(email ? "btn-ghost" : "btn-primary")].filter(Boolean).map((b) => `  ${b}`).join("\n"),
       "{{FOOT_CONTACT}}": [
         email ? `          <a class="gold-link" href="${mailto}">${esc(emailLabel)} →</a>` : "",
         `          <a class="gold-link" href="${facebook}" target="_blank" rel="noopener">${esc(footCta)}</a>`,
