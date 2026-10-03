@@ -609,7 +609,7 @@ async function build() {
     .map(([k, url]) => `          <a href="${url}" target="_blank" rel="noopener">${ICONS[k]}${SOCIAL_NAMES[k]}</a>`)
     .join("\n");
 
-  rep["{{FOOT_SERVICES}}"] = footer.services.map((s) => `          <p>${esc(s)}</p>`).join("\n");
+  rep["{{FOOT_SERVICES}}"] = footer.services.map(esc).join("・"); // 服務項目併成一行，放在洽詢按鈕下方
 
   let out = tpl;
   for (const [token, value] of Object.entries(rep)) out = out.replaceAll(token, value);
