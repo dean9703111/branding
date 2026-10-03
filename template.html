@@ -377,6 +377,7 @@ section{padding:clamp(70px,10vw,130px) 0}
 .chips-block h4 em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:var(--gold);font-size:.9rem;letter-spacing:.06em}
 .chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{
+  position:relative;
   font-size:.8rem;letter-spacing:.05em;color:var(--ink);
   border:1px solid var(--line);border-radius:99px;padding:5px 15px;font-weight:300;
   transition:border-color .25s,background .25s,color .25s;
@@ -384,11 +385,16 @@ section{padding:clamp(70px,10vw,130px) 0}
 }
 .chip:hover{border-color:var(--gold-line);background:var(--gold-soft)}
 .chip.active{border-color:var(--gold);background:var(--gold-soft);color:var(--ink-strong)}
+/* 被點的單位下方一個小箭頭，指向緊接著展開的面板 */
+.chip.active::after{
+  content:"";position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);
+  border:6px solid transparent;border-bottom-color:var(--gold);border-top:0;
+}
 .chip b{font-weight:500;color:var(--gold);margin-left:6px;font-size:.74rem}
 
-/* 點擊單位展開的課程面板 */
+/* 點擊單位展開的課程面板：JS 會把它搬到被點那一列的最後一個 chip 之後，佔滿整列，所以直接出現在該列下方 */
 .chip-panel{
-  display:none;margin-top:18px;position:relative;
+  display:none;flex-basis:100%;width:100%;margin-top:6px;margin-bottom:4px;position:relative;
   border:1px solid var(--gold-line);border-left:3px solid var(--gold);border-radius:10px;
   background:var(--surface);padding:20px 26px;box-shadow:var(--shadow);
 }
@@ -715,6 +721,11 @@ document.querySelectorAll('.chips-block').forEach(block => {
       b.classList.remove('active'); b.setAttribute('aria-expanded', 'false');
     });
   };
+  // 把面板搬到 btn 所在那一列（offsetTop 相同的 chips）的最後一個之後，面板就會出現在該列正下方
+  const placeAfterRow = btn => {
+    const row = [...block.querySelectorAll('button.chip')].filter(b => b.offsetTop === btn.offsetTop);
+    row[row.length - 1].after(panel);
+  };
   block.querySelectorAll('button.chip').forEach(btn => {
     btn.addEventListener('click', () => {
       const wasActive = btn.classList.contains('active');
@@ -722,6 +733,7 @@ document.querySelectorAll('.chips-block').forEach(block => {
       if (wasActive) return;
       btn.classList.add('active');
       btn.setAttribute('aria-expanded', 'true');
+      placeAfterRow(btn);
       const items = COURSES[btn.dataset.unit] || [];
       panel.querySelector('.cp-title').textContent = btn.dataset.unit;
       panel.querySelector('.cp-count').textContent = items.length + ' 項課程';
@@ -740,9 +752,18 @@ document.querySelectorAll('.chips-block').forEach(block => {
         ul.appendChild(li);
       });
       panel.classList.add('open');
+      // 面板下緣超出畫面（手機常見）就捲到剛好看得見，不改變上緣位置
+      requestAnimationFrame(() => {
+        if (panel.getBoundingClientRect().bottom > innerHeight) panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
     });
   });
   panel.querySelector('.cp-close').addEventListener('click', closeAll);
+  // 視窗寬度改變會重排列，面板開著時重新放到正確的那一列
+  addEventListener('resize', () => {
+    const active = block.querySelector('.chip.active');
+    if (active && panel.classList.contains('open')) placeAfterRow(active);
+  });
 });
 </script>
 <script>

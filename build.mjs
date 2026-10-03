@@ -120,7 +120,9 @@ const decodeEntities = (s) =>
 function collectChars(html) {
   const all = new Set(BASE_CHARS), serif = new Set(BASE_CHARS), crit = new Set(BASE_CHARS), critSerif = new Set(BASE_CHARS);
   for (const m of html.matchAll(/content:\s*"([^"]*)"/g)) for (const c of m[1]) { all.add(c); crit.add(c); } // CSS 產生的文字（hero 有）
-  for (const m of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) for (const c of m[1]) all.add(c); // JS 渲染的課程清單
+  // JS 渲染的課程清單（資料在 <script> 裡）；先去掉註解，中文註解不是畫面文字
+  for (const m of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g))
+    for (const c of m[1].replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "")) all.add(c);
   const body = html.replace(/<!--[\s\S]*?-->/g, "").replace(/<style[\s\S]*?<\/style>/g, "").replace(/<script[\s\S]*?<\/script>/g, "");
   const stack = []; // 目前所在元素：是否襯線字、是否首屏
   const re = /<\/?([a-zA-Z][\w-]*)([^>]*)>|([^<]+)/g;
