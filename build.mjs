@@ -441,7 +441,7 @@ async function build() {
     return { "{{PHOTO_SRCSET}}": srcsetAttrs(photo), "{{PHOTO_PRELOAD}}": preload(` imagesrcset="${v.srcset}" imagesizes="${v.sizes}"`) };
   }
 
-  // 合作洽詢：hero 兩顆按鈕、手機浮動列、頁尾連結。Email 用 mailto 帶主旨與填寫格式，點開就能填
+  // 合作洽詢：hero 兩顆按鈕、手機浮動列、收尾區合作邀約。Email 用 mailto 帶主旨與填寫格式，點開就能填
   function contactTokens(c, facebook) {
     const email = (c.email ?? "").trim();
     const emailLabel = c.email_label ?? "Email 洽詢", fbLabel = c.facebook_label ?? "Facebook 私訊";
@@ -493,7 +493,6 @@ async function build() {
     "{{MEDIA_SUB}}": gold(media.sub),
     "{{QUOTE}}": esc(media.quote.text).replaceAll("\n", "<br>"),
     "{{QUOTE_SRC}}": esc(media.quote.source),
-    "{{FOOT_TAGLINE}}": gold(footer.tagline),
     "{{FACEBOOK}}": social.facebook,
     ...contactTokens(hero.contact ?? {}, social.facebook),
     "{{COPYRIGHT}}": esc(footer.copyright),
@@ -609,7 +608,7 @@ async function build() {
     .map(([k, url]) => `          <a href="${url}" target="_blank" rel="noopener">${ICONS[k]}${SOCIAL_NAMES[k]}</a>`)
     .join("\n");
 
-  rep["{{FOOT_SERVICES}}"] = footer.services.map(esc).join("・"); // 服務項目併成一行，放在洽詢按鈕下方
+  rep["{{FOOT_SERVICES}}"] = footer.services.map((x) => `<span>${esc(x)}</span>`).join("・"); // 服務項目併成一行，放在收尾區洽詢按鈕上方
 
   let out = tpl;
   for (const [token, value] of Object.entries(rep)) out = out.replaceAll(token, value);

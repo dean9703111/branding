@@ -70,7 +70,7 @@ facebook = "https://www.facebook.com/deanlinbao"
 github   = "https://github.com/dean9703111"
 medium   = "https://medium.com/@dean-lin"
 
-# 合作洽詢：hero 的兩顆按鈕、手機捲動後的浮動洽詢列、頁尾「合作邀約」都用這組
+# 合作洽詢：hero 的兩顆按鈕、手機捲動後的浮動洽詢列、收尾區「合作邀約」都用這組
 # email 留空時只顯示 Facebook；Facebook 連結沿用上面 [social] 的 facebook
 # email_body 是對方點開 Email 就看到的填寫格式，\n 換行
 [contact]
@@ -412,7 +412,6 @@ source = "DEAN LIN・工程師下班有約"
 # Footer
 
 ```toml
-tagline   = "把複雜的技術，變成人人都能上手的生產力。"
 services  = ["企業內訓・校園講座", "線上課程・媒體邀訪"]
-copyright = "© 2026 Dean Lin 林鼎淵・生成式 AI 講師・暢銷書作家・外商工程師"
+copyright = "© 2026 Dean Lin・生成式 AI 講師・暢銷書作家・外商工程師"
 ```
