@@ -459,7 +459,10 @@ async function build() {
       "{{CTA_FAB_ICONS}}":
         svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>').replace("<svg ", '<svg class="ico-mail" ') +
         svg('<path d="M6 6l12 12M18 6 6 18"/>').replace("<svg ", '<svg class="ico-close" '),
-      "{{FOOT_CONTACT}}": [emailBtn("btn-primary"), fbBtn("btn-ghost")].filter(Boolean).map((b) => `            ${b}`).join("\n"),
+      "{{FOOT_CONTACT}}": [
+        email ? `          <a class="gold-link" href="${mailto}">${esc(emailLabel)} →</a>` : "",
+        `          <a class="gold-link" href="${facebook}" target="_blank" rel="noopener">${esc(fbLabel)} →</a>`,
+      ].filter(Boolean).join("\n"),
     };
   }
 
@@ -609,7 +612,7 @@ async function build() {
     .map(([k, url]) => `          <a href="${url}" target="_blank" rel="noopener">${ICONS[k]}${SOCIAL_NAMES[k]}</a>`)
     .join("\n");
 
-  rep["{{FOOT_SERVICES}}"] = footer.services.map(esc).join("・"); // 服務項目併成一行，放在洽詢按鈕下方
+  rep["{{FOOT_SERVICES}}"] = footer.services.map(esc).join("<br>"); // 服務項目一項一行
 
   let out = tpl;
   for (const [token, value] of Object.entries(rep)) out = out.replaceAll(token, value);
