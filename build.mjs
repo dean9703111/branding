@@ -92,6 +92,14 @@ const assetUrl = (src) => {
 };
 // 絕對網址（JSON-LD、OG 用）：CDN 模式直接用 CDN 網址，否則以 site.url 為基底
 const absUrl = (src, base) => (assetBase ? assetUrl(src) : new URL(encodeURI(src), base).href);
+// OG 圖一律帶 ?v=內容雜湊：社群平台以網址快取預覽圖，換圖後網址跟著變才會重抓
+const ogUrl = (src, base) => {
+  const url = absUrl(src, base);
+  if (url.includes("?v=") || !src.startsWith("assets/")) return url;
+  const file = join(DIR, src);
+  if (!existsSync(file)) fail(`找不到 OG 圖 ${src}`);
+  return `${url}?v=${createHash("sha256").update(readFileSync(file)).digest("hex").slice(0, 8)}`;
+};
 
 // ---------- 字型子集：只載本頁用到的字，字型檔自行託管，首屏字另成小檔 ----------
 // 中文字型完整版要靠 100 多個切片檔，首次載入要先抓 200KB 的 CSS 再抓 30 多個 woff2。
@@ -469,7 +477,7 @@ async function build() {
     "{{DESCRIPTION}}": esc(site.description),
     "{{URL}}": site.url ?? fail("網站設定缺少 url"),
     "{{FAVICON}}": site.favicon ?? fail("網站設定缺少 favicon"),
-    "{{OG_IMAGE}}": absUrl(site.og_image ?? fail("網站設定缺少 og_image"), site.url),
+    "{{OG_IMAGE}}": ogUrl(site.og_image ?? fail("網站設定缺少 og_image"), site.url),
     "{{EYEBROW}}": esc(hero.eyebrow),
     "{{NAME}}": esc(hero.name),
     "{{NAME_EN}}": esc(hero.name_en),

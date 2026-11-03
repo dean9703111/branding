@@ -6,73 +6,61 @@
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu \
     --screenshot=assets/og.png --window-size=1200,630 --hide-scrollbars \
     --virtual-time-budget=8000 og.html
+
+  設計原則（社群預覽會被縮到約 400–500px 寬、部分平台會裁成接近正方形）：
+  - 重點（臉、姓名）集中在中央，左右各留約 120px 不放關鍵資訊
+  - 文字縮小 0.4 倍後仍要可讀：內文 ≥ 34px、姓名 ≥ 140px
+  - 只放 4 個資訊：身分、姓名、一句價值主張、一個信任數據
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&family=Noto+Sans+TC:wght@500;700&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1200px;height:630px;overflow:hidden}
-body{
-  background:#0f1013;color:#ece7db;
-  font-family:"Noto Sans TC",sans-serif;
-  display:flex;
-}
+body{background:#14151a;color:#ece7db;font-family:"Noto Sans TC",sans-serif}
 .card{
-  width:100%;height:100%;display:flex;align-items:stretch;
+  position:relative;width:1200px;height:630px;overflow:hidden;
   background:
-    radial-gradient(900px 500px at 85% 20%, rgba(217,164,65,.10), transparent 60%),
-    linear-gradient(135deg,#15161b 0%,#0f1013 55%);
+    radial-gradient(700px 520px at 74% 38%, #2a2d36 0%, #1c1e24 45%, #14151a 80%);
   border-top:10px solid #d9a441;
 }
-.left{
-  flex:1;display:flex;flex-direction:column;justify-content:center;
-  padding:0 60px 0 80px;
+/* 人像：臉部中心約在 x=800，落在中央安全區內；左緣與下緣漸層融入背景 */
+.photo{
+  position:absolute;left:470px;top:6px;height:940px;width:auto;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 22%, #000 80%, transparent 100%),
+    linear-gradient(to bottom, #000 70%, transparent 100%);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
 }
-.eyebrow{
-  color:#d9a441;letter-spacing:.35em;font-size:22px;font-weight:500;
-  margin-bottom:26px;
+.text{
+  position:absolute;left:110px;top:0;bottom:0;width:560px;
+  display:flex;flex-direction:column;justify-content:center;
 }
+.eyebrow{color:#d9a441;font-size:34px;font-weight:700;letter-spacing:.12em}
 h1{
-  font-family:"Noto Serif TC",serif;font-weight:900;font-size:96px;
-  color:#faf6ec;line-height:1.1;
+  font-family:"Noto Serif TC",serif;font-weight:900;font-size:156px;
+  color:#faf6ec;line-height:1.05;margin-top:10px;letter-spacing:.02em;
 }
 .en{
-  font-family:"Cormorant Garamond",serif;font-weight:500;font-size:34px;
-  color:#a8a294;letter-spacing:.45em;display:block;margin-top:14px;
+  font-family:"Cormorant Garamond",serif;font-weight:600;font-size:38px;
+  color:#b5ae9f;letter-spacing:.42em;margin-top:6px;
 }
-.divider{width:96px;height:3px;background:#d9a441;margin:34px 0}
-.lead{
-  font-size:27px;font-weight:300;color:#c9c3b5;line-height:1.65;max-width:21em;
-}
-.lead b{color:#d9a441;font-weight:500}
-.stats{
-  margin-top:36px;font-size:21px;color:#9b968a;letter-spacing:.06em;
-}
-.stats span{color:#ece7db;font-weight:500}
-.right{
-  width:360px;display:flex;align-items:flex-end;justify-content:center;
-  padding:0 60px 0 0;
-}
-.photo{
-  width:330px;height:520px;object-fit:cover;object-position:top center;
-  border-radius:14px;border:1px solid rgba(217,164,65,.5);
-  box-shadow:0 30px 60px -20px rgba(0,0,0,.7);
-  align-self:center;
-}
+.lead{margin-top:30px;font-size:40px;font-weight:700;line-height:1.35;color:#ece7db}
+.lead b{color:#d9a441}
+.stats{margin-top:22px;font-size:32px;font-weight:500;color:#b5ae9f}
+.stats span{color:#faf6ec;font-weight:700}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="left">
-    <div class="eyebrow">企業內訓講師・暢銷書作家・外商工程師</div>
-    <h1>林鼎淵<span class="en">DEAN LIN</span></h1>
-    <div class="divider"></div>
-    <p class="lead">用最白話的語言，把 AI 工具轉化為<b>「聽得懂、秒上手、立刻見效」</b>的行動方案。</p>
-    <div class="stats"><span>15+</span> 年開發經驗　<span>7</span> 本著作　<span>500萬+</span> 瀏覽量　<span>100+</span> 場授課</div>
-  </div>
-  <div class="right">
-    <img class="photo" src="assets/形象照/個人照.webp" alt="林鼎淵形象照">
+  <img class="photo" src="assets/形象照/個人照.webp" alt="林鼎淵形象照">
+  <div class="text">
+    <div class="eyebrow">企業內訓講師・暢銷書作家</div>
+    <h1>林鼎淵</h1>
+    <div class="en">DEAN LIN</div>
+    <p class="lead">AI 工具，教到你<br><b>聽得懂、秒上手</b></p>
+    <div class="stats"><span>7</span> 本著作 ・ <span>100+</span> 場授課</div>
   </div>
 </div>
 </body>
